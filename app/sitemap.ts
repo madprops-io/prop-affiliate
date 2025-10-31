@@ -6,8 +6,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://madprops.io";
   const now = new Date();
 
-  // The base entries are contextually typed as MetadataRoute.Sitemap
-  const entries: MetadataRoute.Sitemap = [
+  // Base entries, typed precisely as a Sitemap
+  const baseEntries = [
     {
       url: `${base}/`,
       lastModified: now,
@@ -26,17 +26,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.3,
     },
-  ];
+  ] satisfies MetadataRoute.Sitemap;
 
-  // Helper ensures each firm entry is typed exactly as a Sitemap item
-  const toSitemapItem = (f: (typeof FIRMS)[number]): MetadataRoute.Sitemap[number] => ({
+  // Firm pages, also typed as a Sitemap
+  const firmEntries = FIRMS.map((f) => ({
     url: `${base}/firm/${encodeURIComponent(f.key)}`,
     lastModified: now,
     changeFrequency: "weekly",
     priority: 0.7,
-  });
+  })) satisfies MetadataRoute.Sitemap;
 
-  entries.push(...FIRMS.map(toSitemapItem));
-
-  return entries;
+  // Return combined
+  return [...baseEntries, ...firmEntries];
 }
