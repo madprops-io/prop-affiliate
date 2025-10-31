@@ -1,5 +1,6 @@
 // app/firm/[key]/page.tsx
-import type { Metadata, PageProps } from "next";
+import type { Metadata } from "next";
+import type { PageProps } from "next/dist/types";
 import Script from "next/script";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
