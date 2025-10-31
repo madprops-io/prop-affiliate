@@ -1,10 +1,16 @@
+// app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
-import LayoutClient from "../components/LayoutClient"; // ✅ new client wrapper
+import LayoutClient from "../components/LayoutClient";
 
 // Fonts
-const outfit = Outfit({ subsets: ["latin"], weight: ["300", "400", "500", "600"], display: "swap" });
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
+});
 const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
@@ -49,8 +55,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${outfit.className} ${geistSans.variable} ${geistMono.variable}`}>
-        <LayoutClient>{children}</LayoutClient>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${outfit.className}`}>
+        {/* Suspense boundary required for pages that use useSearchParams/usePathname/etc */}
+        <Suspense fallback={<main className="p-6">Loading…</main>}>
+          <LayoutClient>{children}</LayoutClient>
+        </Suspense>
       </body>
     </html>
   );

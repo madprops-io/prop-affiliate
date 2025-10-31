@@ -57,27 +57,6 @@ setSort: (v: SortKey) => void;
   router: any,
   pathname: string
 ) {
-  function platformConnectionsText(f: any): string {
-  const items: string[] = [];
-const platforms: string[] = Array.isArray(f.platforms) ? f.platforms : [];
-const feeds: string[] = Array.isArray(f.dataFeeds) ? f.dataFeeds : [];
-
-platforms.forEach((p: string) => {
-  const via = f.platformFeeds?.[p];
-  if (Array.isArray(via) && via.length > 0) {
-    items.push(`${p} (via ${via.join("/")})`);
-  } else {
-    items.push(p);
-  }
-});
-  const coveredFeeds = new Set(
-    Object.values(f.platformFeeds ?? {}).flatMap((arr) => arr ?? [])
-  );
-feeds.forEach((df: string) => {
-  if (!coveredFeeds.has(df)) items.push(df);
-});
-  return Array.from(new Set(items)).join(", ");
-}
   const { setQ, setModel, setPlatform, setMaxMinFunding, setMinPayout, setSort, setCompare } =
     setters;
 
@@ -208,8 +187,8 @@ export default function Page() {
   const [q, setQ] = useState("");
   const [model, setModel] = useState<ModelType | "">("");
   const [platform, setPlatform] = useState<PlatformType | "">("");
-  const [maxMinFunding, setMaxMinFunding] = useState(0);
-  const [minPayout, setMinPayout] = useState(70);
+const [maxMinFunding, setMaxMinFunding] = useState<number>(0);
+const [minPayout, setMinPayout] = useState<number>(70);
   const [compare, setCompare] = useState<string[]>([]);
 const [sort, setSort] = useState<SortKey>("score");
 
@@ -424,7 +403,13 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             <span>Minimum Max Funding</span>
             <span className="tabular-nums">${maxMinFunding.toLocaleString()}</span>
           </label>
-          <Slider min={0} max={1_000_000} step={50_000} value={[maxMinFunding]} onValueChange={([v]) => setMaxMinFunding(v)} />
+<Slider
+  min={0}
+  max={1_000_000}
+  step={50_000}
+  value={[maxMinFunding]}
+  onValueChange={([v = 0]) => setMaxMinFunding(v)}
+/>
         </div>
 
         <div className="md:col-span-6">
@@ -432,7 +417,13 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             <span>Minimum Payout Split</span>
             <span className="tabular-nums">{minPayout}%</span>
           </label>
-          <Slider min={50} max={100} step={5} value={[minPayout]} onValueChange={([v]) => setMinPayout(v)} />
+<Slider
+  min={50}
+  max={100}
+  step={5}
+  value={[minPayout]}
+  onValueChange={([v = 70]) => setMinPayout(v)}
+/>
         </div>
 
         <div className="md:col-span-12 flex items-center gap-2">

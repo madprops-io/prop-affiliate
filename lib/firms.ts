@@ -80,9 +80,8 @@ export const AFFILIATE_LINKS: Record<string, string> = {
   toponefutures:
     "https://toponefutures.com/?linkId=lp_707970&sourceId=mad&tenantId=toponefutures",
 
-  // 🔻 Fill these in later
+  // 🔻 Fill these in later (unique keys, no duplicates)
   tpt: "",
-  daytraders: "",
   fundedfutures: "",
   legendstrading: "",
   lucidtrading: "",
@@ -176,23 +175,23 @@ export const FIRMS: Firm[] = [
     signup: "https://www.toponefutures.com/",
   },
   {
-  key: "daytraders",
-  name: "Daytraders",
-  homepage: "https://daytraders.com/",
-  logo: "https://placehold.co/160x60?text=Daytraders",
-  model: ["2-Phase"],
-  platforms: ["Rithmic, ProjectX"],
-  maxFunding: 200000,
-  payout: 0.85,
-  trustpilot: 4.5,
-  founded: 2022,
-  notes: "Modern UI and rapid evaluation process. No daily loss limit. EOD drawdown.",
-  signup: "https://daytraders.com/",
-  affiliateUrl: "https://daytraders.com/go/madprops?i=1",
-},
+    key: "daytraders",
+    name: "Daytraders",
+    homepage: "https://daytraders.com/",
+    logo: "https://placehold.co/160x60?text=Daytraders",
+    model: ["2-Phase"],
+    platforms: ["Rithmic", "ProjectX"], // ✅ two separate items
+    maxFunding: 200000,
+    payout: 0.85,
+    trustpilot: 4.5,
+    founded: 2022,
+    notes:
+      "Modern UI and rapid evaluation process. No daily loss limit. EOD drawdown.",
+    signup: "https://daytraders.com/",
+    affiliateUrl: "https://daytraders.com/go/madprops?i=1",
+  },
 
   // 🔻 placeholders for the rest (you can expand later)
-  { key: "daytraders", name: "Daytraders", homepage: "", logo: "", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
   { key: "fundedfutures", name: "Funded Futures Network", homepage: "", logo: "", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
   { key: "legendstrading", name: "Legends Trading", homepage: "", logo: "", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
   { key: "lucidtrading", name: "Lucid Trading", homepage: "", logo: "", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },

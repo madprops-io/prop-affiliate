@@ -2,8 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// If you keep a local fallback constant, import it here:
-import { FIRMS as FALLBACK_FIRMS } from "./firms";
+import { FIRMS as FALLBACK_FIRMS, type Firm } from "./firms";
 
 type RawRow = Record<string, string>;
 
@@ -51,7 +50,7 @@ function splitList(v: string | undefined) {
     .filter(Boolean);
 }
 
-// Map CSV -> FirmRow
+/** Map one CSV row -> FirmRow */
 function mapRow(r: RawRow): FirmRow {
   const evalCost = parseNum(r["eval_cost_usd"]);
   const activationFee = parseNum(r["activation_fee_usd"]);
@@ -93,18 +92,53 @@ function mapRow(r: RawRow): FirmRow {
   };
 }
 
+/** Convert bundled Firm -> FirmRow (used for fallback) */
+function firmToRow(f: Firm): FirmRow {
+  return {
+    key: f.key,
+    name: f.name,
+    payoutSplit: typeof f.payout === "number" ? Math.round(f.payout * 100) : null,
+    maxFunding: f.maxFunding ?? null,
+    platforms: Array.isArray(f.platforms) ? f.platforms : [],
+    model: Array.isArray(f.model) ? f.model : [],
+    minDays: f.minDays ?? null,
+    spreads: f.spreads ?? null,
+    feeRefund: f.feeRefund ?? false,
+    newsTrading: f.newsTrading ?? false,
+    weekendHolding: f.weekendHolding ?? false,
+    homepage: f.homepage ?? null,
+    signup: f.signup ?? null,
+    trustpilot: f.trustpilot ?? null,
+    pricing: f.pricing
+      ? {
+          evalCost: f.pricing.evalFee,
+          activationFee: f.pricing.activationFee,
+          discount: undefined, // your Firm.pricing doesn’t carry %/code; keep undefined
+        }
+      : null,
+    logo: f.logo ?? (f.key ? `/logos/${f.key}.png` : null),
+  };
+}
+
 async function fetchCsvText(csvUrl: string): Promise<string> {
-  // Client-side fetch: no Next.js "next" field here
   const res = await fetch(csvUrl, { cache: "no-store" });
   if (!res.ok) throw new Error(`CSV fetch failed: ${res.status}`);
   return await res.text();
 }
 
+/** Safe CSV parser with guards + quoted field support */
 function parseCsv(text: string): RawRow[] {
-  const lines = text.split(/\r?\n/).filter(Boolean);
-  if (lines.length === 0) return [];
-  const header = lines[0].split(",").map((h) => h.trim());
+  const trimmed = (text ?? "").trim();
+  if (!trimmed) return [];
 
+  const lines = trimmed.split(/\r?\n/).filter((l) => l.trim().length > 0);
+  if (lines.length === 0) return [];
+
+  // Strip BOM on the header line if present
+const headerLine = (lines[0] ?? "").replace(/^\uFEFF/, "");
+if (!headerLine) return [];
+
+const header = headerLine.split(",").map((h) => h.trim());
   return lines.slice(1).map((line) => {
     const cols: string[] = [];
     let current = "";
@@ -153,7 +187,7 @@ export function useFirms() {
 
     (async () => {
       try {
-        // Prefer NEXT_PUBLIC_* so it’s available to the client.
+        // Prefer NEXT_PUBLIC_* so it's available client-side
         const csvUrl =
           (process.env.NEXT_PUBLIC_SHEET_CSV_URL as string | undefined) ||
           (process.env.SHEET_CSV_URL as string | undefined) ||
@@ -168,13 +202,12 @@ export function useFirms() {
           setState({ firms, loading: false, isLive: true });
         }
       } catch (err: unknown) {
-        // Fallback to bundled data (works fine on the client)
+        // Fallback to bundled data (Firm[]) -> convert to FirmRow[]
         let firms: FirmRow[] = [];
         try {
-          // If your fallback is already FirmRow-like, keep it;
-          // if it’s CSV-shaped, map it first.
-          const raw = FALLBACK_FIRMS as unknown as RawRow[];
-          firms = raw.map(mapRow).filter((f) => f.key && f.name);
+          firms = (FALLBACK_FIRMS as Firm[])
+            .map(firmToRow)
+            .filter((f) => f.key && f.name);
         } catch {
           firms = [];
         }
