@@ -1,5 +1,4 @@
-// app/firm/[key]/page.tsx
-import type { Metadata } from "next";
+import type { Metadata, PageProps as NextPageProps } from "next";
 import Script from "next/script";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -10,9 +9,11 @@ import { recommendRelatedFirms } from "@/lib/recommend";
 import { FirmMiniCard } from "@/components/FirmMiniCard";
 import BackToResults from "./BackToResults";
 
-// Make a local prop type that matches Next 15's PageProps shape
+// Make a local prop type that structurally satisfies Next 15's PageProps
 type FirmPageProps = {
   params: Promise<{ key: string }>;
+  // Keep whatever Next expects for searchParams so our type extends PageProps
+  searchParams: NextPageProps["searchParams"];
 };
 
 export async function generateStaticParams() {
@@ -20,8 +21,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(props: FirmPageProps): Promise<Metadata> {
-  const { key } = await props.params;
-  const firm = getFirmByKey(key);
+  const { key } = await props.params;  const firm = getFirmByKey(key);
   if (!firm) return {};
 
   const title = `${firm.name} Review • MadProps`;
