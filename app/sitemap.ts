@@ -6,36 +6,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://madprops.io";
   const now = new Date();
 
-  // Base entries, typed precisely as a Sitemap
-  const baseEntries = [
-    {
-      url: `${base}/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${base}/firms`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${base}/coming-soon`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.3,
-    },
-  ] satisfies MetadataRoute.Sitemap;
-
-  // Firm pages, also typed as a Sitemap
-  const firmEntries = FIRMS.map((f) => ({
-    url: `${base}/firm/${encodeURIComponent(f.key)}`,
+  // Helper that returns exactly one valid sitemap entry
+  const entry = (
+    url: string,
+    changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"],
+    priority: number
+  ): MetadataRoute.Sitemap[number] => ({
+    url,
     lastModified: now,
-    changeFrequency: "weekly",
-    priority: 0.7,
-  })) satisfies MetadataRoute.Sitemap;
+    changeFrequency, // exact union type, not widened
+    priority,
+  });
 
-  // Return combined
-  return [...baseEntries, ...firmEntries];
+  const baseEntries = [
+    entry(`${base}/`, "weekly", 1),
+    entry(`${base}/firms`, "weekly", 0.8),
+    entry(`${base}/coming-soon`, "monthly", 0.3),
+  ];
+
+  const firmEntries = FIRMS.map<MetadataRoute.Sitemap[number]>((f) =>
+    entry(`${base}/firm/${encodeURIComponent(f.key)}`, "weekly", 0.7)
+  );
+
+  // Assert the whole array matches the sitemap spec
+  return [...baseEntries, ...firmEntries] satisfies MetadataRoute.Sitemap;
 }
