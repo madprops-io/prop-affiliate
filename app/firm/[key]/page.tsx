@@ -1,4 +1,5 @@
-import type { Metadata, PageProps as NextPageProps } from "next";
+// app/firm/[key]/page.tsx
+import type { Metadata } from "next";
 import Script from "next/script";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -9,27 +10,27 @@ import { recommendRelatedFirms } from "@/lib/recommend";
 import { FirmMiniCard } from "@/components/FirmMiniCard";
 import BackToResults from "./BackToResults";
 
-// Make a local prop type that structurally satisfies Next 15's PageProps
+// ---- Local prop type that matches Next 15 expectations ----
 type FirmPageProps = {
   params: Promise<{ key: string }>;
-  // Keep whatever Next expects for searchParams so our type extends PageProps
-  searchParams: NextPageProps["searchParams"];
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export async function generateStaticParams() {
   return getAllFirmKeys().map((key) => ({ key }));
 }
 
-export async function generateMetadata(props: FirmPageProps): Promise<Metadata> {
-  const { key } = await props.params;  const firm = getFirmByKey(key);
+export async function generateMetadata(
+  props: FirmPageProps
+): Promise<Metadata> {
+  const { key } = await props.params;
+  const firm = getFirmByKey(key);
   if (!firm) return {};
 
   const title = `${firm.name} Review • MadProps`;
   const description =
     firm.notes ||
-    `${firm.name} details: models ${firm.model.join(
-      ", "
-    )}, platforms ${firm.platforms.join(", ")}.`;
+    `${firm.name} details: models ${firm.model.join(", ")}, platforms ${firm.platforms.join(", ")}.`;
   const url = `https://madprops.io/firm/${firm.key}`;
 
   return {
@@ -95,13 +96,11 @@ export default async function FirmDetailPage(props: FirmPageProps) {
         <BackToResults />
       </div>
 
-      {/* 2-column layout */}
       <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {/* === MAIN COLUMN === */}
+        {/* MAIN */}
         <article className="lg:col-span-2">
           <header className="flex items-start gap-4">
             {firm.logo && (
-              // keep simple <img> to avoid importing extra components
               <img
                 src={firm.logo ?? "/logos/placeholder.png"}
                 alt={firm.name}
@@ -130,7 +129,7 @@ export default async function FirmDetailPage(props: FirmPageProps) {
             </div>
           </header>
 
-          {/* Primary CTA */}
+          {/* CTA */}
           <div className="mt-4">
             <a
               href={buildAffiliateUrl(firm.signup, firm.key)}
@@ -184,7 +183,7 @@ export default async function FirmDetailPage(props: FirmPageProps) {
             )}
           </section>
 
-          {/* Primary CTA Button */}
+          {/* Wide CTA */}
           <div className="mt-6">
             <a
               href={buildAffiliateUrl(firm.signup, firm.key)}
@@ -227,7 +226,7 @@ export default async function FirmDetailPage(props: FirmPageProps) {
           </section>
         </article>
 
-        {/* === SIDEBAR === */}
+        {/* SIDEBAR */}
         <aside className="lg:col-span-1">
           <div className="rounded-2xl border p-4">
             <h3 className="text-base font-semibold mb-3">You might also like</h3>
