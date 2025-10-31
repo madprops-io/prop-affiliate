@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import LayoutClient from "../components/LayoutClient";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Fonts
 const outfit = Outfit({
@@ -60,6 +62,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Suspense fallback={<main className="p-6">Loading…</main>}>
           <LayoutClient>{children}</LayoutClient>
         </Suspense>
+
+        {/* Telemetry */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
