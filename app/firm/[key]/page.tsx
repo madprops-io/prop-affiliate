@@ -12,17 +12,15 @@ import { FirmMiniCard } from "@/components/FirmMiniCard";
 import BackToResults from "./BackToResults";
 
 export async function generateStaticParams() {
-  // Static params stay the same as before
-  return getAllFirmKeys().map((key) => ({ key }));
-}
+  return getAllFirmKeys().map((key) => ({ key }));}
 
+// ✅ Next 15 requires params to be awaited
 export async function generateMetadata(
   { params }: PageProps<{ key: string }>
 ): Promise<Metadata> {
-  const { key } = await params;          // 👈 Next 15: params is a Promise
+  const { key } = await params;
   const firm = getFirmByKey(key);
   if (!firm) return {};
-
   const title = `${firm.name} Review • MadProps`;
   const description =
     firm.notes ||
@@ -48,14 +46,12 @@ export async function generateMetadata(
     },
   };
 }
-
 export default async function FirmDetailPage(
   { params }: PageProps<{ key: string }>
 ) {
-  const { key } = await params;          // 👈 await again here
+  const { key } = await params;
   const firm = getFirmByKey(key);
   if (!firm) return notFound();
-
   const related = recommendRelatedFirms(firm, FIRMS, { limit: 4 });
 
   const breadcrumbs = [
