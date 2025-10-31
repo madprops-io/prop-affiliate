@@ -1,6 +1,5 @@
 // app/firm/[key]/page.tsx
 import type { Metadata } from "next";
-import type { PageProps } from "next/dist/types";
 import Script from "next/script";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -12,15 +11,15 @@ import { FirmMiniCard } from "@/components/FirmMiniCard";
 import BackToResults from "./BackToResults";
 
 export async function generateStaticParams() {
-  return getAllFirmKeys().map((key) => ({ key }));}
-
-// ✅ Next 15 requires params to be awaited
+  return getAllFirmKeys().map((key) => ({ key }));
+}
 export async function generateMetadata(
-  { params }: PageProps<{ key: string }>
+  { params }: { params: Promise<{ key: string }> }
 ): Promise<Metadata> {
   const { key } = await params;
   const firm = getFirmByKey(key);
   if (!firm) return {};
+
   const title = `${firm.name} Review • MadProps`;
   const description =
     firm.notes ||
@@ -46,13 +45,14 @@ export async function generateMetadata(
     },
   };
 }
+
+// ✅ Same change for the page component
 export default async function FirmDetailPage(
-  { params }: PageProps<{ key: string }>
+  { params }: { params: Promise<{ key: string }> }
 ) {
   const { key } = await params;
   const firm = getFirmByKey(key);
-  if (!firm) return notFound();
-  const related = recommendRelatedFirms(firm, FIRMS, { limit: 4 });
+  if (!firm) return notFound();  const related = recommendRelatedFirms(firm, FIRMS, { limit: 4 });
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
