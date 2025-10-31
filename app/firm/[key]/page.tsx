@@ -10,20 +10,26 @@ import { recommendRelatedFirms } from "@/lib/recommend";
 import { FirmMiniCard } from "@/components/FirmMiniCard";
 import BackToResults from "./BackToResults";
 
+// Make a local prop type that matches Next 15's PageProps shape
+type FirmPageProps = {
+  params: Promise<{ key: string }>;
+};
+
 export async function generateStaticParams() {
   return getAllFirmKeys().map((key) => ({ key }));
 }
-export async function generateMetadata(
-  { params }: { params: Promise<{ key: string }> }
-): Promise<Metadata> {
-  const { key } = await params;
+
+export async function generateMetadata(props: FirmPageProps): Promise<Metadata> {
+  const { key } = await props.params;
   const firm = getFirmByKey(key);
   if (!firm) return {};
 
   const title = `${firm.name} Review • MadProps`;
   const description =
     firm.notes ||
-    `${firm.name} details: models ${firm.model.join(", ")}, platforms ${firm.platforms.join(", ")}.`;
+    `${firm.name} details: models ${firm.model.join(
+      ", "
+    )}, platforms ${firm.platforms.join(", ")}.`;
   const url = `https://madprops.io/firm/${firm.key}`;
 
   return {
@@ -46,13 +52,12 @@ export async function generateMetadata(
   };
 }
 
-// ✅ Same change for the page component
-export default async function FirmDetailPage(
-  { params }: { params: Promise<{ key: string }> }
-) {
-  const { key } = await params;
+export default async function FirmDetailPage(props: FirmPageProps) {
+  const { key } = await props.params;
   const firm = getFirmByKey(key);
-  if (!firm) return notFound();  const related = recommendRelatedFirms(firm, FIRMS, { limit: 4 });
+  if (!firm) return notFound();
+
+  const related = recommendRelatedFirms(firm, FIRMS, { limit: 4 });
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
