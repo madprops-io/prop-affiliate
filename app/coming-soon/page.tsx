@@ -71,14 +71,6 @@ export default function ComingSoon() {
       {/* header (brand only — no nav) */}
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
         <div className="flex select-none items-center gap-3">
-          <Image
-            src="/logo-mark.png"
-            alt="MadProps Logo"
-            width={40}
-            height={40}
-            priority
-            className="rounded-full"
-          />
           <div className="leading-tight">
             <span className="block text-xl font-semibold tracking-tight md:text-2xl bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">
               MadProps
