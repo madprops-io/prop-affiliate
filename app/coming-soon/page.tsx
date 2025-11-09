@@ -42,6 +42,8 @@ export default function ComingSoon() {
     { name: "FunderPro", blurb: "Popular evaluation paths. Use code MADPROPS", href: "https://funderpro.cxclick.com/visit/?bta=44803&brand=funderpro  ", logo: "/logos/funderpro.png", status: "affiliate" },
     { name: "Blue Guardian Futures", blurb: "Competitive pricing; clean UX.", href: "https://checkout.blueguardianfutures.com/ref/885/", logo: "/logos/blueguardian.png", status: "affiliate" },
     { name: "Daytraders", blurb: "Trail, Static & S2F programs. Free data.", href: "https://daytraders.com/go/madprops?c=HGRCNLZU", logo: "/logos/daytraders.png", status: "affiliate" },
+    { name: "Phidias Propfirm", blurb: "Emerging prop, 15 live accounts. Use code MAD.", href: "https://phidiaspropfirm.com/", logo: "/logos/phidias.png", status: "affiliate" },
+    { name: "AquaFutures", blurb: "Newer player; competitive fees.", href: "https://www.aquafutures.io/", logo: "/logos/aqua.png", status: "affiliate" },
   ];
 
   const comingSoon: Partner[] = [
@@ -51,9 +53,7 @@ export default function ComingSoon() {
     { name: "FundedNext Futures", blurb: "Global brand; futures program.", href: "https://fundednext.com/futures", logo: "/logos/fundednext.png", status: "pending" },
     { name: "My Funded Futures", blurb: "Clean 1-phase futures model.", href: "https://myfundedfutures.com", logo: "/logos/mff.png", status: "pending" },
     { name: "Legends Trading", blurb: "Education-forward approach.", href: "https://thelegendstrading.com/", logo: "/logos/legends.png", status: "pending" },
-    { name: "AquaFutures", blurb: "Newer player; competitive fees.", href: "https://www.aquafutures.io/", logo: "/logos/aqua.png", status: "pending" },
     { name: "E8 Futures", blurb: "Trusted brand branching to futures.", href: "https://e8markets.com/", logo: "/logos/e8.png", status: "pending" },
-    { name: "Phidias Propfirm", blurb: "Emerging prop — details soon.", href: "https://phidiaspropfirm.com/", logo: "/logos/phidias.png", status: "pending" },
   ];
 
   const getCtaText = (status: PartnerStatus) =>
