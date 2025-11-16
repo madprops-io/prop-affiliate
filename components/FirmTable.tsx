@@ -170,8 +170,8 @@ export default function FirmTable({ firms, fireDealsMode, columnsPortalRef }: Fi
     | "trueCost";
   const [sortKey, setSortKey] = useState<SortKey>("trueCost");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const PAGE_SIZE = 20;
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const ROWS_PER_PAGE = 18;
+  const [tablePage, setTablePage] = useState(1);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const prevSortRef = useRef<{ key: SortKey; dir: "asc" | "desc" }>({ key: "trueCost", dir: "asc" });
   const prevFireRef = useRef<boolean>(fireDealsMode);
@@ -210,8 +210,8 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
   };
 
   useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
-  }, [enriched.length]);
+    setTablePage(1);
+  }, [enriched.length, fireDealsMode]);
 
   useEffect(() => {
     if (!copiedCode) return;
@@ -289,22 +289,28 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
   const filteredRows = useMemo(() => {
     if (!fireDealsMode) return sorted;
     return sorted.filter((row) => {
-      const percent = (
-        row.discountPct ??
-        row.firm?.pricing?.discount?.percent ??
-        row.firm?.pricing?.discountPct ??
-        0
-      );
+      const percent =
+        row.discountPct ?? row.firm?.pricing?.discount?.percent ?? row.firm?.pricing?.discountPct ?? 0;
       const amount = row.discountAmt ?? row.firm?.pricing?.discount?.amount ?? 0;
       const code = row.discountCode ?? row.firm?.pricing?.discount?.code;
       return (Number(percent) > 0 || Number(amount) > 0 || Boolean(code)) && Number(row.trueCost ?? 0) > 0;
     });
   }, [sorted, fireDealsMode]);
 
-  const visibleRows = useMemo(
-    () => filteredRows.slice(0, Math.min(visibleCount, filteredRows.length)),
-    [filteredRows, visibleCount]
-  );
+  const totalRows = filteredRows.length;
+  const tablePageCount = Math.max(1, Math.ceil(totalRows / ROWS_PER_PAGE));
+  const currentTablePage = Math.min(Math.max(tablePage, 1), tablePageCount);
+  const showingStart = totalRows === 0 ? 0 : (currentTablePage - 1) * ROWS_PER_PAGE + 1;
+  const showingEnd = Math.min(currentTablePage * ROWS_PER_PAGE, totalRows);
+
+  useEffect(() => {
+    if (tablePage > tablePageCount) setTablePage(tablePageCount);
+  }, [tablePage, tablePageCount]);
+
+  const visibleRows = useMemo(() => {
+    const start = (currentTablePage - 1) * ROWS_PER_PAGE;
+    return filteredRows.slice(start, start + ROWS_PER_PAGE);
+  }, [filteredRows, currentTablePage, ROWS_PER_PAGE]);
 
   const setSort = (key: SortKey) => {
     setSortDir((prev) => (sortKey === key ? (prev === "asc" ? "desc" : "asc") : "asc"));
@@ -565,15 +571,36 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
           </tbody>
         </table>
       </div>
-      {visibleRows.length < filteredRows.length && (
-        <div className="mt-4 text-center">
-          <Button
-            variant="outline"
-            className="rounded-full border border-[#26ffd4]/50 bg-[#04111c] px-5 py-2 text-white/80 transition hover:border-[#26ffd4]/80 hover:text-white"
-            onClick={() => setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, filteredRows.length))}
-          >
-            Show More ({filteredRows.length - visibleRows.length} left)
-          </Button>
+      {filteredRows.length > ROWS_PER_PAGE && (
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
+            Showing {showingStart}-{showingEnd} of {filteredRows.length}
+          </span>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={currentTablePage === 1}
+              onClick={() => setTablePage((prev) => Math.max(1, prev - 1))}
+              className="rounded-full border-[#f6c850]/50 text-xs font-semibold uppercase tracking-[0.2em] text-[#f6c850] disabled:opacity-40"
+            >
+              Previous
+            </Button>
+            <span className="text-xs font-semibold text-white/70">
+              Page {currentTablePage} / {tablePageCount}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={currentTablePage === tablePageCount}
+              onClick={() => setTablePage((prev) => Math.min(tablePageCount, prev + 1))}
+              className="rounded-full border-[#f6c850]/50 text-xs font-semibold uppercase tracking-[0.2em] text-[#f6c850] disabled:opacity-40"
+            >
+              Next
+            </Button>
+          </div>
         </div>
       )}
     </>

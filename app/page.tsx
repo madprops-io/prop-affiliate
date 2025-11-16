@@ -10,6 +10,7 @@ import HeroBanner from "@/components/HeroBanner";
 import HomeViewToggle from "@/app/HomeViewToggle";
 
 import { useFirms } from "@/lib/useFirms";
+import { useFavorites } from "@/lib/useFavorites";
 import { getCosts } from "@/lib/pricing";
 import { FIRMS } from "@/lib/firms";
 import { buildAffiliateUrl } from "@/lib/affiliates";
@@ -19,7 +20,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { ExternalLink, Info, LinkIcon, Search, Star } from "lucide-react";
+import { ExternalLink, Heart, Info, LinkIcon, Search, Star } from "lucide-react";
 
 /**
  * MadProps — Prop Firm Affiliate Comparison (Home Page)
@@ -28,6 +29,16 @@ import { ExternalLink, Info, LinkIcon, Search, Star } from "lucide-react";
 
 const MODELS = ["Instant", "1-Phase", "2-Phase", "Scaling"] as const;
 const FALLBACK_PLATFORMS = ["MT4", "MT5", "cTrader", "TradingView", "Rithmic", "NinjaTrader", "Tradovate"];
+const POPULAR_PLATFORM_ORDER = [
+  "TradingView",
+  "MT5",
+  "MT4",
+  "cTrader",
+  "Rithmic",
+  "NinjaTrader",
+  "Tradovate",
+  "DXtrade",
+] as const;
 const ACCOUNT_SIZE_OPTIONS = [
   "",
   "5000",
@@ -44,8 +55,8 @@ const ACCOUNT_SIZE_OPTIONS = [
 const MAX_FUNDING_PRESETS = [0, 50_000, 100_000, 200_000, 300_000, 500_000, 1_000_000] as const;
 const DRAW_DOWN_OPTIONS = ["EOD", "EOT TRAILING", "INTRADAY", "STATIC"] as const;
 const MIN_PAYOUT_PRESETS = [0, 50, 60, 70, 80, 90] as const;
-const TRUST_OPTIONS = [0, 3, 3.5, 4] as const;
-const PLATFORM_PREVIEW_COUNT = 5;
+const TRUST_OPTIONS = Array.from({ length: 11 }, (_, idx) => idx * 0.5) as const;
+const PLATFORM_PREVIEW_FALLBACK_COUNT = 8;
 const FIRE_DEAL_TRUST_MIN = 3;
 const FIRE_DEAL_TRUECOST_MAX = 600;
 const PAYOUT_SPEED_PRESETS = [
@@ -72,6 +83,8 @@ type ModelType = (typeof MODELS)[number];
 type PlatformType = string;
 type SortKey = "score" | "payout" | "cap" | "name" | "truecost";
 const DEFAULT_MIN_PAYOUT = 0;
+const DEFAULT_MIN_TRUST = 3;
+const CARDS_PER_PAGE = 18;
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
 }
@@ -82,6 +95,19 @@ function parseDaysToNumber(value: unknown) {
     if (match) return Number(match[1]);
   }
   return null;
+}
+
+function parseListParam(value?: string | null) {
+  if (!value) return [];
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function arraysEqual(a: string[], b: string[]) {
+  if (a.length !== b.length) return false;
+  return a.every((val, idx) => b[idx] === val);
 }
 
 function useDebounced<T>(value: T, delay = 250) {
@@ -97,7 +123,7 @@ function resetAll(
   setters: {
     setQ: (v: string) => void;
     setModel: (v: any) => void;
-    setPlatform: (v: any) => void;
+    setPlatforms: (v: PlatformType[] | []) => void;
     setMaxMinFunding: (v: number) => void;
     setMinPayout: (v: number) => void;
     setSort: (v: SortKey) => void;
@@ -107,12 +133,12 @@ function resetAll(
   pathname: string,
   options?: { view?: string | null }
 ) {
-  const { setQ, setModel, setPlatform, setMaxMinFunding, setMinPayout, setSort, setCompare } =
+  const { setQ, setModel, setPlatforms, setMaxMinFunding, setMinPayout, setSort, setCompare } =
     setters;
 
   setQ("");
   setModel("");
-  setPlatform("");
+  setPlatforms([]);
   setMaxMinFunding(0);
   setMinPayout(DEFAULT_MIN_PAYOUT);
   setSort("score");
@@ -122,8 +148,6 @@ function resetAll(
   const nextUrl = viewParam ? `${pathname}?view=${viewParam}` : pathname;
   router.replace(nextUrl, { scroll: false });
 }
-
-const ALL_KEYS = new Set(FIRMS.map((f) => f.key));
 
 function Toast({ show, children }: { show: boolean; children: React.ReactNode }) {
   if (!show) return null;
@@ -267,8 +291,39 @@ export default function Page() {
     });
     return Array.from(map.values()).sort((a, b) => a.localeCompare(b));
   }, [nFirms]);
-
+  const platformPreviewList = useMemo(() => {
+    if (!platformOptions.length) return [];
+    const lookup = new Map(platformOptions.map((name) => [name.toLowerCase(), name]));
+    const normalizedSeen = new Set<string>();
+    const prioritized: string[] = [];
+    POPULAR_PLATFORM_ORDER.forEach((label) => {
+      const match = lookup.get(label.toLowerCase());
+      if (!match) return;
+      const key = match.toLowerCase();
+      if (normalizedSeen.has(key)) return;
+      normalizedSeen.add(key);
+      prioritized.push(match);
+    });
+    if (prioritized.length === 0) {
+      return platformOptions.slice(0, Math.min(PLATFORM_PREVIEW_FALLBACK_COUNT, platformOptions.length));
+    }
+    return prioritized;
+  }, [platformOptions]);
   const usingLiveData = isLive;
+  const { favorites, toggleFavorite, isFavorite, clearFavorites } = useFavorites();
+  const favoriteFirms = useMemo(() => {
+    return (nFirms ?? []).filter((firm) => favorites.includes(firm.key));
+  }, [nFirms, favorites]);
+  const compareKeyWhitelist = useMemo(() => {
+    const keys = new Set<string>();
+    FIRMS.forEach((firm) => {
+      if (firm.key) keys.add(firm.key);
+    });
+    (firms ?? []).forEach((firm) => {
+      if (firm?.key) keys.add(firm.key);
+    });
+    return keys;
+  }, [firms]);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -278,21 +333,23 @@ export default function Page() {
   const [q, setQ] = useState("");
   const [searchDraft, setSearchDraft] = useState("");
   const [model, setModel] = useState<ModelType | "">("");
-  const [platform, setPlatform] = useState<PlatformType | "">("");
+  const [selectedPlatforms, setSelectedPlatforms] = useState<PlatformType[]>([]);
 const [maxMinFunding, setMaxMinFunding] = useState<number>(0);
 const [minPayout, setMinPayout] = useState<number>(DEFAULT_MIN_PAYOUT);
-  const [accountSizeFilter, setAccountSizeFilter] = useState<string>("");
+  const [accountSizeFilter, setAccountSizeFilter] = useState<string[]>([]);
   const [drawdownFilter, setDrawdownFilter] = useState<string>("");
   const [payoutSpeedFilter, setPayoutSpeedFilter] = useState<string>("");
   const [oneDayEvalOnly, setOneDayEvalOnly] = useState(false);
   const [refundOnly, setRefundOnly] = useState(false);
   const [discountOnly, setDiscountOnly] = useState(false);
-  const [minTrust, setMinTrust] = useState<number>(0);
+  const [minTrust, setMinTrust] = useState<number>(DEFAULT_MIN_TRUST);
   const [scoreFocus, setScoreFocus] = useState<ScoreCriterion[]>([]);
   const [fireDealsMode, setFireDealsMode] = useState(false);
   const [compare, setCompare] = useState<string[]>([]);
 const [sort, setSort] = useState<SortKey>("score");
   const [showAllPlatforms, setShowAllPlatforms] = useState(false);
+  const [cardsPage, setCardsPage] = useState(1);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
   const fireDealsPrevFilters = useRef<{
     discountOnly: boolean;
     minTrust: number;
@@ -317,7 +374,7 @@ const [sort, setSort] = useState<SortKey>("score");
     const previous = fireDealsPrevFilters.current;
     setFireDealsMode(false);
     setDiscountOnly(previous ? previous.discountOnly : false);
-    setMinTrust(previous ? previous.minTrust : 0);
+    setMinTrust(previous ? previous.minTrust : DEFAULT_MIN_TRUST);
     if (previous?.scoreFocus?.length) setScoreFocus(previous.scoreFocus);
     else setScoreFocus([]);
     fireDealsPrevFilters.current = null;
@@ -330,12 +387,61 @@ const [sort, setSort] = useState<SortKey>("score");
 
   const handleManualFilterChange = () => {
     if (fireDealsMode) deactivateFireDeals();
+    setCardsPage(1);
+  };
+
+  const handleExportFavorites = () => {
+    if (typeof window === "undefined" || favoriteFirms.length === 0) return;
+    const header = [
+      "Name",
+      "Key",
+      "Models",
+      "Account Size",
+      "Max Funding",
+      "Platforms",
+      "Payout %",
+      "True Cost",
+      "Discount Code",
+      "Website",
+    ];
+    const rows = favoriteFirms.map((firm) => {
+      const cost = getCosts(firm as any);
+      const values = [
+        firm.name ?? "",
+        firm.key ?? "",
+        (firm.model ?? []).join(" / "),
+        firm.accountSize ? `$${firm.accountSize.toLocaleString()}` : "",
+        firm.maxFunding ? `$${firm.maxFunding.toLocaleString()}` : "",
+        (firm.platforms ?? []).join(" / "),
+        typeof firm.payoutPct === "number" ? `${firm.payoutPct}%` : "",
+        `$${cost.trueCost.toLocaleString()}`,
+        firm.discount?.code ?? "",
+        firm.homepage ?? firm.signup ?? "",
+      ];
+      return values
+        .map((val) => {
+          const str = String(val ?? "");
+          return `"${str.replace(/"/g, '""')}"`;
+        })
+        .join(",");
+    });
+    const csv = [header.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    const timestamp = new Date().toISOString().slice(0, 10);
+    link.download = `madprops-favorites-${timestamp}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   };
 
   const doReset = () => {
     if (fireDealsMode) deactivateFireDeals();
     resetAll(
-      { setQ, setModel, setPlatform, setMaxMinFunding, setMinPayout, setSort, setCompare },
+      { setQ, setModel, setPlatforms: setSelectedPlatforms, setMaxMinFunding, setMinPayout, setSort, setCompare },
       router,
       pathname,
       { view: searchParams.get("view") }
@@ -347,9 +453,11 @@ const [sort, setSort] = useState<SortKey>("score");
     setOneDayEvalOnly(false);
     setRefundOnly(false);
     setDiscountOnly(false);
-    setMinTrust(0);
+    setMinTrust(DEFAULT_MIN_TRUST);
     setScoreFocus([]);
     setShowAllPlatforms(false);
+    setCardsPage(1);
+    setFavoritesOnly(false);
     fireDealsPrevFilters.current = null;
   };
 
@@ -359,7 +467,7 @@ const [sort, setSort] = useState<SortKey>("score");
 
     const nextQ = sp.get("q") ?? "";
     const nextModel = sp.get("model") ?? "";
-    const nextPlatform = sp.get("platform") ?? "";
+    const nextPlatformRaw = sp.get("platforms") ?? sp.get("platform") ?? "";
     const nextCap = Number(sp.get("cap") ?? "0");
     const nextPayoutRaw = sp.get("payout");
     const nextPayout = nextPayoutRaw === null ? DEFAULT_MIN_PAYOUT : Number(nextPayoutRaw);
@@ -369,12 +477,12 @@ const nextSort = (sp.get("sort") ?? "score") as SortKey;    const nextCompareRaw
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean)
-        .filter((k) => ALL_KEYS.has(k)) || [];
+        .filter((k) => compareKeyWhitelist.has(k)) || [];
 
     const safeModel = (MODELS as readonly string[]).includes(nextModel)
       ? (nextModel as ModelType)
       : "";
-    const safePlatform = (nextPlatform ?? "").trim();
+    const safePlatforms = parseListParam(nextPlatformRaw);
     const safeCap = Number.isFinite(nextCap) ? clamp(nextCap, 0, 1_000_000) : 0;
     const safePayout = Number.isFinite(nextPayout) ? clamp(nextPayout, 0, 100) : DEFAULT_MIN_PAYOUT;
 const allowedSorts = ["score", "payout", "cap", "name", "truecost"] as const;
@@ -383,7 +491,9 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
   : "score";
     setQ((prev) => (prev === nextQ ? prev : nextQ));
     setModel((prev) => (prev === safeModel ? prev : (safeModel as any)));
-    setPlatform((prev) => (prev === safePlatform ? prev : (safePlatform as PlatformType)));
+    setSelectedPlatforms((prev) =>
+      arraysEqual(prev, safePlatforms) ? prev : safePlatforms
+    );
     setMaxMinFunding((prev) => (prev === safeCap ? prev : safeCap));
     setMinPayout((prev) => (prev === safePayout ? prev : safePayout));
     setSort((prev) => (prev === safeSort ? prev : safeSort));
@@ -392,7 +502,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         ? prev
         : nextCompare
     );
-  }, [searchParams]);
+  }, [searchParams, compareKeyWhitelist]);
 
   useEffect(() => {
     setSearchDraft(q);
@@ -411,21 +521,26 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
 
     setOrDelete("q", q.trim());
     setOrDelete("model", model);
-    setOrDelete("platform", platform);
+    if (selectedPlatforms.length > 0) sp.set("platforms", selectedPlatforms.join(","));
+    else {
+      sp.delete("platforms");
+      sp.delete("platform");
+    }
     setOrDelete("cap", debouncedCap || 0);
     const payoutParam = Number.isFinite(debouncedPayout) ? debouncedPayout : DEFAULT_MIN_PAYOUT;
     if (payoutParam === DEFAULT_MIN_PAYOUT) setOrDelete("payout", "");
     else setOrDelete("payout", payoutParam);
     setOrDelete("sort", sort);
 
-    if (compare.length > 0) sp.set("compare", compare.join(","));
+    const validCompare = compare.filter((key) => compareKeyWhitelist.has(key));
+    if (validCompare.length > 0) sp.set("compare", validCompare.join(","));
     else sp.delete("compare");
 
     const next = `${pathname}?${sp.toString()}`;
     const current = `${pathname}?${searchParams.toString()}`;
     if (next !== current) router.replace(next, { scroll: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [q, model, platform, debouncedCap, debouncedPayout, sort, compare, pathname, router]);
+  }, [q, model, selectedPlatforms, debouncedCap, debouncedPayout, sort, compare, pathname, router, compareKeyWhitelist]);
 
   // ===== filtering & sorting =====
   type ScoredFirm = UIFirm & { score: number };
@@ -434,18 +549,21 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     const ql = q.toLowerCase();
     const payoutPreset = PAYOUT_SPEED_PRESETS.find((preset) => preset.value === payoutSpeedFilter);
     const payoutMax = payoutPreset?.max ?? null;
-    const normalizedSelectedPlatform = (platform || "").trim().toLowerCase();
+    const normalizedSelectedPlatforms = selectedPlatforms
+      .map((p) => (p || "").trim().toLowerCase())
+      .filter(Boolean);
     return (nFirms ?? []).filter((f) => {
       const { trueCost } = getCosts(f as any);
       const nameOk = !q || (f.name || "").toLowerCase().includes(ql);
       const modelOk = !model || (f.model || []).includes(model);
       const platformsOk =
-        !platform ||
-        (f.platforms || []).some((p) => (p || "").trim().toLowerCase() === normalizedSelectedPlatform);
+        normalizedSelectedPlatforms.length === 0 ||
+        (f.platforms || []).some((p) => normalizedSelectedPlatforms.includes((p || "").trim().toLowerCase()));
       const fundingOk = (f.maxFunding ?? 0) >= (maxMinFunding ?? 0);
       const splitOk = (f.payoutPct ?? 0) >= (minPayout ?? 0);
       const accountOk =
-        !accountSizeFilter || Math.round(f.accountSize ?? 0) === Number(accountSizeFilter);
+        accountSizeFilter.length === 0 ||
+        accountSizeFilter.some((size) => Math.round(f.accountSize ?? 0) === Number(size));
       const drawdownOk =
         !drawdownFilter ||
         (f.drawdownType || "").toLowerCase().includes(drawdownFilter.toLowerCase());
@@ -461,6 +579,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
       const trustRequirement = Math.max(minTrust ?? 0, fireDealsMode ? FIRE_DEAL_TRUST_MIN : 0);
       const trustOk = (f.trustpilot ?? 0) >= trustRequirement;
       const lowCostOk = !fireDealsMode || trueCost <= FIRE_DEAL_TRUECOST_MAX;
+      const favoritesOk = !favoritesOnly || isFavorite(f.key);
       return (
         nameOk &&
         modelOk &&
@@ -474,14 +593,15 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         refundOk &&
         discountOk &&
         lowCostOk &&
-        trustOk
+        trustOk &&
+        favoritesOk
       );
     });
   }, [
     nFirms,
     q,
     model,
-    platform,
+    selectedPlatforms,
     maxMinFunding,
     minPayout,
     accountSizeFilter,
@@ -492,6 +612,8 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     discountOnly,
     fireDealsMode,
     minTrust,
+    favoritesOnly,
+    isFavorite,
   ]);
 
   const scored: ScoredFirm[] = useMemo(() => {
@@ -565,11 +687,26 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
       });
   }, [filtered, scoreFocus, sort]);
 
+  useEffect(() => {
+    setCardsPage((prev) => {
+      const maxPage = Math.max(1, Math.ceil(scored.length / CARDS_PER_PAGE));
+      return clamp(prev, 1, maxPage);
+    });
+  }, [scored.length]);
+
+  const cardsPageCount = Math.max(1, Math.ceil(scored.length / CARDS_PER_PAGE));
+  const currentCardsPage = clamp(cardsPage, 1, cardsPageCount);
+  const paginatedScored = scored.slice(
+    (currentCardsPage - 1) * CARDS_PER_PAGE,
+    currentCardsPage * CARDS_PER_PAGE
+  );
+  const showingStart = scored.length === 0 ? 0 : (currentCardsPage - 1) * CARDS_PER_PAGE + 1;
+  const showingEnd = Math.min(currentCardsPage * CARDS_PER_PAGE, scored.length);
   const selected = scored.filter((f) => compare.includes(f.key));
-  const displayedPlatforms = showAllPlatforms
-    ? platformOptions
-    : platformOptions.slice(0, PLATFORM_PREVIEW_COUNT);
-  const hiddenPlatformCount = Math.max(platformOptions.length - displayedPlatforms.length, 0);
+  const displayedPlatforms = showAllPlatforms ? platformOptions : platformPreviewList;
+  const hiddenPlatformCount = showAllPlatforms
+    ? 0
+    : Math.max(platformOptions.length - platformPreviewList.length, 0);
   const usingDefaultScoreFocus =
     scoreFocus.length === 0 ||
     (scoreFocus.length === DEFAULT_SCORE_FOCUS.length &&
@@ -579,8 +716,8 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     Boolean(
       q ||
         model ||
-        platform ||
-        accountSizeFilter ||
+        selectedPlatforms.length > 0 ||
+        accountSizeFilter.length > 0 ||
         drawdownFilter ||
         payoutSpeedFilter ||
         maxMinFunding > 0 ||
@@ -590,6 +727,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         discountOnly ||
         fireDealsMode ||
         minTrust > 0 ||
+        favoritesOnly ||
         !usingDefaultScoreFocus
     ) || compare.length > 0;
 type UIFirmWithConn = UIFirm & {
@@ -660,7 +798,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
       )}
 
       {/* Controls */}
-      <section className="surface rounded-2xl p-4 md:p-6 shadow-sm space-y-6">
+      <section className="surface golden-filter-panel rounded-2xl border border-[#f6c850]/40 p-4 md:p-6 shadow-[0_0_40px_rgba(246,200,80,0.25)] space-y-6">
         <div>
           <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
             <Search size={16} /> Search firms
@@ -678,7 +816,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
               list="home-firm-search-options"
               value={searchDraft}
               onChange={(event) => setSearchDraft(event.target.value)}
-              className="flex-1 min-w-0"
+              className="flex-1 min-w-0 border-2 border-[#f6c850]/60 bg-[#050b15] text-white placeholder:text-white/60 shadow-[0_0_25px_rgba(246,200,80,0.25)] focus-visible:ring-2 focus-visible:ring-[#f6c850] focus-visible:ring-offset-0 focus-visible:border-[#f6c850]"
             />
             <datalist id="home-firm-search-options">
               {firmNameOptions
@@ -693,7 +831,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             </datalist>
             <button
               type="submit"
-              className="rounded-full bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-200 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-950 shadow-[0_8px_20px_-10px_rgba(16,185,129,0.6)] transition hover:brightness-110"
+              className="rounded-full bg-gradient-to-r from-[#f7d778] via-[#f6c850] to-[#f0b429] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-950 shadow-[0_8px_20px_-10px_rgba(246,200,80,0.8)] transition hover:brightness-110"
             >
               Search
             </button>
@@ -711,6 +849,41 @@ function platformConnectionsText(f: UIFirmWithConn): string {
               Clear
             </Button>
           </form>
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-white/70">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border border-[#5fffc2]/60 bg-[#050c17] text-[#050c17] focus:ring-0 checked:bg-[#5fffc2] checked:border-[#5fffc2]"
+                checked={favoritesOnly}
+                onChange={(event) => {
+                  handleManualFilterChange();
+                  setFavoritesOnly(event.target.checked);
+                }}
+              />
+              Favorites only ({favorites.length})
+            </label>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={favoriteFirms.length === 0}
+              onClick={handleExportFavorites}
+              className="rounded-full border border-[#5fffc2]/50 text-xs font-semibold uppercase tracking-[0.2em] text-[#5fffc2] disabled:opacity-40"
+            >
+              Export favorites
+              {favoriteFirms.length > 0 ? ` (${favoriteFirms.length})` : ""}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={favorites.length === 0}
+              onClick={clearFavorites}
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60 hover:text-white disabled:opacity-30"
+            >
+              Clear favorites
+            </Button>
+          </div>
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
@@ -732,12 +905,12 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Account size</p>
               <div className="mt-2">
-                <FilterChips
+                <MultiFilterChips
                   options={ACCOUNT_SIZE_OPTIONS}
                   value={accountSizeFilter}
-                  onChange={(opt) => {
+                  onChange={(next) => {
                     handleManualFilterChange();
-                    setAccountSizeFilter(opt);
+                    setAccountSizeFilter(next);
                   }}
                   getLabel={(opt) => (!opt ? "All" : `$${Number(opt).toLocaleString()}`)}
                 />
@@ -793,12 +966,12 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                 ) : null}
               </div>
               <div className="mt-2">
-                <FilterChips
+                <MultiFilterChips
                   options={["", ...displayedPlatforms]}
-                  value={platform}
-                  onChange={(v) => {
+                  value={selectedPlatforms}
+                  onChange={(next) => {
                     handleManualFilterChange();
-                    setPlatform(v as PlatformType);
+                    setSelectedPlatforms(next as PlatformType[]);
                   }}
                 />
               </div>
@@ -1015,14 +1188,19 @@ function platformConnectionsText(f: UIFirmWithConn): string {
 
       {/* Cards */}
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {scored.map((f, idx) => {
+        {paginatedScored.map((f, idx) => {
           const cost = getCosts(f as any);
+          const isFavoriteCard = isFavorite(f.key);
           return (
             <Card
               key={`${f.key}-${idx}`}
-              className="rounded-2xl surface elevated border border-amber-300/15 hover:border-amber-300/35 shadow-sm transition-all"
+              className={`flex h-full rounded-2xl surface elevated border shadow-sm transition-all ${
+                isFavoriteCard
+                  ? "border-[#5fffc2]/70 shadow-[0_0_25px_rgba(95,255,194,0.35)] hover:border-[#5fffc2]"
+                  : "border-amber-300/15 hover:border-amber-300/35"
+              }`}
             >
-              <CardContent className="space-y-3 p-4">
+              <CardContent className="flex h-full flex-col space-y-3 p-4">
                 {/* header row: logo + discount badge */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -1056,15 +1234,35 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                     )}
                   </div>
 
-                  {cost.discountPct > 0 ? (
-                    <span className="px-2 py-1 rounded-full text-xs font-semibold bg-amber-400/15 text-amber-300 border border-amber-300/30">
-                      {cost.discountPct}% OFF{f.discount?.code ? ` • ${f.discount.code}` : ""}
-                    </span>
-                  ) : (
-                    <span className="px-2 py-1 rounded-full text-xs bg-white/5 text-white/60 border border-white/10">
-                      No promo
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {cost.discountPct > 0 ? (
+                      <span className="px-2 py-1 rounded-full text-xs font-semibold bg-amber-400/15 text-amber-300 border border-amber-300/30">
+                        {cost.discountPct}% OFF{f.discount?.code ? ` • ${f.discount.code}` : ""}
+                      </span>
+                    ) : (
+                      <span className="px-2 py-1 rounded-full text-xs bg-white/5 text-white/60 border border-white/10">
+                        No promo
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => toggleFavorite(f.key)}
+                      aria-pressed={isFavoriteCard}
+                      aria-label={isFavoriteCard ? "Remove favorite" : "Save to favorites"}
+                      className={`rounded-full border px-2 py-1 transition ${
+                        isFavoriteCard
+                          ? "border-[#5fffc2]/80 text-[#5fffc2]"
+                          : "border-white/15 text-white/60 hover:text-white"
+                      }`}
+                    >
+                      <Heart
+                        size={16}
+                        className="transition"
+                        fill={isFavoriteCard ? "#5fffc2" : "transparent"}
+                        color={isFavoriteCard ? "#04111c" : "currentColor"}
+                      />
+                    </button>
+                  </div>
                 </div>
 
                 <h2 className="text-lg font-semibold leading-snug">
@@ -1092,109 +1290,145 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                   ))}
                 </div>
 
-                <ul className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
-                  <li>
-                    <strong>True cost:</strong> ${cost.trueCost.toLocaleString()}
-                  </li>
-                  <li>
-                    <strong>Up-front:</strong> ${cost.evalAfterDiscount.toLocaleString()}
-                  </li>
-                  <li>
-                    <strong>Activation:</strong> ${Number(f.pricing?.activationFee ?? 0).toLocaleString()}
-                  </li>
-                  {f.discount && cost.discountPct > 0 && (
-                    <li className="col-span-2 text-xs font-medium text-amber-300">
-                      {f.discount.label || "Promo"} ({cost.discountPct}% off)
-                      {f.discount?.code && (
-                        <span className="text-muted-foreground"> -- code: {f.discount.code}</span>
-                      )}
+                <div className="flex flex-1 flex-col gap-3">
+                  <ul className="grid flex-1 grid-cols-2 gap-x-3 gap-y-1 text-sm">
+                    <li className="text-[#5fffc2] font-semibold">
+                      <span className="text-[#5fffc2]/90">True cost:</span> ${cost.trueCost.toLocaleString()}
                     </li>
-                  )}
-                  <li>
-                    <strong>Payout:</strong> {f.payoutPct ?? 0}%
-                  </li>
-                  <li>
-                    <strong>Max funding:</strong> ${f.maxFunding?.toLocaleString() ?? "-"}
-                  </li>
-                  <li>
-                    <strong>Account size:</strong> ${f.accountSize?.toLocaleString() ?? "-"}
-                  </li>
-                  <li>
-                    <strong>Min days:</strong> {f.minDays ?? "-"}
-                  </li>
-                  <li className="col-span-2">
-                    <strong>Spreads:</strong> {f.spreads ?? "-"}
-                  </li>
-                  <li>
-                    <strong>Refund:</strong> {f.feeRefund ? "Yes" : "No"}
-                  </li>
-                  <li>
-                    <strong>News trading:</strong> {f.newsTrading ? "Allowed" : "Restricted"}
-                  </li>
-                  <li>
-                    <strong>Weekend hold:</strong> {f.weekendHolding ? "Yes" : "No"}
-                  </li>
-                  <li className="col-span-2 flex items-center gap-2 text-amber-300">
-                    <span className="text-base leading-none">{formatStarIcons(f.trustpilot)}</span>
-                    <span className="text-xs text-white/80">{(f.trustpilot ?? 0).toFixed(1)}</span>
-                  </li>
-                </ul>
+                    <li className="text-[#5fffc2] font-semibold">
+                      <span className="text-[#5fffc2]/90">Account size:</span> $
+                      {f.accountSize?.toLocaleString() ?? "-"}
+                    </li>
+                    <li>
+                      <strong>Up-front:</strong> ${cost.evalAfterDiscount.toLocaleString()}
+                    </li>
+                    <li>
+                      <strong>Activation:</strong> ${Number(f.pricing?.activationFee ?? 0).toLocaleString()}
+                    </li>
+                    {f.discount && cost.discountPct > 0 && (
+                      <li className="col-span-2 text-xs font-medium text-amber-300">
+                        {f.discount.label || "Promo"} ({cost.discountPct}% off)
+                        {f.discount?.code && (
+                          <span className="text-muted-foreground"> -- code: {f.discount.code}</span>
+                        )}
+                      </li>
+                    )}
+                    <li>
+                      <strong>Payout:</strong> {f.payoutPct ?? 0}%
+                    </li>
+                    <li>
+                      <strong>Max funding:</strong> ${f.maxFunding?.toLocaleString() ?? "-"}
+                    </li>
+                    <li>
+                      <strong>Min days:</strong> {f.minDays ?? "-"}
+                    </li>
+                    <li className="col-span-2">
+                      <strong>Spreads:</strong> {f.spreads ?? "-"}
+                    </li>
+                    <li>
+                      <strong>Refund:</strong> {f.feeRefund ? "Yes" : "No"}
+                    </li>
+                    <li>
+                      <strong>News trading:</strong> {f.newsTrading ? "Allowed" : "Restricted"}
+                    </li>
+                    <li>
+                      <strong>Weekend hold:</strong> {f.weekendHolding ? "Yes" : "No"}
+                    </li>
+                    <li className="col-span-2 flex items-center gap-2 text-amber-300">
+                      <span className="text-base leading-none">{formatStarIcons(f.trustpilot)}</span>
+                      <span className="text-xs text-white/80">{(f.trustpilot ?? 0).toFixed(1)}</span>
+                    </li>
+                  </ul>
 
-                {/* actions */}
-                <div className="flex gap-2">
-                  {f.homepage && (
-                    <a href={f.homepage} target="_blank" rel="nofollow noopener" className="w-full">
-                      <Button className="w-full border-2 border-transparent bg-white/5 hover:bg-white/10">
-                        <ExternalLink className="mr-2" size={16} />
-                        Website
-                      </Button>
-                    </a>
-                  )}
+                  <div className="mt-auto space-y-3">
+                    <div className="flex gap-2">
+                      {f.homepage && (
+                        <a href={f.homepage} target="_blank" rel="nofollow noopener" className="w-full">
+                          <Button className="w-full border-2 border-transparent bg-white/5 hover:bg-white/10">
+                            <ExternalLink className="mr-2" size={16} />
+                            Website
+                          </Button>
+                        </a>
+                      )}
 
-                  <a
-                    href={buildAffiliateUrl(f.signup ?? f.homepage ?? "#", f.key)}
-                    target="_blank"
-                    rel={f.signup ? "nofollow sponsored noopener" : "nofollow noopener"}
-                    className="w-full"
-                  >
-                    <Button className="w-full border-2 border-transparent transition-all duration-300 hover:border-[#5fffc2] hover:shadow-[0_0_12px_#5fffc2aa]">
-                      Get Started
-                    </Button>
-                  </a>
-                </div>
+                      <a
+                        href={buildAffiliateUrl(f.signup ?? f.homepage ?? "#", f.key)}
+                        target="_blank"
+                        rel={f.signup ? "nofollow sponsored noopener" : "nofollow noopener"}
+                        className="w-full"
+                      >
+                        <Button className="w-full border-2 border-transparent transition-all duration-300 hover:border-[#5fffc2] hover:shadow-[0_0_12px_#5fffc2aa]">
+                          Get Started
+                        </Button>
+                      </a>
+                    </div>
 
-                {/* compare + (optional) affiliate preview */}
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      className="accent-black"
-                      checked={compare.includes(f.key)}
-                      onChange={(e) =>
-                        setCompare((prev) =>
-                          e.target.checked ? [...prev, f.key] : prev.filter((k) => k !== f.key)
-                        )
-                      }
-                    />
-                    Compare
-                  </label>
+                    <div className="flex items-center justify-between">
+                      <label className="flex items-center gap-2 text-sm">
+                        <input
+                          type="checkbox"
+                          className="accent-black"
+                          checked={compare.includes(f.key)}
+                          onChange={(e) =>
+                            setCompare((prev) =>
+                              e.target.checked ? [...prev, f.key] : prev.filter((k) => k !== f.key)
+                            )
+                          }
+                        />
+                        Compare
+                      </label>
 
-                  {f.signup && (
-                    <a
-                      href={buildAffiliateUrl(f.signup, f.key)}
-                      target="_blank"
-                      rel="nofollow sponsored noopener"
-                      className="text-xs underline"
-                    >
-                      Affiliate link preview
-                    </a>
-                  )}
+                      {f.signup && (
+                        <a
+                          href={buildAffiliateUrl(f.signup, f.key)}
+                          target="_blank"
+                          rel="nofollow sponsored noopener"
+                          className="text-xs underline"
+                        >
+                          Affiliate link preview
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           );
         })}
       </section>
+
+      {scored.length > CARDS_PER_PAGE && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
+            Showing {showingStart}-{showingEnd} of {scored.length}
+          </span>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={currentCardsPage === 1}
+              onClick={() => setCardsPage((prev) => Math.max(1, prev - 1))}
+              className="rounded-full border-[#f6c850]/50 text-xs font-semibold uppercase tracking-[0.2em] text-[#f6c850] disabled:opacity-40"
+            >
+              Previous
+            </Button>
+            <span className="text-xs font-semibold text-white/70">
+              Page {currentCardsPage} / {cardsPageCount}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={currentCardsPage === cardsPageCount}
+              onClick={() => setCardsPage((prev) => Math.min(cardsPageCount, prev + 1))}
+              className="rounded-full border-[#f6c850]/50 text-xs font-semibold uppercase tracking-[0.2em] text-[#f6c850] disabled:opacity-40"
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Compare table (only for cards view) */}
       {selected.length > 0 && (
@@ -1243,7 +1477,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
     <main>
       <HeroBanner />
 
-      <div className="container mx-auto max-w-6xl p-6 space-y-6">
+      <div className="mx-auto w-full max-w-[1400px] px-4 py-6 space-y-6">
         <Script id="ld-json" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
         {/* Top disclosure */}
@@ -1300,6 +1534,48 @@ function FilterChips({
             key={opt || `option-${idx}`}
             type="button"
             onClick={() => onChange(opt)}
+            className={chipClasses(active)}
+          >
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function MultiFilterChips({
+  options,
+  value,
+  onChange,
+  getLabel,
+}: {
+  options: readonly string[];
+  value: string[];
+  onChange: (next: string[]) => void;
+  getLabel?: (v: string) => React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {options.map((opt, idx) => {
+        const label = getLabel ? getLabel(opt) : opt === "" ? "All" : opt;
+        const active = opt === "" ? value.length === 0 : value.includes(opt);
+        return (
+          <button
+            key={opt || `multi-${idx}`}
+            type="button"
+            onClick={() => {
+              if (opt === "") {
+                onChange([]);
+                return;
+              }
+              const withoutEmpty = value.filter((item) => item !== "");
+              onChange(
+                active
+                  ? withoutEmpty.filter((item) => item !== opt)
+                  : [...withoutEmpty, opt]
+              );
+            }}
             className={chipClasses(active)}
           >
             {label}

@@ -201,6 +201,14 @@ body {
   border-radius: 0.75rem;
   transition: all 0.25s ease;
 }
+.surface.golden-filter-panel {
+  border-color: rgba(246,200,80,0.4);
+  box-shadow: 0 0 40px rgba(246,200,80,0.25);
+}
+.surface.golden-filter-panel:hover {
+  border-color: #f6c850;
+  box-shadow: 0 0 20px rgba(246,200,80,0.55);
+}
 .surface-hover:hover {
   background: rgba(255,255,255,0.08);
 }

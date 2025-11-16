@@ -18,6 +18,7 @@ export type CostResult = {
   evalAfterDiscount: number;
   trueCost: number;            // actual out-of-pocket cost
   trueCostAfterRefund: number; // if refund applies
+  discountPct: number;         // normalized percentage off (0-100)
 };
 
 function toNum(n: unknown, d = 0) {
@@ -33,19 +34,20 @@ export function getCosts(input: { pricing?: Pricing; feeRefund?: boolean | null 
     (p as Pricing).discount?.percent ??
     (p as Pricing).discountPct ??
     (p as { discountPct?: number }).discountPct;
-  let discPercent = toNum(discSource, 0);
-  let discAmount = toNum((p as Pricing).discount?.amount, 0);
+  const discPercent = Math.max(0, Math.min(100, toNum(discSource, 0)));
+  const discAmount = Math.max(0, toNum((p as Pricing).discount?.amount, 0));
   // Qualifiers (e.g. BOGO) are purely informational; they should not change the math.
 
   // If a flat amount is provided, prefer it over percentage
-  const evalAfterDiscount = discAmount > 0
-    ? Math.max(0, evalFee - discAmount)
-    : Math.max(0, evalFee * (1 - discPercent / 100));
+  const evalAfterDiscount =
+    discAmount > 0 ? Math.max(0, evalFee - discAmount) : Math.max(0, evalFee * (1 - discPercent / 100));
   const trueCost = evalAfterDiscount + activation;
+  const amountAsPct = discAmount > 0 && evalFee > 0 ? Math.min(100, (discAmount / evalFee) * 100) : 0;
+  const discountPct = discAmount > 0 ? amountAsPct : discPercent;
 
   // optional “after refund” for firms that refund the evaluation fee
   const refund = input.feeRefund || p.feeRefund ? evalAfterDiscount : 0;
   const trueCostAfterRefund = Math.max(0, trueCost - refund);
 
-  return { evalAfterDiscount, trueCost, trueCostAfterRefund };
+  return { evalAfterDiscount, trueCost, trueCostAfterRefund, discountPct };
 }

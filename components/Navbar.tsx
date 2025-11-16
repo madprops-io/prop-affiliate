@@ -34,10 +34,10 @@ export default function Navbar() {
     <header className={headerClass}>
       <div className="container mx-auto max-w-6xl flex items-center justify-between gap-4 px-4 py-4">
         <Link href="/" className="relative z-10 flex flex-col leading-tight group hover:opacity-95 text-left">
-          <span className="text-lg md:text-2xl font-semibold uppercase tracking-[0.5em] text-emerald-200">
+          <span className="text-lg md:text-2xl font-semibold uppercase tracking-[0.5em] text-[#5fffc2]">
             MADPROPS
           </span>
-          <span className="text-xs italic text-amber-300/90 md:text-sm tracking-[0.2em]">
+          <span className="text-xs italic text-[#f7d778] md:text-sm tracking-[0.2em]">
             Trade smarter.
           </span>
         </Link>
