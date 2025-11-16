@@ -28,11 +28,52 @@ import { ExternalLink, Info, LinkIcon, Search, Star } from "lucide-react";
 
 const MODELS = ["Instant", "1-Phase", "2-Phase", "Scaling"] as const;
 const PLATFORMS = ["MT4", "MT5", "cTrader", "TradingView", "Rithmic", "NinjaTrader"] as const;
+const ACCOUNT_SIZE_OPTIONS = [
+  "",
+  "5000",
+  "10000",
+  "25000",
+  "50000",
+  "75000",
+  "100000",
+  "150000",
+  "200000",
+  "250000",
+  "300000",
+] as const;
+const DRAW_DOWN_OPTIONS = ["EOD", "EOT TRAILING", "INTRADAY", "STATIC"] as const;
+const PAYOUT_SPEED_PRESETS = [
+  { value: "", label: "Any", max: null },
+  { value: "fast7", label: "≤7 days (Fast)", max: 7 },
+  { value: "fast14", label: "≤14 days", max: 14 },
+  { value: "fast30", label: "≤30 days", max: 30 },
+] as const;
+const SCORE_FOCUS_PRESETS = [
+  { value: "payout", label: "High payout" },
+  { value: "trust", label: "Trusted" },
+  { value: "funding", label: "Max funding" },
+  { value: "cost", label: "Low cost" },
+  { value: "payoutspeed", label: "Fast payouts" },
+  { value: "refund", label: "Refundable" },
+  { value: "drawdown", label: "Flexible drawdown" },
+  { value: "discount", label: "Has discount" },
+  { value: "evalspeed", label: "Quick eval" },
+] as const;
+type ScoreCriterion = (typeof SCORE_FOCUS_PRESETS)[number]["value"];
+const DEFAULT_SCORE_FOCUS: ScoreCriterion[] = ["payout", "trust", "funding"];
 type ModelType = (typeof MODELS)[number];
 type PlatformType = (typeof PLATFORMS)[number];
 type SortKey = "score" | "payout" | "cap" | "name" | "truecost";
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
+}
+function parseDaysToNumber(value: unknown) {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string") {
+    const match = value.match(/(\d+(\.\d+)?)/);
+    if (match) return Number(match[1]);
+  }
+  return null;
 }
 
 function useDebounced<T>(value: T, delay = 250) {
@@ -123,9 +164,14 @@ export default function Page() {
     name: string;
     model: string[];
     platforms: string[];
-    payout: number | null; // 0–1
-    payoutPct: number | null; // 0–100
+    payout: number | null;
+    payoutPct: number | null;
     maxFunding: number | null;
+    accountSize?: number | null;
+    drawdownType?: string | null;
+    drawdownTokens?: string[];
+    daysToPayout?: number | string | null;
+    payoutDaysValue?: number | null;
     logo?: string | null;
     homepage?: string | null;
     signup?: string | null;
@@ -151,6 +197,7 @@ export default function Page() {
         ? [String(f.model)]
         : [];
 
+      const daysToPayoutRaw = f.daysToPayout ?? f.days_to_payout ?? null;
       return {
         key: f.key,
         name: f.name,
@@ -159,6 +206,11 @@ export default function Page() {
         payout,
         payoutPct: payout != null ? Math.round(payout * 100) : null,
         maxFunding: typeof f.maxFunding === "number" ? f.maxFunding : null,
+        accountSize: typeof f.accountSize === "number" ? f.accountSize : f.maxFunding ?? null,
+        drawdownType: typeof f.drawdownType === "string" ? f.drawdownType : f.drawdown_type ?? null,
+        drawdownTokens: Array.isArray(f.drawdownTokens) ? f.drawdownTokens : [],
+        daysToPayout: daysToPayoutRaw,
+        payoutDaysValue: parseDaysToNumber(daysToPayoutRaw),
 
         logo: f.logo ?? (f.key ? `/logos/${f.key}.png` : null),
 
@@ -177,6 +229,18 @@ export default function Page() {
     });
   }, [firms]);
 
+  const firmNameOptions = useMemo(() => {
+    const seen = new Set<string>();
+    return nFirms
+      .map((firm) => (firm.name ?? "").trim())
+      .filter((name) => {
+        if (!name) return false;
+        if (seen.has(name)) return false;
+        seen.add(name);
+        return true;
+      });
+  }, [nFirms]);
+
   const usingLiveData = isLive;
 
   const router = useRouter();
@@ -185,19 +249,40 @@ export default function Page() {
 
   // ===== state =====
   const [q, setQ] = useState("");
+  const [searchDraft, setSearchDraft] = useState("");
   const [model, setModel] = useState<ModelType | "">("");
   const [platform, setPlatform] = useState<PlatformType | "">("");
 const [maxMinFunding, setMaxMinFunding] = useState<number>(0);
 const [minPayout, setMinPayout] = useState<number>(70);
+  const [accountSizeFilter, setAccountSizeFilter] = useState<string>("");
+  const [drawdownFilter, setDrawdownFilter] = useState<string>("");
+  const [payoutSpeedFilter, setPayoutSpeedFilter] = useState<string>("");
+  const [oneDayEvalOnly, setOneDayEvalOnly] = useState(false);
+  const [refundOnly, setRefundOnly] = useState(false);
+  const [discountOnly, setDiscountOnly] = useState(false);
+  const [minTrust, setMinTrust] = useState<number>(0);
+  const [scoreFocus, setScoreFocus] = useState<ScoreCriterion[]>([...DEFAULT_SCORE_FOCUS]);
+  const [fireDealsMode, setFireDealsMode] = useState(false);
   const [compare, setCompare] = useState<string[]>([]);
 const [sort, setSort] = useState<SortKey>("score");
 
-  const doReset = () =>
+  const doReset = () => {
     resetAll(
       { setQ, setModel, setPlatform, setMaxMinFunding, setMinPayout, setSort, setCompare },
       router,
       pathname
     );
+    setSearchDraft("");
+    setAccountSizeFilter("");
+    setDrawdownFilter("");
+    setPayoutSpeedFilter("");
+    setOneDayEvalOnly(false);
+    setRefundOnly(false);
+    setDiscountOnly(false);
+    setMinTrust(0);
+    setScoreFocus([...DEFAULT_SCORE_FOCUS]);
+    setFireDealsMode(false);
+  };
 
   // ===== read from URL =====
   useEffect(() => {
@@ -241,6 +326,10 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     );
   }, [searchParams]);
 
+  useEffect(() => {
+    setSearchDraft(q);
+  }, [q]);
+
   // ===== write to URL =====
   const debouncedCap = useDebounced(maxMinFunding, 200);
   const debouncedPayout = useDebounced(minPayout, 200);
@@ -273,39 +362,132 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
 
   const filtered: UIFirm[] = useMemo(() => {
     const ql = q.toLowerCase();
+    const payoutPreset = PAYOUT_SPEED_PRESETS.find((preset) => preset.value === payoutSpeedFilter);
+    const payoutMax = payoutPreset?.max ?? null;
     return (nFirms ?? []).filter((f) => {
       const nameOk = !q || (f.name || "").toLowerCase().includes(ql);
       const modelOk = !model || (f.model || []).includes(model);
       const platformsOk = !platform || (f.platforms || []).includes(platform);
       const fundingOk = (f.maxFunding ?? 0) >= (maxMinFunding ?? 0);
       const splitOk = (f.payoutPct ?? 0) >= (minPayout ?? 0);
-      return nameOk && modelOk && platformsOk && fundingOk && splitOk;
+      const accountOk =
+        !accountSizeFilter || Math.round(f.accountSize ?? 0) === Number(accountSizeFilter);
+      const drawdownOk =
+        !drawdownFilter ||
+        (f.drawdownType || "").toLowerCase().includes(drawdownFilter.toLowerCase());
+      const payoutSpeedOk =
+        !payoutSpeedFilter ||
+        ((f.payoutDaysValue ?? Number.POSITIVE_INFINITY) <= (payoutMax ?? Number.POSITIVE_INFINITY));
+      const evalSpeedOk = !oneDayEvalOnly || (f.minDays ?? Number.POSITIVE_INFINITY) <= 1;
+      const refundOk = !refundOnly || !!f.feeRefund;
+      const discountValue =
+        f.discount?.percent ?? f.discount?.amount ?? f.pricing?.discountPct ?? 0;
+      const discountOk = !discountOnly || Number(discountValue) > 0;
+      const fireDealOk = !fireDealsMode || Number(discountValue) > 0;
+      const trustOk = (f.trustpilot ?? 0) >= (minTrust ?? 0);
+      return (
+        nameOk &&
+        modelOk &&
+        platformsOk &&
+        fundingOk &&
+        splitOk &&
+        accountOk &&
+        drawdownOk &&
+        payoutSpeedOk &&
+        evalSpeedOk &&
+        refundOk &&
+        discountOk &&
+        fireDealOk &&
+        trustOk
+      );
     });
-  }, [nFirms, q, model, platform, maxMinFunding, minPayout]);
+  }, [
+    nFirms,
+    q,
+    model,
+    platform,
+    maxMinFunding,
+    minPayout,
+    accountSizeFilter,
+    drawdownFilter,
+    payoutSpeedFilter,
+    oneDayEvalOnly,
+    refundOnly,
+    discountOnly,
+    fireDealsMode,
+    minTrust,
+  ]);
 
-const scored: ScoredFirm[] = useMemo(() => {
-  return filtered
-    .map((f) => ({
-      ...f,
-      score: Math.round(
-        (f.payout ?? 0) * 100 * 0.5 +
-        (f.trustpilot ?? 0) * 10 * 0.3 +
-        Math.min((f.maxFunding ?? 0) / 10000, 10) * 0.2
-      ),
-    }))
-    .sort((a, b) => {
-      if (sort === "payout") return (b.payout ?? 0) - (a.payout ?? 0);
-      if (sort === "cap") return (b.maxFunding ?? 0) - (a.maxFunding ?? 0);
-      if (sort === "name") return (a.name || "").localeCompare(b.name || "");
-      if (sort === "truecost") {
-        const ca = getCosts(a as any).trueCost;
-        const cb = getCosts(b as any).trueCost;
-        // low true cost first:
-        return ca - cb;
+  const scored: ScoredFirm[] = useMemo(() => {
+    const appliedFocus: ScoreCriterion[] = scoreFocus.length
+      ? scoreFocus
+      : [...DEFAULT_SCORE_FOCUS];
+    const costCache = new Map<string, number>();
+    const getTrueCost = (firm: UIFirm) => {
+      if (costCache.has(firm.key)) return costCache.get(firm.key)!;
+      const value = getCosts(firm as any).trueCost;
+      costCache.set(firm.key, value);
+      return value;
+    };
+    const scoreForCriterion = (f: UIFirm, criterion: ScoreCriterion) => {
+      switch (criterion) {
+        case "payout":
+          return (f.payout ?? 0) * 100;
+        case "trust":
+          return ((f.trustpilot ?? 0) / 5) * 100;
+        case "funding":
+          return Math.min((f.maxFunding ?? 0) / 1000, 100);
+        case "cost": {
+          const cost = getTrueCost(f);
+          if (!Number.isFinite(cost) || cost <= 0) return 50;
+          return Math.max(0, 100 - Math.min(cost / 50, 100));
+        }
+        case "payoutspeed": {
+          const days = f.payoutDaysValue ?? 45;
+          const clamped = Math.min(Math.max(days, 0), 45);
+          return ((45 - clamped) / 45) * 100;
+        }
+        case "refund":
+          return f.feeRefund ? 100 : 40;
+        case "drawdown":
+          return (f.drawdownType || "").toLowerCase().includes("static") ? 100 : 60;
+        case "discount": {
+          const discountValue =
+            f.discount?.percent ?? f.discount?.amount ?? f.pricing?.discountPct ?? 0;
+          return Number(discountValue) > 0 ? 100 : 40;
+        }
+        case "evalspeed": {
+          const min = f.minDays ?? Number.POSITIVE_INFINITY;
+          if (!Number.isFinite(min)) return 40;
+          if (min <= 1) return 100;
+          if (min <= 3) return 80;
+          if (min <= 5) return 60;
+          return 40;
+        }
+        default:
+          return 0;
       }
-      return (b.score ?? 0) - (a.score ?? 0);
-    });
-}, [filtered, sort]);
+    };
+
+    return filtered
+      .map((f) => {
+        const scoreTotal =
+          appliedFocus.reduce((sum, criterion) => sum + scoreForCriterion(f, criterion), 0) /
+          appliedFocus.length;
+        return { ...f, score: Math.round(scoreTotal) };
+      })
+      .sort((a, b) => {
+        if (sort === "payout") return (b.payout ?? 0) - (a.payout ?? 0);
+        if (sort === "cap") return (b.maxFunding ?? 0) - (a.maxFunding ?? 0);
+        if (sort === "name") return (a.name || "").localeCompare(b.name || "");
+        if (sort === "truecost") {
+          const ca = getTrueCost(a);
+          const cb = getTrueCost(b);
+          return ca - cb;
+        }
+        return (b.score ?? 0) - (a.score ?? 0);
+      });
+  }, [filtered, scoreFocus, sort]);
 
   const selected = scored.filter((f) => compare.includes(f.key));
 type UIFirmWithConn = UIFirm & {
@@ -381,7 +563,47 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           <label className="flex items-center gap-2 text-sm font-medium">
             <Search size={16} /> Search firms
           </label>
-          <Input placeholder="Search by name…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <form
+            className="mt-1 flex flex-wrap items-center gap-2"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setQ(searchDraft);
+            }}
+          >
+            <Input
+              placeholder="Search by name…"
+              list="home-firm-search-options"
+              value={searchDraft}
+              onChange={(event) => setSearchDraft(event.target.value)}
+              className="flex-1"
+            />
+            <datalist id="home-firm-search-options">
+              {firmNameOptions
+                .filter((name) => {
+                  const drafted = searchDraft.trim().toLowerCase();
+                  if (!drafted) return false;
+                  return name.toLowerCase().startsWith(drafted);
+                })
+                .map((name) => (
+                  <option key={name} value={name} />
+                ))}
+            </datalist>
+            <Button type="submit" size="sm">
+              Search
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="text-white/70 hover:text-white"
+              onClick={() => {
+                setSearchDraft("");
+                setQ("");
+              }}
+            >
+              Clear
+            </Button>
+          </form>
         </div>
 
         <div className="md:col-span-3">
@@ -453,10 +675,13 @@ function platformConnectionsText(f: UIFirmWithConn): string {
 
       {/* Cards */}
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {scored.map((f) => {
+        {scored.map((f, idx) => {
           const cost = getCosts(f as any);
           return (
-            <Card key={f.key} className="rounded-2xl surface elevated border border-amber-300/15 hover:border-amber-300/35 shadow-sm transition-all">
+            <Card
+              key={`${f.key}-${idx}`}
+              className="rounded-2xl surface elevated border border-amber-300/15 hover:border-amber-300/35 shadow-sm transition-all"
+            >
               <CardContent className="space-y-3 p-4">
                 {/* header row: logo + discount badge */}
                 <div className="flex items-center justify-between">
@@ -531,14 +756,12 @@ function platformConnectionsText(f: UIFirmWithConn): string {
   <li>
     <strong>True cost:</strong> ${cost.trueCost.toLocaleString()}
   </li>
-  <li>
-    <strong>Up-front:</strong> ${cost.discounted.toLocaleString()}
-  </li>
-  <li>
-    <strong>Activation:</strong>{" "}
-    {cost.activation.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
-      .replace("$", "$")}
-  </li>
+                <li>
+                  <strong>Up-front:</strong> ${cost.evalAfterDiscount.toLocaleString()}
+                </li>
+                <li>
+                  <strong>Activation:</strong> ${Number(f.pricing?.activationFee ?? 0).toLocaleString()}
+                </li>
   {f.discount && cost.discountPct > 0 && (
     <li className="col-span-2 text-xs font-medium text-amber-300">
       💸 {f.discount.label || "Promo"} ({cost.discountPct}% off)
@@ -659,8 +882,8 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                 </tr>
               </thead>
               <tbody>
-                {selected.map((f) => (
-                  <tr key={`cmp-${f.key}`} className="border-t">
+                {selected.map((f, idx) => (
+                  <tr key={`cmp-${f.key}-${idx}`} className="border-t">
                     <td className="p-2 font-medium">{f.name}</td>
                     <td className="p-2">{f.model.join(", ")}</td>
                     <td className="p-2">{f.platforms.join(", ")}</td>
