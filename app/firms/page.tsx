@@ -1,55 +1,52 @@
-// app/firms/page.tsx (Server Component)
+﻿// app/firms/page.tsx (Server Component)
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Suspense } from "react";
-
 import { FIRMS } from "@/lib/firms";
-import { FirmCard } from "@/components/FirmCard";
-import FirmsViewToggle from "./FirmsViewToggle"; // client component
+import type { Firm } from "@/lib/types";
+import { FirmDirectoryCards } from "./FirmDirectoryCards";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "All Firms • MadProps",
+  title: "All Firms — MadProps",
   description: "Browse every proprietary trading firm we track, all in one place.",
   alternates: { canonical: "/firms" },
 };
 
-export default async function FirmsIndexPage({
-  searchParams,
-}: {
-  // Next 15: searchParams is a Promise on server components
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  const sp = await searchParams;
-  const sorted = [...FIRMS].sort((a, b) => a.name.localeCompare(b.name));
+type FirmsPageProps = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
+
+export default function FirmsIndexPage({ searchParams }: FirmsPageProps) {
+  const sorted: Firm[] = [...FIRMS].sort((a, b) => a.name.localeCompare(b.name));
+  const initialFirm =
+    typeof searchParams?.firm === "string" && searchParams.firm.trim().length > 0
+      ? searchParams.firm.trim()
+      : null;
 
   return (
-    <main className="container mx-auto max-w-6xl p-6 space-y-8">
-      <header className="space-y-2">
-        <h1 className="text-2xl font-semibold">All Firms</h1>
-        <p className="text-muted-foreground">
-          Full list of firms we track. Use the home page to filter/sort — or switch to the{" "}
-          <Link href="/firms?view=table" className="underline">
-            sortable table
-          </Link>.
-        </p>
-      </header>
+    <main className="min-h-screen bg-gradient-to-b from-[#040912] via-[#02050a] to-[#010307] text-white">
+      <section className="border-b border-white/5 bg-gradient-to-br from-[#050a16] via-[#040a18] to-[#030712]">
+        <div className="mx-auto flex max-w-[1100px] flex-col gap-5 px-4 py-12 text-center">
+          <span className="text-xs uppercase tracking-[0.45em] text-emerald-300/80">Directory</span>
+          <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
+            Curated prop firms with expandable receipts.
+          </h1>
+          <p className="mx-auto max-w-3xl text-base text-white/70">
+            Quick-scan cards up top, deep payouts + rules inside each fold-out. Need the spreadsheet view?{" "}
+            <Link href="/?view=table#comparison" className="text-emerald-300 underline">
+              Jump to the sortable table
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
 
-      {/* Wrap the client component in Suspense for safety */}
-      <Suspense fallback={<section className="p-6">Loading…</section>}>
-        <FirmsViewToggle
-          initialSearchParams={sp}
-          fallbackCards={
-            <section
-              aria-label="All prop firms"
-              className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            >
-              {sorted.map((f) => (
-                <FirmCard key={f.key} firm={f as any} />
-              ))}
-            </section>
-          }
-        />
-      </Suspense>
+      <section className="mx-auto max-w-[1100px] px-4 py-10 space-y-6">
+        <FirmDirectoryCards firms={sorted} initialExpandedKey={initialFirm} />
+      </section>
     </main>
   );
 }
+
+

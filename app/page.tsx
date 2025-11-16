@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Script from "next/script";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,12 +13,12 @@ import { useFirms } from "@/lib/useFirms";
 import { getCosts } from "@/lib/pricing";
 import { FIRMS } from "@/lib/firms";
 import { buildAffiliateUrl } from "@/lib/affiliates";
+import { formatStarIcons } from "@/lib/useStarRating";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
 import { ExternalLink, Info, LinkIcon, Search, Star } from "lucide-react";
 
 /**
@@ -27,7 +27,7 @@ import { ExternalLink, Info, LinkIcon, Search, Star } from "lucide-react";
  */
 
 const MODELS = ["Instant", "1-Phase", "2-Phase", "Scaling"] as const;
-const PLATFORMS = ["MT4", "MT5", "cTrader", "TradingView", "Rithmic", "NinjaTrader"] as const;
+const FALLBACK_PLATFORMS = ["MT4", "MT5", "cTrader", "TradingView", "Rithmic", "NinjaTrader", "Tradovate"];
 const ACCOUNT_SIZE_OPTIONS = [
   "",
   "5000",
@@ -41,12 +41,18 @@ const ACCOUNT_SIZE_OPTIONS = [
   "250000",
   "300000",
 ] as const;
+const MAX_FUNDING_PRESETS = [0, 50_000, 100_000, 200_000, 300_000, 500_000, 1_000_000] as const;
 const DRAW_DOWN_OPTIONS = ["EOD", "EOT TRAILING", "INTRADAY", "STATIC"] as const;
+const MIN_PAYOUT_PRESETS = [0, 50, 60, 70, 80, 90] as const;
+const TRUST_OPTIONS = [0, 3, 3.5, 4] as const;
+const PLATFORM_PREVIEW_COUNT = 5;
+const FIRE_DEAL_TRUST_MIN = 3;
+const FIRE_DEAL_TRUECOST_MAX = 600;
 const PAYOUT_SPEED_PRESETS = [
   { value: "", label: "Any", max: null },
-  { value: "fast7", label: "≤7 days (Fast)", max: 7 },
-  { value: "fast14", label: "≤14 days", max: 14 },
-  { value: "fast30", label: "≤30 days", max: 30 },
+  { value: "fast7", label: "<=7 days (Fast)", max: 7 },
+  { value: "fast14", label: "<=14 days", max: 14 },
+  { value: "fast30", label: "<=30 days", max: 30 },
 ] as const;
 const SCORE_FOCUS_PRESETS = [
   { value: "payout", label: "High payout" },
@@ -61,9 +67,11 @@ const SCORE_FOCUS_PRESETS = [
 ] as const;
 type ScoreCriterion = (typeof SCORE_FOCUS_PRESETS)[number]["value"];
 const DEFAULT_SCORE_FOCUS: ScoreCriterion[] = ["payout", "trust", "funding"];
+const FIRE_DEAL_SCORE_FOCUS: ScoreCriterion[] = ["cost", "discount", "trust"];
 type ModelType = (typeof MODELS)[number];
-type PlatformType = (typeof PLATFORMS)[number];
+type PlatformType = string;
 type SortKey = "score" | "payout" | "cap" | "name" | "truecost";
+const DEFAULT_MIN_PAYOUT = 0;
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
 }
@@ -92,11 +100,12 @@ function resetAll(
     setPlatform: (v: any) => void;
     setMaxMinFunding: (v: number) => void;
     setMinPayout: (v: number) => void;
-setSort: (v: SortKey) => void;
+    setSort: (v: SortKey) => void;
     setCompare: (v: string[]) => void;
   },
   router: any,
-  pathname: string
+  pathname: string,
+  options?: { view?: string | null }
 ) {
   const { setQ, setModel, setPlatform, setMaxMinFunding, setMinPayout, setSort, setCompare } =
     setters;
@@ -105,11 +114,13 @@ setSort: (v: SortKey) => void;
   setModel("");
   setPlatform("");
   setMaxMinFunding(0);
-  setMinPayout(70);
+  setMinPayout(DEFAULT_MIN_PAYOUT);
   setSort("score");
   setCompare([]);
 
-  router.replace(pathname, { scroll: false });
+  const viewParam = options?.view;
+  const nextUrl = viewParam ? `${pathname}?view=${viewParam}` : pathname;
+  router.replace(nextUrl, { scroll: false });
 }
 
 const ALL_KEYS = new Set(FIRMS.map((f) => f.key));
@@ -241,6 +252,22 @@ export default function Page() {
       });
   }, [nFirms]);
 
+  const platformOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    const addPlatform = (value?: string | null) => {
+      if (!value) return;
+      const normalized = value.trim();
+      if (!normalized) return;
+      const dedupeKey = normalized.toLowerCase();
+      if (!map.has(dedupeKey)) map.set(dedupeKey, normalized);
+    };
+    FALLBACK_PLATFORMS.forEach(addPlatform);
+    (nFirms ?? []).forEach((firm) => {
+      (firm.platforms ?? []).forEach((p) => addPlatform(p));
+    });
+    return Array.from(map.values()).sort((a, b) => a.localeCompare(b));
+  }, [nFirms]);
+
   const usingLiveData = isLive;
 
   const router = useRouter();
@@ -253,7 +280,7 @@ export default function Page() {
   const [model, setModel] = useState<ModelType | "">("");
   const [platform, setPlatform] = useState<PlatformType | "">("");
 const [maxMinFunding, setMaxMinFunding] = useState<number>(0);
-const [minPayout, setMinPayout] = useState<number>(70);
+const [minPayout, setMinPayout] = useState<number>(DEFAULT_MIN_PAYOUT);
   const [accountSizeFilter, setAccountSizeFilter] = useState<string>("");
   const [drawdownFilter, setDrawdownFilter] = useState<string>("");
   const [payoutSpeedFilter, setPayoutSpeedFilter] = useState<string>("");
@@ -261,16 +288,57 @@ const [minPayout, setMinPayout] = useState<number>(70);
   const [refundOnly, setRefundOnly] = useState(false);
   const [discountOnly, setDiscountOnly] = useState(false);
   const [minTrust, setMinTrust] = useState<number>(0);
-  const [scoreFocus, setScoreFocus] = useState<ScoreCriterion[]>([...DEFAULT_SCORE_FOCUS]);
+  const [scoreFocus, setScoreFocus] = useState<ScoreCriterion[]>([]);
   const [fireDealsMode, setFireDealsMode] = useState(false);
   const [compare, setCompare] = useState<string[]>([]);
 const [sort, setSort] = useState<SortKey>("score");
+  const [showAllPlatforms, setShowAllPlatforms] = useState(false);
+  const fireDealsPrevFilters = useRef<{
+    discountOnly: boolean;
+    minTrust: number;
+    scoreFocus: ScoreCriterion[];
+  } | null>(null);
+
+  const activateFireDeals = () => {
+    if (fireDealsMode) return;
+    fireDealsPrevFilters.current = {
+      discountOnly,
+      minTrust,
+      scoreFocus: [...scoreFocus],
+    };
+    setFireDealsMode(true);
+    setDiscountOnly(true);
+    setMinTrust((current) => Math.max(current, FIRE_DEAL_TRUST_MIN));
+    setScoreFocus([...FIRE_DEAL_SCORE_FOCUS]);
+  };
+
+  const deactivateFireDeals = () => {
+    if (!fireDealsMode) return;
+    const previous = fireDealsPrevFilters.current;
+    setFireDealsMode(false);
+    setDiscountOnly(previous ? previous.discountOnly : false);
+    setMinTrust(previous ? previous.minTrust : 0);
+    if (previous?.scoreFocus?.length) setScoreFocus(previous.scoreFocus);
+    else setScoreFocus([]);
+    fireDealsPrevFilters.current = null;
+  };
+
+  const toggleFireDeals = () => {
+    if (fireDealsMode) deactivateFireDeals();
+    else activateFireDeals();
+  };
+
+  const handleManualFilterChange = () => {
+    if (fireDealsMode) deactivateFireDeals();
+  };
 
   const doReset = () => {
+    if (fireDealsMode) deactivateFireDeals();
     resetAll(
       { setQ, setModel, setPlatform, setMaxMinFunding, setMinPayout, setSort, setCompare },
       router,
-      pathname
+      pathname,
+      { view: searchParams.get("view") }
     );
     setSearchDraft("");
     setAccountSizeFilter("");
@@ -280,8 +348,9 @@ const [sort, setSort] = useState<SortKey>("score");
     setRefundOnly(false);
     setDiscountOnly(false);
     setMinTrust(0);
-    setScoreFocus([...DEFAULT_SCORE_FOCUS]);
-    setFireDealsMode(false);
+    setScoreFocus([]);
+    setShowAllPlatforms(false);
+    fireDealsPrevFilters.current = null;
   };
 
   // ===== read from URL =====
@@ -292,7 +361,8 @@ const [sort, setSort] = useState<SortKey>("score");
     const nextModel = sp.get("model") ?? "";
     const nextPlatform = sp.get("platform") ?? "";
     const nextCap = Number(sp.get("cap") ?? "0");
-    const nextPayout = Number(sp.get("payout") ?? "0");
+    const nextPayoutRaw = sp.get("payout");
+    const nextPayout = nextPayoutRaw === null ? DEFAULT_MIN_PAYOUT : Number(nextPayoutRaw);
 const nextSort = (sp.get("sort") ?? "score") as SortKey;    const nextCompareRaw = sp.get("compare") ?? "";
     const nextCompare =
       nextCompareRaw
@@ -304,18 +374,16 @@ const nextSort = (sp.get("sort") ?? "score") as SortKey;    const nextCompareRaw
     const safeModel = (MODELS as readonly string[]).includes(nextModel)
       ? (nextModel as ModelType)
       : "";
-    const safePlatform = (PLATFORMS as readonly string[]).includes(nextPlatform)
-      ? (nextPlatform as PlatformType)
-      : "";
+    const safePlatform = (nextPlatform ?? "").trim();
     const safeCap = Number.isFinite(nextCap) ? clamp(nextCap, 0, 1_000_000) : 0;
-    const safePayout = Number.isFinite(nextPayout) ? clamp(nextPayout, 0, 100) : 0;
+    const safePayout = Number.isFinite(nextPayout) ? clamp(nextPayout, 0, 100) : DEFAULT_MIN_PAYOUT;
 const allowedSorts = ["score", "payout", "cap", "name", "truecost"] as const;
 const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
   ? (nextSort as SortKey)
   : "score";
     setQ((prev) => (prev === nextQ ? prev : nextQ));
     setModel((prev) => (prev === safeModel ? prev : (safeModel as any)));
-    setPlatform((prev) => (prev === safePlatform ? prev : (safePlatform as any)));
+    setPlatform((prev) => (prev === safePlatform ? prev : (safePlatform as PlatformType)));
     setMaxMinFunding((prev) => (prev === safeCap ? prev : safeCap));
     setMinPayout((prev) => (prev === safePayout ? prev : safePayout));
     setSort((prev) => (prev === safeSort ? prev : safeSort));
@@ -345,7 +413,9 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     setOrDelete("model", model);
     setOrDelete("platform", platform);
     setOrDelete("cap", debouncedCap || 0);
-    setOrDelete("payout", debouncedPayout || 70);
+    const payoutParam = Number.isFinite(debouncedPayout) ? debouncedPayout : DEFAULT_MIN_PAYOUT;
+    if (payoutParam === DEFAULT_MIN_PAYOUT) setOrDelete("payout", "");
+    else setOrDelete("payout", payoutParam);
     setOrDelete("sort", sort);
 
     if (compare.length > 0) sp.set("compare", compare.join(","));
@@ -364,10 +434,14 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     const ql = q.toLowerCase();
     const payoutPreset = PAYOUT_SPEED_PRESETS.find((preset) => preset.value === payoutSpeedFilter);
     const payoutMax = payoutPreset?.max ?? null;
+    const normalizedSelectedPlatform = (platform || "").trim().toLowerCase();
     return (nFirms ?? []).filter((f) => {
+      const { trueCost } = getCosts(f as any);
       const nameOk = !q || (f.name || "").toLowerCase().includes(ql);
       const modelOk = !model || (f.model || []).includes(model);
-      const platformsOk = !platform || (f.platforms || []).includes(platform);
+      const platformsOk =
+        !platform ||
+        (f.platforms || []).some((p) => (p || "").trim().toLowerCase() === normalizedSelectedPlatform);
       const fundingOk = (f.maxFunding ?? 0) >= (maxMinFunding ?? 0);
       const splitOk = (f.payoutPct ?? 0) >= (minPayout ?? 0);
       const accountOk =
@@ -382,9 +456,11 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
       const refundOk = !refundOnly || !!f.feeRefund;
       const discountValue =
         f.discount?.percent ?? f.discount?.amount ?? f.pricing?.discountPct ?? 0;
-      const discountOk = !discountOnly || Number(discountValue) > 0;
-      const fireDealOk = !fireDealsMode || Number(discountValue) > 0;
-      const trustOk = (f.trustpilot ?? 0) >= (minTrust ?? 0);
+      const discountRequired = discountOnly || fireDealsMode;
+      const discountOk = !discountRequired || Number(discountValue) > 0;
+      const trustRequirement = Math.max(minTrust ?? 0, fireDealsMode ? FIRE_DEAL_TRUST_MIN : 0);
+      const trustOk = (f.trustpilot ?? 0) >= trustRequirement;
+      const lowCostOk = !fireDealsMode || trueCost <= FIRE_DEAL_TRUECOST_MAX;
       return (
         nameOk &&
         modelOk &&
@@ -397,7 +473,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         evalSpeedOk &&
         refundOk &&
         discountOk &&
-        fireDealOk &&
+        lowCostOk &&
         trustOk
       );
     });
@@ -490,6 +566,32 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
   }, [filtered, scoreFocus, sort]);
 
   const selected = scored.filter((f) => compare.includes(f.key));
+  const displayedPlatforms = showAllPlatforms
+    ? platformOptions
+    : platformOptions.slice(0, PLATFORM_PREVIEW_COUNT);
+  const hiddenPlatformCount = Math.max(platformOptions.length - displayedPlatforms.length, 0);
+  const usingDefaultScoreFocus =
+    scoreFocus.length === 0 ||
+    (scoreFocus.length === DEFAULT_SCORE_FOCUS.length &&
+      DEFAULT_SCORE_FOCUS.every((criterion) => scoreFocus.includes(criterion)));
+  const scoreFocusPresets = SCORE_FOCUS_PRESETS.filter((preset) => preset.value !== "discount");
+  const hasActiveFilters =
+    Boolean(
+      q ||
+        model ||
+        platform ||
+        accountSizeFilter ||
+        drawdownFilter ||
+        payoutSpeedFilter ||
+        maxMinFunding > 0 ||
+        minPayout !== DEFAULT_MIN_PAYOUT ||
+        oneDayEvalOnly ||
+        refundOnly ||
+        discountOnly ||
+        fireDealsMode ||
+        minTrust > 0 ||
+        !usingDefaultScoreFocus
+    ) || compare.length > 0;
 type UIFirmWithConn = UIFirm & {
   platformFeeds?: Record<string, string[]>;
   dataFeeds?: string[];
@@ -558,24 +660,25 @@ function platformConnectionsText(f: UIFirmWithConn): string {
       )}
 
       {/* Controls */}
-      <section className="surface rounded-2xl p-3 md:p-4 shadow-sm grid items-end gap-3 md:grid-cols-12">
-        <div className="md:col-span-5">
-          <label className="flex items-center gap-2 text-sm font-medium">
+      <section className="surface rounded-2xl p-4 md:p-6 shadow-sm space-y-6">
+        <div>
+          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
             <Search size={16} /> Search firms
-          </label>
+          </p>
           <form
-            className="mt-1 flex flex-wrap items-center gap-2"
+            className="mt-2 flex flex-wrap items-center gap-2"
             onSubmit={(event) => {
               event.preventDefault();
+              handleManualFilterChange();
               setQ(searchDraft);
             }}
           >
             <Input
-              placeholder="Search by name…"
+              placeholder="Search by name"
               list="home-firm-search-options"
               value={searchDraft}
               onChange={(event) => setSearchDraft(event.target.value)}
-              className="flex-1"
+              className="flex-1 min-w-0"
             />
             <datalist id="home-firm-search-options">
               {firmNameOptions
@@ -588,15 +691,19 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                   <option key={name} value={name} />
                 ))}
             </datalist>
-            <Button type="submit" size="sm">
+            <button
+              type="submit"
+              className="rounded-full bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-200 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-950 shadow-[0_8px_20px_-10px_rgba(16,185,129,0.6)] transition hover:brightness-110"
+            >
               Search
-            </Button>
+            </button>
             <Button
               type="button"
               variant="ghost"
               size="sm"
               className="text-white/70 hover:text-white"
               onClick={() => {
+                handleManualFilterChange();
                 setSearchDraft("");
                 setQ("");
               }}
@@ -606,57 +713,290 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           </form>
         </div>
 
-        <div className="md:col-span-3">
-          <label className="text-sm font-medium">Model</label>
-          <div className="mt-1 flex flex-wrap gap-2">
-            <FilterChips options={["", ...MODELS]} value={model} onChange={(v) => setModel(v as any)} />
+        <div className="grid gap-5 md:grid-cols-2">
+          <div className="space-y-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Model</p>
+              <div className="mt-2">
+                <FilterChips
+                  options={["", ...MODELS]}
+                  value={model}
+                  onChange={(v) => {
+                    handleManualFilterChange();
+                    setModel(v as ModelType | "");
+                  }}
+                />
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Account size</p>
+              <div className="mt-2">
+                <FilterChips
+                  options={ACCOUNT_SIZE_OPTIONS}
+                  value={accountSizeFilter}
+                  onChange={(opt) => {
+                    handleManualFilterChange();
+                    setAccountSizeFilter(opt);
+                  }}
+                  getLabel={(opt) => (!opt ? "All" : `$${Number(opt).toLocaleString()}`)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">
+                Minimum max funding
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {MAX_FUNDING_PRESETS.map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    className={chipClasses(maxMinFunding === preset)}
+                    onClick={() => {
+                      handleManualFilterChange();
+                      setMaxMinFunding(preset);
+                    }}
+                  >
+                    {preset === 0 ? "All" : `$${preset.toLocaleString()}`}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Platforms</p>
+                {!showAllPlatforms && hiddenPlatformCount > 0 ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="border-dashed border-amber-200/40 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-amber-100"
+                    onClick={() => setShowAllPlatforms(true)}
+                  >
+                    More platforms ({hiddenPlatformCount})
+                  </Button>
+                ) : showAllPlatforms ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="px-3 py-1 text-[11px] uppercase tracking-wider text-white/60"
+                    onClick={() => setShowAllPlatforms(false)}
+                  >
+                    Show fewer
+                  </Button>
+                ) : null}
+              </div>
+              <div className="mt-2">
+                <FilterChips
+                  options={["", ...displayedPlatforms]}
+                  value={platform}
+                  onChange={(v) => {
+                    handleManualFilterChange();
+                    setPlatform(v as PlatformType);
+                  }}
+                />
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Drawdown type</p>
+              <div className="mt-2">
+                <FilterChips
+                  options={["", ...DRAW_DOWN_OPTIONS]}
+                  value={drawdownFilter}
+                  onChange={(opt) => {
+                    handleManualFilterChange();
+                    setDrawdownFilter(opt);
+                  }}
+                />
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Payout speed</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {PAYOUT_SPEED_PRESETS.map((preset) => {
+                  const active = payoutSpeedFilter === preset.value;
+                  return (
+                    <button
+                      key={preset.value || "any"}
+                      type="button"
+                      className={chipClasses(active)}
+                      onClick={() => {
+                        handleManualFilterChange();
+                        setPayoutSpeedFilter((prev) => (prev === preset.value ? "" : preset.value));
+                      }}
+                      title={preset.max ? `Within ${preset.max} days` : "Any payout timing"}
+                    >
+                      {preset.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="md:col-span-4">
-          <label className="text-sm font-medium">Platform</label>
-          <div className="mt-1 flex flex-wrap gap-2">
-            <FilterChips options={["", ...PLATFORMS]} value={platform} onChange={(v) => setPlatform(v as any)} />
+        <div className="grid gap-5 md:grid-cols-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Minimum payout split</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {MIN_PAYOUT_PRESETS.map((preset) => (
+                <button
+                  key={preset}
+                  type="button"
+                  className={chipClasses(minPayout === preset)}
+                  onClick={() => {
+                    handleManualFilterChange();
+                    setMinPayout(preset);
+                  }}
+                >
+                  {preset === 0 ? "All" : `${preset}%`}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Eval speed</p>
+            <label className="mt-2 flex items-center gap-2 text-sm text-white/80">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border border-[#1fffba]/70 bg-[#040c17] text-[#040c17] focus:ring-0 checked:bg-[#1fffba] checked:border-[#1fffba]"
+                checked={oneDayEvalOnly}
+                onChange={(event) => {
+                  handleManualFilterChange();
+                  setOneDayEvalOnly(event.target.checked);
+                }}
+              />
+              Show only firms with 1-day pass
+            </label>
           </div>
         </div>
 
-        <div className="md:col-span-6">
-          <label className="flex justify-between text-sm font-medium">
-            <span>Minimum Max Funding</span>
-            <span className="tabular-nums">${maxMinFunding.toLocaleString()}</span>
-          </label>
-<Slider
-  min={0}
-  max={1_000_000}
-  step={50_000}
-  value={[maxMinFunding]}
-  onValueChange={([v = 0]) => setMaxMinFunding(v)}
-/>
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Score focus</p>
+            <span className="text-xs text-white/50">
+              Used when sorting by score. "Trusted" treats 3+ Trustpilot ratings as favorable.
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className={chipClasses(usingDefaultScoreFocus)}
+              onClick={() => {
+                handleManualFilterChange();
+                setScoreFocus([]);
+              }}
+            >
+              All criteria
+            </button>
+            {scoreFocusPresets.map((preset) => {
+              const active = scoreFocus.includes(preset.value);
+              return (
+                <button
+                  key={preset.value}
+                  type="button"
+                  className={chipClasses(active)}
+                  onClick={() => {
+                    handleManualFilterChange();
+                    setScoreFocus((prev) =>
+                      prev.includes(preset.value)
+                        ? prev.filter((item) => item !== preset.value)
+                        : [...prev, preset.value]
+                    );
+                  }}
+                >
+                  {preset.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        <div className="md:col-span-6">
-          <label className="flex justify-between text-sm font-medium">
-            <span>Minimum Payout Split</span>
-            <span className="tabular-nums">{minPayout}%</span>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Sort by</span>
+            <FilterChips
+              options={["score", "payout", "cap", "name", "truecost"]}
+              value={sort}
+              onChange={(v) => setSort(v as any)}
+            />
+          </div>
+
+          <label className="flex items-center gap-2 text-sm text-white/80">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border border-[#1fffba]/70 bg-[#040c17] text-[#040c17] focus:ring-0 checked:bg-[#1fffba] checked:border-[#1fffba]"
+              checked={refundOnly}
+              onChange={(event) => {
+                handleManualFilterChange();
+                setRefundOnly(event.target.checked);
+              }}
+            />
+            Refund eligible
           </label>
-<Slider
-  min={50}
-  max={100}
-  step={5}
-  value={[minPayout]}
-  onValueChange={([v = 70]) => setMinPayout(v)}
-/>
-        </div>
 
-        <div className="md:col-span-12 flex items-center gap-2">
-          <label className="text-sm font-medium">Sort by</label>
-<FilterChips
-  options={["score", "payout", "cap", "name", "truecost"]}
-  value={sort}
-  onChange={(v) => setSort(v as any)}
-/>
+          <label className="flex items-center gap-2 text-sm text-white/80">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border border-[#1fffba]/70 bg-[#040c17] text-[#040c17] focus:ring-0 checked:bg-[#1fffba] checked:border-[#1fffba]"
+              checked={discountOnly}
+              onChange={(event) => {
+                handleManualFilterChange();
+                setDiscountOnly(event.target.checked);
+              }}
+            />
+            Has discount
+          </label>
 
-          {(q || model || platform || maxMinFunding > 0 || minPayout !== 70 || sort !== "score" || compare.length > 0) && (
+          <button
+            type="button"
+            aria-pressed={fireDealsMode}
+            title={`Applies discount + low cost (true cost <= $${FIRE_DEAL_TRUECOST_MAX}) + trusted (Trustpilot >= ${FIRE_DEAL_TRUST_MIN}).`}
+            onClick={toggleFireDeals}
+            className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] shadow transition ${
+              fireDealsMode
+                ? "bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-200 text-black shadow-[0_8px_20px_-10px_rgba(255,140,0,0.6)]"
+                : "bg-gradient-to-r from-orange-500 via-amber-400 to-amber-300 text-black/80 opacity-80 hover:opacity-100"
+            }`}
+          >
+            Fire deals
+          </button>
+          {fireDealsMode ? (
+            <div className="flex flex-wrap gap-1 text-xs uppercase tracking-wide text-amber-200">
+              <span className="rounded-full border border-amber-300/60 px-2 py-0.5">Low cost</span>
+              <span className="rounded-full border border-amber-300/60 px-2 py-0.5">Has discount</span>
+              <span className="rounded-full border border-amber-300/60 px-2 py-0.5">Trusted 3+</span>
+            </div>
+          ) : null}
+
+          <div className="flex items-center gap-2 text-sm text-white/80">
+            <span>Min Trustpilot</span>
+            <select
+              value={minTrust}
+              onChange={(event) => {
+                handleManualFilterChange();
+                setMinTrust(Number(event.target.value));
+              }}
+              className="rounded-full border border-[#f6c850]/60 bg-[#040c17] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#f6c850] outline-none focus:border-[#f6c850]"
+            >
+              {TRUST_OPTIONS.map((option) => (
+                <option key={option} value={option} className="text-emerald-950">
+                  {option === 0 ? "0+" : `${option}+`}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {hasActiveFilters ? (
             <Button
               variant="outline"
               size="sm"
@@ -666,7 +1006,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             >
               Reset filters
             </Button>
-          )}
+          ) : null}
         </div>
       </section>
 
@@ -752,59 +1092,51 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                   ))}
                 </div>
 
-<ul className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
-  <li>
-    <strong>True cost:</strong> ${cost.trueCost.toLocaleString()}
-  </li>
-                <li>
-                  <strong>Up-front:</strong> ${cost.evalAfterDiscount.toLocaleString()}
-                </li>
-                <li>
-                  <strong>Activation:</strong> ${Number(f.pricing?.activationFee ?? 0).toLocaleString()}
-                </li>
-  {f.discount && cost.discountPct > 0 && (
-    <li className="col-span-2 text-xs font-medium text-amber-300">
-      💸 {f.discount.label || "Promo"} ({cost.discountPct}% off)
-      {f.discount?.code && (
-        <span className="text-muted-foreground"> — code: {f.discount.code}</span>
-      )}
-    </li>
-  )}
-  <li>
-    <strong>Payout:</strong> {(f.payoutPct ?? 0)}%
-  </li>
-  <li>
-    <strong>Max funding:</strong> ${f.maxFunding?.toLocaleString() ?? "—"}
-  </li>
-  <li>
-    <strong>Min days:</strong> {f.minDays ?? "—"}
-  </li>
-  <li className="col-span-2">
-    <strong>Spreads:</strong> {f.spreads ?? "—"}
-  </li>
-  <li>
-    <strong>Refund:</strong> {f.feeRefund ? "Yes" : "No"}
-  </li>
-  <li>
-    <strong>News trading:</strong> {f.newsTrading ? "Allowed" : "Restricted"}
-  </li>
-  <li>
-    <strong>Weekend hold:</strong> {f.weekendHolding ? "Yes" : "No"}
-  </li>
-                  <li className="flex items-center gap-1">
-                    <Star size={14} className="text-yellow-400" />
-                    <Badge
-                      variant="outline"
-                      className={
-                        (f.trustpilot ?? 0) >= 4.5
-                          ? "border-green-500 bg-green-50 text-green-600"
-                          : (f.trustpilot ?? 0) >= 3.5
-                          ? "border-yellow-500 bg-yellow-50 text-yellow-600"
-                          : "border-red-500 bg-red-50 text-red-600"
-                      }
-                    >
-                      {(f.trustpilot ?? 0).toFixed(1)}
-                    </Badge>
+                <ul className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
+                  <li>
+                    <strong>True cost:</strong> ${cost.trueCost.toLocaleString()}
+                  </li>
+                  <li>
+                    <strong>Up-front:</strong> ${cost.evalAfterDiscount.toLocaleString()}
+                  </li>
+                  <li>
+                    <strong>Activation:</strong> ${Number(f.pricing?.activationFee ?? 0).toLocaleString()}
+                  </li>
+                  {f.discount && cost.discountPct > 0 && (
+                    <li className="col-span-2 text-xs font-medium text-amber-300">
+                      {f.discount.label || "Promo"} ({cost.discountPct}% off)
+                      {f.discount?.code && (
+                        <span className="text-muted-foreground"> -- code: {f.discount.code}</span>
+                      )}
+                    </li>
+                  )}
+                  <li>
+                    <strong>Payout:</strong> {f.payoutPct ?? 0}%
+                  </li>
+                  <li>
+                    <strong>Max funding:</strong> ${f.maxFunding?.toLocaleString() ?? "-"}
+                  </li>
+                  <li>
+                    <strong>Account size:</strong> ${f.accountSize?.toLocaleString() ?? "-"}
+                  </li>
+                  <li>
+                    <strong>Min days:</strong> {f.minDays ?? "-"}
+                  </li>
+                  <li className="col-span-2">
+                    <strong>Spreads:</strong> {f.spreads ?? "-"}
+                  </li>
+                  <li>
+                    <strong>Refund:</strong> {f.feeRefund ? "Yes" : "No"}
+                  </li>
+                  <li>
+                    <strong>News trading:</strong> {f.newsTrading ? "Allowed" : "Restricted"}
+                  </li>
+                  <li>
+                    <strong>Weekend hold:</strong> {f.weekendHolding ? "Yes" : "No"}
+                  </li>
+                  <li className="col-span-2 flex items-center gap-2 text-amber-300">
+                    <span className="text-base leading-none">{formatStarIcons(f.trustpilot)}</span>
+                    <span className="text-xs text-white/80">{(f.trustpilot ?? 0).toFixed(1)}</span>
                   </li>
                 </ul>
 
@@ -940,30 +1272,38 @@ function platformConnectionsText(f: UIFirmWithConn): string {
 
 /* ===== helper components ===== */
 
+const chipClasses = (active: boolean) =>
+  `rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] transition ${
+    active
+      ? "border-[#f6c850] bg-gradient-to-r from-[#f7d778] via-[#f6c850] to-[#f0b429] text-emerald-950 shadow-[0_8px_20px_-10px_rgba(246,200,80,0.8)]"
+      : "border-[#f6c850]/50 text-[#f6c850]/80 hover:text-[#f6c850] hover:border-[#f6c850]"
+  }`;
+
 function FilterChips({
   options,
   value,
   onChange,
+  getLabel,
 }: {
-  options: string[];
+  options: readonly string[];
   value: string;
   onChange: (v: string) => void;
+  getLabel?: (v: string) => React.ReactNode;
 }) {
   return (
     <div className="flex flex-wrap gap-2">
-      {options.map((opt) => {
-        const label = opt === "" ? "All" : opt;
+      {options.map((opt, idx) => {
+        const label = getLabel ? getLabel(opt) : opt === "" ? "All" : opt;
         const active = value === opt;
         return (
-          <Button
-            key={label}
+          <button
+            key={opt || `option-${idx}`}
             type="button"
-            variant={active ? "default" : "outline"}
-            size="sm"
             onClick={() => onChange(opt)}
+            className={chipClasses(active)}
           >
             {label}
-          </Button>
+          </button>
         );
       })}
     </div>
@@ -1023,3 +1363,4 @@ function Footer() {
     </footer>
   );
 }
+

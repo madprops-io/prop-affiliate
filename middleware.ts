@@ -1,10 +1,14 @@
-// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  // Only toggle when COMING_SOON is explicitly "true"
-  if (process.env.COMING_SOON !== "true") return NextResponse.next();
+  const isProd = process.env.NODE_ENV === "production";
+  const comingSoon = process.env.COMING_SOON === "true";
+
+  // Disable redirect in development
+  if (!isProd || !comingSoon) {
+    return NextResponse.next();
+  }
 
   const { pathname } = req.nextUrl;
 
@@ -15,9 +19,11 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/favicon") ||
     pathname.startsWith("/icons") ||
     pathname.startsWith("/images") ||
-    pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|ico|txt|xml|json|css|js|map)$/);
+    pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|ico|txt|xml|json|css|js)$/);
 
-  if (pathname === "/coming-soon" || isAsset) return NextResponse.next();
+  if (pathname === "/coming-soon" || isAsset) {
+    return NextResponse.next();
+  }
 
   const url = req.nextUrl.clone();
   url.pathname = "/coming-soon";
@@ -25,5 +31,6 @@ export function middleware(req: NextRequest) {
 }
 
 // Apply middleware to all routes
-export const config = { matcher: "/:path*" };
-
+export const config = {
+  matcher: "/:path*",
+};

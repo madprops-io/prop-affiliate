@@ -1,5 +1,4 @@
 // app/coming-soon/page.tsx
-import Image from "next/image";
 import Logo from "@/components/ui/Logo";
 import type { Metadata } from "next";
 
@@ -35,7 +34,7 @@ export default function ComingSoon() {
     { name: "Elite Trader Funding", blurb: "Flexible evaluations & resets.", href: "https://elitetraderfunding.app/evaluations?ref=MadProps", logo: "/logos/etf.png", status: "affiliate" },
     { name: "Funded Futures Network (FFN)", blurb: "Standard & Express evaluations. Use code MAD", href: "https://www.fundedfuturesnetwork.com/?via=madprops", logo: "/logos/ffn.png", status: "affiliate" },
     { name: "Trade Day", blurb: "Professional platform; daily payouts. Use code MAD", href: "https://www.tradeday.com/", logo: "/logos/tradeday.png", status: "pending" },
-    { name: "Bulenox", blurb: "Simple rules, top customer service. Use Code MAD at checkout.", href: "https://bulenox.com/member/aff/go/tjcaldwell", logo: "/logos/bulenox.png", status: "affiliate" },
+    { name: "Bulenox", blurb: "Simple rules, top customer service. Use Code MAD at checkout.", href: "https://bulenox.com/member/aff/go/tjcaldwell", logo: "/logos/bulenox.svg", status: "affiliate" },
     { name: "FundingTicks", blurb: "Modern futures prop; clean UI.", href: "https://app.fundingticks.com/register?ref=ELPASO/", logo: "/logos/fundingticks.png", status: "affiliate" },
     { name: "Top One Futures", blurb: "Simple one-phase futures evaluations.", href: "https://toponefutures.com/?linkId=lp_707970&sourceId=mad&tenantId=toponefutures", logo: "/logos/topone.png", status: "affiliate" },
     { name: "TradingFunds", blurb: "Straightforward rules & pricing.", href: "https://tradingfunds.com/aff/1125/", logo: "/logos/tradingfunds.webp", status: "affiliate" },

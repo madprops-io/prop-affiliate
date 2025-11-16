@@ -1,0 +1,237 @@
+diff --git a/lib/types.ts b/lib/types.ts
+index 1111111..2222222 100644
+--- a/lib/types.ts
++++ b/lib/types.ts
+@@ -1,12 +1,43 @@
+-// Types for MadProps (previous version)
+-// export interface Firm { ... }
++// Types for MadProps
++// Central, shared types for UI and API to avoid drift.
++// Note: Pricing lives in lib/pricing to keep cost logic colocated.
+
++import type { Pricing } from "./pricing";
++
+ export interface BaseEntity {
+   id: string;
+   name: string;
+ }
+ 
+-export interface Firm extends BaseEntity {
+-  homepage?: string;
+-}
++/**
++ * Firm (shared between API and UI)
++ * - cap: numeric market cap or internal capacity metric
++ * - homepage: nullable when unknown (use null, not undefined)
++ * - pricing: optional; when present, must match Pricing
++ */
++export interface Firm extends BaseEntity {
++  cap: number;
++  homepage: string | null;
++  pricing?: Pricing;
++}
++
++/**
++ * UIFirm for client-side flags; must stay structurally compatible with Firm.
++ * Avoids widening/loosening types that cause null/undefined drift.
++ */
++export interface UIFirm extends Firm {
++  highlight?: boolean;
++}
++
++/**
++ * APIFirm for explicit server-shape if needed in API handlers.
++ * Same structure as Firm, but declared separately to make any
++ * server-only fields obvious in the future.
++ */
++export type APIFirm = Firm;
+ 
+ export type ID = string;
++
++// Re-export to unify imports for consumers that only know about lib/types
++export type { Pricing } from "./pricing";
+diff --git a/lib/pricing.ts b/lib/pricing.ts
+index 3333333..4444444 100644
+--- a/lib/pricing.ts
++++ b/lib/pricing.ts
+@@ -1,19 +1,56 @@
+-// Pricing helpers (previous version)
+-// export function getCosts(a: any) { ... }
++// Pricing domain types & helpers live here to keep cost logic colocated.
+
++/**
++ * Pricing
++ * - tier labels are stable strings; adjust as product evolves
++ * - perSeat can be null when not seat-based
++ */
+ export type Pricing = {
+-  plan: string;
+-  base: number;
+-  perSeat?: number;
++  tier: "free" | "pro" | "enterprise";
++  base: number;            // base monthly cost
++  perSeat?: number | null; // per-seat monthly cost (nullable when N/A)
+ };
+ 
+-export function getCosts(a: any) {
+-  const trueCost = (n: number) => a.base + (a.perSeat || 0) * n;
+-  return { trueCost };
++/**
++ * getCosts
++ * Fully typed so callers don't need casts.
++ * Returns helpers that operate on the provided Pricing.
++ */
++export function getCosts(pricing: Pricing) {
++  const perSeat = pricing.perSeat ?? 0;
++  const trueCost = (seats: number) => {
++    const s = Number.isFinite(seats) && seats >= 0 ? seats : 0;
++    return pricing.base + perSeat * s;
++  };
++  return { trueCost };
+ }
++
++/**
++ * Optional convenience calculator when you already know seats.
++ */
++export function calcMonthly(pricing: Pricing, seats: number): number {
++  return getCosts(pricing).trueCost(seats);
++}
+diff --git a/app/page.tsx b/app/page.tsx
+index 5555555..6666666 100644
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -1,38 +1,72 @@
+ "use client";
+-import React from "react";
+-import { getCosts } from "@/lib/pricing";
+-import type { UIFirm } from "@/lib/types";
++import React from "react";
++import { getCosts } from "@/lib/pricing";
++import type { UIFirm, Pricing } from "@/lib/types";
+ 
+-// Previous UIFirm had pricing as 'any' or mismatched shape
+-// type UIFirm = { ...; pricing?: any }
++// Ensure UIFirm.pricing matches Pricing (imported above via lib/types)
++// UIFirm already re-exports Pricing; keep render-time guards.
+
+ type Props = {
+   firms: UIFirm[];
+   defaultSeats?: number;
+ };
+ 
+ export default function Page({ firms, defaultSeats = 1 }: Props) {
+-  const seats = defaultSeats;
++  const seats = defaultSeats ?? 1;
+ 
+   return (
+     <main className="p-6 space-y-6">
+       <h1 className="text-2xl font-semibold">Firms</h1>
+       <ul className="space-y-3">
+         {firms.map((f) => {
+-          // Previously: getCosts(f).trueCost(seats) with casts
+-          // Now: guard pricing presence; no casts needed.
+-          const monthly =
+-            f.pricing ? getCosts(f.pricing).trueCost(seats) : 0;
++          // Guard for optional pricing; only compute cost when present.
++          const monthly = f.pricing ? getCosts(f.pricing).trueCost(seats) : null;
+           return (
+             <li
+               key={f.id}
+               className="rounded-xl border p-4 flex items-center justify-between"
+             >
+-              <div>
+-                <div className="font-medium">{f.name}</div>
+-                {f.homepage && (
+-                  <a href={f.homepage} className="text-blue-600 underline">
+-                    {f.homepage}
+-                  </a>
+-                )}
+-              </div>
+-              <div className="tabular-nums">${monthly}</div>
++              <div className="min-w-0">
++                <div className="font-medium truncate">{f.name}</div>
++                {f.homepage ? (
++                  <a
++                    href={f.homepage}
++                    className="text-blue-600 underline break-all"
++                    rel="noopener noreferrer"
++                    target="_blank"
++                  >
++                    {f.homepage}
++                  </a>
++                ) : (
++                  <span className="text-sm text-gray-500">No homepage</span>
++                )}
++                <div className="text-xs text-gray-500 mt-1">
++                  cap: {Number.isFinite(f.cap) ? f.cap : 0}
++                </div>
++              </div>
++              <div className="tabular-nums ml-4 shrink-0">
++                {monthly !== null ? <>${monthly}</> : <span className="text-gray-400">—</span>}
++              </div>
+             </li>
+           );
+         })}
+       </ul>
+     </main>
+   );
+ }
+diff --git a/app/api/firms/route.ts b/app/api/firms/route.ts
+index 7777777..8888888 100644
+--- a/app/api/firms/route.ts
++++ b/app/api/firms/route.ts
+@@ -1,52 +1,86 @@
+-import { NextResponse } from "next/server";
+-import type { APIFirm } from "@/lib/types";
++import { NextResponse } from "next/server";
++import type { APIFirm, Pricing } from "@/lib/types";
+ 
+-// Previously some fields were undefined instead of null; homepage not normalized
+-// and cap missing. Also pricing shape could drift from lib/pricing.
++// Ensure the API returns the same shapes as our shared types expect.
+
+ type RawFirm = {
+   id: string;
+   name: string;
+-  homepage?: string; // may be undefined in source
+-  cap?: number;      // may be missing in source
+-  pricing?: any;     // untyped source
++  homepage?: string | null | undefined;
++  cap?: number | null | undefined;
++  pricing?: Pricing | null | undefined;
+ };
+ 
+ async function fetchRawFirms(): Promise<RawFirm[]> {
+   // ...implementation detail...
+   return [];
+ }
+ 
+ export async function GET() {
+   const raw = await fetchRawFirms();
+-  const firms: APIFirm[] = raw.map((r) => ({
+-    id: r.id,
+-    name: r.name,
+-    homepage: r.homepage, // may be undefined
+-    // cap omitted before
+-    // pricing passed through loosely
+-    pricing: r.pricing,
+-  }));
++  const firms: APIFirm[] = raw.map((r) => {
++    // Normalize homepage to null (never undefined)
++    const homepage = r.homepage ?? null;
++    // Normalize cap to a number (fallback 0)
++    const cap = typeof r.cap === "number" && Number.isFinite(r.cap) ? r.cap : 0;
++    // Pricing either absent or conforms to Pricing (trusted source) — pass through
++    const pricing = r.pricing ?? undefined;
++
++    return {
++      id: r.id,
++      name: r.name,
++      homepage,
++      cap,
++      pricing,
++    };
++  });
+ 
+   return NextResponse.json({ firms });
+ }
