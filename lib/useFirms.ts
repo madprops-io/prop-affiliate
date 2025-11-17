@@ -14,6 +14,7 @@ const slugifyKey = (value: string | undefined) =>
 export type FirmRow = {
   key: string;
   name: string;
+  accountLabel?: string | null;
   payoutSplit?: number | null; // 0-100 (single value, use max if range)
   payoutDisplay?: string | null; // e.g., "80/90%" or "80-90%"
   maxFunding?: number | null;
@@ -162,6 +163,7 @@ function mapRow(r: RawRow): FirmRow {
     return undefined;
   };
 
+  const accountLabel = pick("account_label", "Account Label", "program_name", "Program Name", "account_name", "Account Name");
   const platformsStr =
     pick("platforms", "platform", "Platforms", "trading_platforms", "Trading Platforms", "Platform") ||
     r["platforms"];
@@ -193,6 +195,7 @@ function mapRow(r: RawRow): FirmRow {
   return {
     key: effectiveKey,
     name: firmName,
+    accountLabel: accountLabel ?? null,
     payoutSplit: typeof payoutPct === "number" ? Math.round(payoutPct) : undefined,
     payoutDisplay: payoutParsed.display ?? null,
     maxFunding,
@@ -235,6 +238,7 @@ function firmToRow(f: Firm): FirmRow {
   return {
     key: f.key,
     name: f.name,
+    accountLabel: f.notes ?? null,
     payoutSplit: typeof f.payout === "number" ? Math.round(f.payout * 100) : null,
     payoutDisplay: undefined,
     maxFunding: f.maxFunding ?? null,

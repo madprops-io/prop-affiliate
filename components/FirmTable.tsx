@@ -16,8 +16,13 @@ type TableFirm = FirmRow & {
   model?: FirmRow["model"] | string;
 };
 
+const slugifyKey = (value?: string | null) => (value ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+
 const DIRECTORY_KEY_BY_NAME = new Map(
-  FIRMS.map((firm) => [firm.name?.toLowerCase().trim() ?? "", firm.key])
+  FIRMS.map((firm) => [
+    firm.name?.toLowerCase().trim() ?? "",
+    slugifyKey(firm.key ?? firm.name),
+  ])
 );
 
 type EnrichedRow = {
@@ -487,13 +492,15 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
                 <td className="py-2 px-3">
                   {(() => {
                     const normalizedName = (firm.name ?? "").toLowerCase().trim();
-                    const directoryKey = DIRECTORY_KEY_BY_NAME.get(normalizedName) ?? firm.key;
+                    const fallbackKey = slugifyKey(firm.key ?? firm.name ?? normalizedName);
+                    const directoryKey = DIRECTORY_KEY_BY_NAME.get(normalizedName) ?? fallbackKey;
+                    const targetKey = directoryKey || fallbackKey;
                     return (
                       <Link
                         href={{
                           pathname: "/firms",
-                          query: { firm: directoryKey },
-                          hash: `firm-${directoryKey}`,
+                          query: { firm: targetKey },
+                          hash: `firm-${targetKey}`,
                         }}
                         prefetch={false}
                         className="font-medium text-white/90 hover:text-[#5fffd9] underline-offset-4 hover:underline"
@@ -508,13 +515,13 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
                   </div>
                 </td>
                 {columns.accountSize && (
-                  <td className={cellClass("accountSize")}>{typeof accountSize === "number" ? fmtMoney(accountSize) : "-"}</td>
+                  <td className={cellClass("accountSize", "text-center")}>{typeof accountSize === "number" ? fmtMoney(accountSize) : "-"}</td>
                 )}
-                {columns.trueCost && <td className={cellClass("trueCost")}>{fmtMoney(trueCost)}</td>}
-                {columns.eval && <td className={cellClass("eval")}>{fmtMoney(evalCost)}</td>}
-                {columns.activation && <td className={cellClass("activation")}>{fmtMoney(activationFee)}</td>}
+                {columns.trueCost && <td className={cellClass("trueCost", "text-center")}>{fmtMoney(trueCost)}</td>}
+                {columns.eval && <td className={cellClass("eval", "text-center")}>{fmtMoney(evalCost)}</td>}
+                {columns.activation && <td className={cellClass("activation", "text-center")}>{fmtMoney(activationFee)}</td>}
                 {columns.code && (
-                  <td className={cellClass()}>
+                  <td className={cellClass(undefined, "text-center")}>
                     {discountCode ? (
                       <button
                         type="button"
@@ -528,10 +535,10 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
                     )}
                   </td>
                 )}
-                {columns.minDays && <td className={cellClass("minDays")}>{typeof minDays === "number" ? minDays : "-"}</td>}
-                {columns.ddt && <td className={cellClass("ddt")}>{ddt || "-"}</td>}
+                {columns.minDays && <td className={cellClass("minDays", "text-center")}>{typeof minDays === "number" ? minDays : "-"}</td>}
+                {columns.ddt && <td className={cellClass("ddt", "text-center")}>{ddt || "-"}</td>}
                 {columns.daysToPayout && (
-                  <td className={cellClass("daysToPayout", "font-mono text-sm text-white/80")}>{formatPayoutDays(daysToPayout)}</td>
+                  <td className={cellClass("daysToPayout", "font-mono text-sm text-white/80 text-center")}>{formatPayoutDays(daysToPayout)}</td>
                 )}
                 {columns.cta && (
                   <td className={cellClass(undefined, "text-center")}>
@@ -552,10 +559,10 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
                   </td>
                 )}
                 {columns.discount && (
-                  <td className={cellClass("discount")}>{formatDiscountValue(discountPct, discountAmt)}</td>
+                  <td className={cellClass("discount", "text-center")}>{formatDiscountValue(discountPct, discountAmt)}</td>
                 )}
                 {columns.payout && (
-                  <td className={cellClass("payout")}>{payoutDisplay ?? (typeof payoutPct === "number" ? `${payoutPct}%` : "-")}</td>
+                  <td className={cellClass("payout", "text-center")}>{payoutDisplay ?? (typeof payoutPct === "number" ? `${payoutPct}%` : "-")}</td>
                 )}
             {columns.platforms && (
               <td
@@ -627,11 +634,19 @@ function FirmLogo({ name, src, fallbackKey }: { name: string; src?: string | nul
       .join("")
       .toUpperCase() ?? "?";
 
+  const LogoPanel = ({ children }: { children: React.ReactNode }) => (
+    <div className="relative flex h-16 w-16 items-center justify-center rounded-[20px] bg-gradient-to-br from-[#ffe5a3]/85 via-[#ffcb70]/75 to-[#ff9f48]/70 p-[2px] shadow-[0_10px_20px_-12px_rgba(255,198,88,0.8)]">
+      <div className="flex h-full w-full items-center justify-center rounded-[16px] bg-slate-950/90">
+        {children}
+      </div>
+    </div>
+  );
+
   if (errored || !activeSrc) {
     return (
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-black/30 text-xs font-semibold text-white/60">
-        {initials}
-      </div>
+      <LogoPanel>
+        <span className="text-xs font-semibold tracking-[0.2em] text-white/80">{initials}</span>
+      </LogoPanel>
     );
   }
 
@@ -644,17 +659,17 @@ function FirmLogo({ name, src, fallbackKey }: { name: string; src?: string | nul
   };
 
   return (
-    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-black/20 p-2">
+    <LogoPanel>
       <Image
         src={activeSrc}
         alt={`${name} logo`}
         width={56}
         height={56}
-        className="h-full w-full object-contain"
+        className="h-full w-full object-contain p-1.5"
         unoptimized
         onError={handleError}
       />
-    </div>
+    </LogoPanel>
   );
 }
 

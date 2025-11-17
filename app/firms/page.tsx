@@ -8,10 +8,12 @@ import { FirmDirectoryCards } from "./FirmDirectoryCards";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "All Firms — MadProps",
+  title: "All Firms - MadProps",
   description: "Browse every proprietary trading firm we track, all in one place.",
   alternates: { canonical: "/firms" },
 };
+
+const slugifyKey = (value?: string | null) => (value ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "");
 
 type FirmsPageProps = {
   searchParams?: Record<string, string | string[] | undefined>;
@@ -19,10 +21,8 @@ type FirmsPageProps = {
 
 export default function FirmsIndexPage({ searchParams }: FirmsPageProps) {
   const sorted: Firm[] = [...FIRMS].sort((a, b) => a.name.localeCompare(b.name));
-  const initialFirm =
-    typeof searchParams?.firm === "string" && searchParams.firm.trim().length > 0
-      ? searchParams.firm.trim()
-      : null;
+  const rawFirmParam = typeof searchParams?.firm === "string" ? searchParams.firm : null;
+  const initialFirm = rawFirmParam ? slugifyKey(rawFirmParam) || null : null;
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#040912] via-[#02050a] to-[#010307] text-white">

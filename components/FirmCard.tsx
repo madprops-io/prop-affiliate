@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useState, type ReactNode } from "react";
 import { buildAffiliateUrl } from "@/lib/affiliates";
 import { Card, CardContent } from "@/components/ui/card";
 import { BadgeList } from "./BadgeList";
@@ -48,6 +49,23 @@ export function FirmCard({ firm }: { firm: CardFirm }) {
   const rawLogo = (firm.logo || "").trim();
   const logoSrc = rawLogo.length > 0 ? rawLogo : fallbackLogo;
   const hasLogo = /^https?:\/\//i.test(logoSrc) || logoSrc.startsWith("/");
+  const [logoErrored, setLogoErrored] = useState(false);
+  const showLogo = hasLogo && !logoErrored;
+  const initials =
+    firm.name
+      ?.split(/\s+/)
+      .map((s) => s[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() ?? "?";
+
+  const LogoPanel = ({ children }: { children: ReactNode }) => (
+    <div className="relative flex h-16 w-16 items-center justify-center rounded-[20px] bg-gradient-to-br from-[#ffe5a3]/85 via-[#ffcb70]/75 to-[#ff9f48]/70 p-[2px] shadow-[0_10px_20px_-12px_rgba(255,198,88,0.8)]">
+      <div className="flex h-full w-full items-center justify-center rounded-[16px] bg-slate-950/90">
+        {children}
+      </div>
+    </div>
+  );
 
   const stats = [
     {
@@ -72,27 +90,21 @@ export function FirmCard({ firm }: { firm: CardFirm }) {
     <Card className="rounded-2xl border border-white/10 bg-white/5/60 backdrop-blur transition-colors hover:bg-white/10">
       <CardContent className="space-y-4 p-5">
         <div className="flex gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded border border-white/10 bg-white/5 p-1.5">
-            {hasLogo ? (
+          <LogoPanel>
+            {showLogo ? (
               <Image
                 src={logoSrc}
                 alt={`${firm.name} logo`}
                 width={64}
                 height={64}
-                className="h-16 w-16 object-contain"
+                className="h-full w-full object-contain p-1.5"
                 unoptimized
+                onError={() => setLogoErrored(true)}
               />
             ) : (
-              <span className="text-xs font-semibold text-white/60">
-                {firm.name
-                  ?.split(/\s+/)
-                  .map((s) => s[0])
-                  .slice(0, 2)
-                  .join("")
-                  .toUpperCase() ?? "?"}
-              </span>
+              <span className="text-xs font-semibold tracking-[0.2em] text-white/80">{initials}</span>
             )}
-          </div>
+          </LogoPanel>
 
           <div className="min-w-0 flex-1">
             <Link href={`/firm/${firm.key}`} className="text-lg font-semibold hover:underline">

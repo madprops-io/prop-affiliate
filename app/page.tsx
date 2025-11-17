@@ -1191,6 +1191,8 @@ function platformConnectionsText(f: UIFirmWithConn): string {
         {paginatedScored.map((f, idx) => {
           const cost = getCosts(f as any);
           const isFavoriteCard = isFavorite(f.key);
+          const fallbackLogo = `/logos/${f.key}.png`;
+          const resolvedLogo = f.logo?.trim().length ? f.logo.trim() : fallbackLogo;
           return (
             <Card
               key={`${f.key}-${idx}`}
@@ -1204,34 +1206,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                 {/* header row: logo + discount badge */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    {f.logo ? (
-                      <Image
-                        src={f.logo}
-                        alt={`${f.name} logo`}
-                        width={160}
-                        height={60}
-                        className="h-12 w-auto rounded bg-white/5"
-                        unoptimized
-                        onError={(e) => {
-                          const el = e.currentTarget as HTMLImageElement;
-                          el.style.display = "none";
-                          const fallback = document.createElement("div");
-                          fallback.className =
-                            "h-12 w-40 rounded bg-white/10 flex items-center justify-center text-xs text-white/60";
-                          fallback.textContent = (f.name ?? "?")
-                            .split(/\s+/)
-                            .map((s) => s[0])
-                            .slice(0, 2)
-                            .join("")
-                            .toUpperCase();
-                          el.parentElement?.appendChild(fallback);
-                        }}
-                      />
-                    ) : (
-                      <div className="h-12 w-40 rounded bg-white/10 flex items-center justify-center text-xs text-white/50">
-                        No logo
-                      </div>
-                    )}
+                    <ScoreCardLogo name={f.name} src={resolvedLogo} />
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -1582,6 +1557,39 @@ function MultiFilterChips({
           </button>
         );
       })}
+    </div>
+  );
+}
+
+function ScoreCardLogo({ name, src }: { name?: string | null; src: string }) {
+  const [errored, setErrored] = useState(false);
+  const initials =
+    name
+      ?.split(/\s+/)
+      .map((s) => s[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() ?? "?";
+
+  const showImage = Boolean(src) && !errored;
+
+  return (
+    <div className="relative flex h-16 w-16 items-center justify-center rounded-[20px] bg-gradient-to-br from-[#ffe5a3]/85 via-[#ffcb70]/75 to-[#ff9f48]/70 p-[2px] shadow-[0_10px_18px_-12px_rgba(255,198,88,0.75)]">
+      <div className="flex h-full w-full items-center justify-center rounded-[16px] bg-slate-950/90">
+        {showImage ? (
+          <Image
+            src={src}
+            alt={`${name ?? "Firm"} logo`}
+            width={64}
+            height={64}
+            className="h-full w-full object-contain p-1.5"
+            unoptimized
+            onError={() => setErrored(true)}
+          />
+        ) : (
+          <span className="text-xs font-semibold tracking-[0.2em] text-white/80">{initials}</span>
+        )}
+      </div>
     </div>
   );
 }

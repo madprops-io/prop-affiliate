@@ -2,15 +2,103 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Firm } from "@/lib/types";
 import { buildAffiliateUrl } from "@/lib/affiliates";
 import { Button } from "@/components/ui/button";
+import { useFirms, type FirmRow } from "@/lib/useFirms";
 
 type Props = {
   firms: Firm[];
   initialExpandedKey?: string | null;
 };
+
+type GroupedFirm = Firm & { accounts: AccountRow[]; slugKey: string };
+type AccountRow = {
+  name: string;
+  label?: string | null;
+  accountSize?: number | null;
+  maxFunding?: number | null;
+  payoutPct?: number | null;
+  minDays?: number | null;
+  daysToPayout?: number | string | null;
+  drawdownType?: string | null;
+  spreads?: string | null;
+  feeRefund?: boolean | null;
+  newsTrading?: boolean | null;
+  weekendHolding?: boolean | null;
+  pricing?: any;
+};
+
+const slugify = (value?: string | null) =>
+  (value ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+
+function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, string>): GroupedFirm[] {
+  const map = new Map<string, GroupedFirm>();
+  rows.forEach((row) => {
+    const baseName = row.name || "";
+    const baseNameKey = baseName.toLowerCase().trim();
+    const directoryKey = directoryMap?.get(baseNameKey) ?? null;
+    const rawKey = (row as FirmRow).key ?? (row as Firm).key ?? "";
+    const normalizedKey = slugify(rawKey);
+    const nameSlug = slugify(baseName);
+    const canonicalKey = directoryKey || normalizedKey || nameSlug || baseName || "";
+    if (!canonicalKey) return;
+
+    const mapKey = directoryKey || nameSlug || canonicalKey;
+    const slugKey = canonicalKey;
+    const base: GroupedFirm = map.get(mapKey) || {
+      slugKey,
+      key: canonicalKey,
+      name: baseName || canonicalKey,
+      homepage: (row as any).homepage ?? null,
+      signup: (row as any).signup ?? null,
+      logo: (row as any).logo ?? (canonicalKey ? `/logos/${canonicalKey}.png` : null),
+      model: Array.isArray((row as any).model) ? (row as any).model : [],
+      platforms: Array.isArray((row as any).platforms) ? (row as any).platforms : [],
+      maxFunding: typeof (row as any).maxFunding === "number" ? (row as any).maxFunding : null,
+      payout: typeof (row as any).payoutSplit === "number" ? (row as any).payoutSplit / 100 : null,
+      payoutSplit: typeof (row as any).payoutSplit === "number" ? (row as any).payoutSplit : null,
+      payoutDisplay: (row as any).payoutDisplay ?? null,
+      accountSize: typeof (row as any).accountSize === "number" ? (row as any).accountSize : null,
+      minDays: typeof (row as any).minDays === "number" ? (row as any).minDays : null,
+      daysToPayout: (row as any).daysToPayout ?? null,
+      drawdownType: (row as any).drawdownType ?? null,
+      spreads: (row as any).spreads ?? null,
+      feeRefund: (row as any).feeRefund ?? null,
+      newsTrading: (row as any).newsTrading ?? null,
+      weekendHolding: (row as any).weekendHolding ?? null,
+      trustpilot: typeof (row as any).trustpilot === "number" ? (row as any).trustpilot : null,
+      pricing: (row as any).pricing ?? null,
+      discount: (row as any).pricing?.discount ?? (row as any).discount ?? null,
+      notes: (row as any).notes ?? null,
+      accounts: [],
+    };
+
+    base.accounts.push({
+      name:
+        (row as any).accountLabel ||
+        (row as any).notes ||
+        `${(row as any).accountSize ? `$${(row as any).accountSize.toLocaleString()}` : "Account"}`,
+      label: (row as any).accountLabel ?? null,
+      accountSize: typeof (row as any).accountSize === "number" ? (row as any).accountSize : null,
+      maxFunding: typeof (row as any).maxFunding === "number" ? (row as any).maxFunding : null,
+      payoutPct: typeof (row as any).payoutSplit === "number" ? (row as any).payoutSplit : null,
+      minDays: typeof (row as any).minDays === "number" ? (row as any).minDays : null,
+      daysToPayout: (row as any).daysToPayout ?? null,
+      drawdownType: (row as any).drawdownType ?? null,
+      spreads: (row as any).spreads ?? null,
+      feeRefund: (row as any).feeRefund ?? null,
+      newsTrading: (row as any).newsTrading ?? null,
+      weekendHolding: (row as any).weekendHolding ?? null,
+      pricing: (row as any).pricing ?? null,
+    });
+
+    map.set(mapKey, base);
+  });
+
+  return Array.from(map.values());
+}
 
 function formatMoney(value?: number | null) {
   if (typeof value !== "number" || !Number.isFinite(value)) return "-";
@@ -24,16 +112,49 @@ function formatPercent(value?: number | null) {
 
 export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
   const [expandedKey, setExpandedKey] = useState<string | null>(initialExpandedKey ?? null);
+  const [pendingScrollKey, setPendingScrollKey] = useState<string | null>(initialExpandedKey ?? null);
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const { firms: liveFirms } = useFirms();
+  const directoryKeyMap = useMemo(() => {
+    const map = new Map<string, string>();
+    firms.forEach((firm) => {
+      const nameKey = (firm.name || "").toLowerCase().trim();
+      const slug = slugify(firm.key ?? firm.name);
+      if (!nameKey || !slug) return;
+      map.set(nameKey, slug);
+    });
+    return map;
+  }, [firms]);
+
+  const dataFirms = useMemo(() => {
+    if (liveFirms.length > 0) {
+      return groupFirmRows(liveFirms, directoryKeyMap);
+    }
+    return firms.map((firm) => ({
+      ...firm,
+      slugKey: slugify(firm.key ?? firm.name),
+      accounts: [],
+    })) as GroupedFirm[];
+  }, [liveFirms, firms, directoryKeyMap]);
+
+  const scrollFirmIntoView = useCallback((el: HTMLElement) => {
+    if (typeof window === "undefined") return;
+    const extraOffset = -200; // pull the card further down (positive moves lower, negative moves higher)
+    requestAnimationFrame(() => {
+      const rect = el.getBoundingClientRect();
+      const absoluteTop = rect.top + window.scrollY;
+      const target = absoluteTop - window.innerHeight / 2 + rect.height / 2 + extraOffset;
+      window.scrollTo({
+        top: Math.max(target, 0),
+        behavior: "smooth",
+      });
+    });
+  }, []);
   useEffect(() => {
     if (!initialExpandedKey) return;
     setExpandedKey(initialExpandedKey);
-    if (typeof window !== "undefined") {
-      const hash = `firm-${initialExpandedKey}`;
-      const el = document.getElementById(hash);
-      if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
-    }
+    setPendingScrollKey(initialExpandedKey);
   }, [initialExpandedKey]);
   useEffect(() => {
     if (initialExpandedKey) return;
@@ -45,17 +166,43 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
     if (!targetKey && hash.startsWith("firm-")) targetKey = hash.replace("firm-", "");
     if (targetKey) {
       setExpandedKey(targetKey);
-      const hashId = hash.startsWith("firm-") ? hash : `firm-${targetKey}`;
-      const el = document.getElementById(hashId);
-      if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+      setPendingScrollKey(targetKey);
     }
   }, [initialExpandedKey]);
 
+  useEffect(() => {
+    if (!pendingScrollKey) return;
+    if (expandedKey !== pendingScrollKey) return;
+    if (typeof window === "undefined") return;
+    const hash = `firm-${pendingScrollKey}`;
+    const el = document.getElementById(hash);
+    if (!el) return;
+    const delays = [100, 350, 650];
+    const timeouts = delays.map((delay) =>
+      window.setTimeout(() => scrollFirmIntoView(el), delay)
+    );
+    const finalTimeout = window.setTimeout(() => {
+      scrollFirmIntoView(el);
+      setPendingScrollKey(null);
+    }, delays[delays.length - 1] + 300);
+    timeouts.push(finalTimeout);
+    return () => timeouts.forEach((id) => window.clearTimeout(id));
+  }, [expandedKey, pendingScrollKey, scrollFirmIntoView]);
+
   const filteredFirms = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
-    if (!query) return firms;
-    return firms.filter((firm) => firm.name.toLowerCase().includes(query));
-  }, [firms, searchTerm]);
+    if (!query) return dataFirms;
+    const matchesBase = dataFirms.filter((firm) =>
+      firm.name.toLowerCase().includes(query)
+    );
+    if (matchesBase.length > 0) return matchesBase;
+    // fallback: check account descriptions
+    return dataFirms.filter((firm) =>
+      (firm.accounts ?? []).some((account) =>
+        account.name.toLowerCase().includes(query)
+      )
+    );
+  }, [dataFirms, searchTerm]);
 
   useEffect(() => {
     if (!searchTerm.trim()) return;
@@ -87,7 +234,7 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
           className="flex-1 rounded-xl border border-white/15 bg-transparent px-4 py-2 text-sm text-white placeholder:text-white/40 focus:border-emerald-300/60 focus:outline-none"
         />
         <datalist id="firm-search-options">
-          {firms
+          {dataFirms
             .filter((firm) =>
               searchInput.trim() ? firm.name.toLowerCase().startsWith(searchInput.trim().toLowerCase()) : false
             )
@@ -116,6 +263,7 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
 
       <div className="grid gap-5">
         {filteredFirms.map((firm) => {
+        const accounts = (firm as GroupedFirm).accounts ?? [];
         const isOpen = expandedKey === firm.key;
         const toggle = () => setExpandedKey(isOpen ? null : firm.key);
         const signupUrl = buildAffiliateUrl(firm.signup, firm.key);
@@ -128,7 +276,8 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
           <article
             id={`firm-${firm.key}`}
             key={firm.key}
-            className="scroll-mt-28 rounded-3xl border border-white/10 bg-white/5/30 p-5 shadow-[0_40px_60px_-50px_black] transition hover:border-emerald-400/40 hover:bg-white/10"
+            style={{ scrollMarginTop: "45vh" }}
+            className="rounded-3xl border border-white/10 bg-white/5/30 p-5 shadow-[0_40px_60px_-50px_black] transition hover:border-emerald-400/40 hover:bg-white/10"
           >
             <button
               type="button"
@@ -184,6 +333,37 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
                     Visit / Sign up
                   </a>
                 </div>
+
+                {accounts.length > 0 ? (
+                  <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                    <p className="text-xs uppercase tracking-[0.35em] text-white/40">Account options</p>
+                    <div className="mt-3 space-y-3">
+                      {accounts.map((account, idx) => {
+                        const label = account.label || account.name || "";
+                        const size = account.accountSize
+                          ? `$${account.accountSize.toLocaleString()}`
+                          : "";
+                        return (
+                          <div
+                            key={`${firm.key}-acct-${idx}`}
+                            className="grid gap-3 sm:grid-cols-3 text-sm text-white/80 border border-white/5 rounded-xl px-3 py-2"
+                          >
+                            <span className="font-semibold">
+                              {size ? `${size}${label ? ` · ${label}` : ""}` : label || "Account"}
+                            </span>
+                            <span>
+                              Payout:{" "}
+                              {typeof account.payoutPct === "number" ? `${Math.round(account.payoutPct)}%` : "-"}
+                            </span>
+                            <span>
+                              Days to payout: {account.daysToPayout ? String(account.daysToPayout) : "-"}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : null}
               </div>
             ) : null}
           </article>
@@ -222,29 +402,40 @@ function Pill({ label, active }: { label: string; active: boolean }) {
 
 function FirmLogo({ name, src }: { name: string; src: string }) {
   const [errored, setErrored] = useState(false);
+  const initials =
+    name
+      ?.split(/\s+/)
+      .map((s) => s[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() ?? "?";
+
+  const LogoPanel = ({ children }: { children: React.ReactNode }) => (
+    <div className="relative flex h-20 w-20 items-center justify-center rounded-[24px] bg-gradient-to-br from-[#ffe5a3]/85 via-[#ffcb70]/75 to-[#ff9f48]/70 p-[2px] shadow-[0_18px_32px_-18px_rgba(255,198,88,0.8)]">
+      <div className="flex h-full w-full items-center justify-center rounded-[18px] bg-slate-950/90">
+        {children}
+      </div>
+    </div>
+  );
+
   if (errored) {
     return (
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-black/40 text-xs font-semibold text-white/60">
-        {name
-          ?.split(/\s+/)
-          .map((s) => s[0])
-          .slice(0, 2)
-          .join("")
-          .toUpperCase() ?? "?"}
-      </div>
+      <LogoPanel>
+        <span className="text-base font-semibold tracking-[0.2em] text-white/80">{initials}</span>
+      </LogoPanel>
     );
   }
   return (
-    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-black/20 p-2">
+    <LogoPanel>
       <Image
         src={src}
         alt={`${name} logo`}
-        width={56}
-        height={56}
-        className="h-full w-full object-contain"
+        width={72}
+        height={72}
+        className="h-full w-full object-contain p-2.5"
         unoptimized
         onError={() => setErrored(true)}
       />
-    </div>
+    </LogoPanel>
   );
 }
