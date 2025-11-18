@@ -77,7 +77,7 @@ const getDaySortValue = (value: number | string | null | undefined) => {
 type FirmTableProps = {
   firms?: TableFirm[] | { data?: TableFirm[] };
   fireDealsMode: boolean;
-  columnsPortalRef?: React.RefObject<HTMLDivElement>;
+  columnsPortalRef?: React.RefObject<HTMLDivElement | null>;
 };
 
 export default function FirmTable({ firms, fireDealsMode, columnsPortalRef }: FirmTableProps) {
@@ -374,7 +374,9 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
 
   return (
     <>
-      {columnsPortalRef?.current ? columnsControl : <div className="relative z-10 mb-2 flex justify-end">{columnToggle}</div>}
+      {columnsPortalRef?.current ? columnsControl : (
+        <div className="relative z-10 mb-2 flex justify-end pr-4">{columnToggle}</div>
+      )}
       <div className="overflow-x-auto rounded-3xl border border-[#26ffd4]/15 bg-gradient-to-br from-[#020914] via-[#010409] to-[#000103] p-1 shadow-[0_45px_80px_-50px_#12ffd0]">
         <table className="w-full text-sm text-white/80 backdrop-blur-sm">
           <thead className="sticky top-0 z-10 bg-[#040d19]/95 text-white shadow-[0_12px_30px_-20px_#000]">
