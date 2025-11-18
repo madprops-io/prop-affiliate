@@ -447,7 +447,7 @@ const [sort, setSort] = useState<SortKey>("score");
       { view: searchParams.get("view") }
     );
     setSearchDraft("");
-    setAccountSizeFilter("");
+    setAccountSizeFilter([]);
     setDrawdownFilter("");
     setPayoutSpeedFilter("");
     setOneDayEvalOnly(false);
