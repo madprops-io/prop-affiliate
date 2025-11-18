@@ -221,8 +221,8 @@ function mapRow(r: RawRow): FirmRow {
       discount:
         typeof discountPercent === "number" || typeof discountAmount === "number"
           ? {
-              percent: discountPercent ?? null,
-              amount: discountAmount ?? null,
+              percent: discountPercent ?? undefined,
+              amount: discountAmount ?? undefined,
               code: r["discount_code"] || null,
               label: discountLabelForDisplay,
             }
