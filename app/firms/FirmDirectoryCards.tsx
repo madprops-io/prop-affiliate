@@ -189,7 +189,7 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
     const finalTimeout = window.setTimeout(() => {
       scrollFirmIntoView(el);
       setPendingScrollKey(null);
-    }, delays[delays.length - 1] + 300);
+    }, (delays[delays.length - 1] ?? 0) + 300);
     timeouts.push(finalTimeout);
     return () => timeouts.forEach((id) => window.clearTimeout(id));
   }, [expandedKey, pendingScrollKey, scrollFirmIntoView]);
