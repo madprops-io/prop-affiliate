@@ -77,8 +77,8 @@ export function FirmCard({ firm }: { firm: CardFirm }) {
       value: payoutPct != null ? `${payoutPct}%` : "-",
     },
     {
-      label: "Min days",
-      value: typeof firm.minDays === "number" ? `${firm.minDays}` : "-",
+      label: "Min days (Eval)",
+      value: firm.minDays === 0 ? "Instant" : typeof firm.minDays === "number" ? `${firm.minDays}` : "-",
     },
     {
       label: "Platforms",

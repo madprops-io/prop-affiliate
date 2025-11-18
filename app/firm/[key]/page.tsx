@@ -265,7 +265,10 @@ export default function FirmDetailPage() {
             <Stat label="Payout split" value={formatPercent(selected.payoutPct)} />
             <Stat label="Max funding" value={formatCurrency(selected.maxFunding)} />
             <Stat label="Featured account size" value={formatCurrency(selected.accountSize)} />
-            <Stat label="Min days to qualify" value={selected.minDays ? `${selected.minDays}` : "-"} />
+            <Stat
+              label="Min days (Eval)"
+              value={selected.minDays === 0 ? "Instant" : selected.minDays ? `${selected.minDays}` : "-"}
+            />
             <Stat label="Days to payout" value={selected.daysToPayout ? String(selected.daysToPayout) : "-"} />
             <Stat label="Drawdown type" value={selected.drawdownType ?? "-"} />
             <Stat label="Spreads" value={selected.spreads ?? "-"} />

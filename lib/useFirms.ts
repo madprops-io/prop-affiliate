@@ -202,7 +202,19 @@ function mapRow(r: RawRow): FirmRow {
     accountSize: accountSize ?? maxFunding ?? null,
     platforms: splitList(platformsStr),
     model: splitList(modelStr),
-    minDays: parseNum(r["min_days"]),
+    minDays: (() => {
+      const source =
+        r["min_days (Eval)"] ??
+        r["Min Days (Eval)"] ??
+        r["min days (Eval)"] ??
+        r["min_days_eval"] ??
+        r["min_days"] ??
+        r["minDays"];
+      const normalized = (source ?? "").trim().toLowerCase();
+      if (normalized === "instant" || normalized === "instant funded") return 0;
+      const parsed = parseNum(source);
+      return typeof parsed === "number" ? parsed : undefined;
+    })(),
     daysToPayout: (() => {
       const parsed = parseDaysField(daysToPayoutStr);
       return typeof parsed === "number" || typeof parsed === "string" ? parsed : null;

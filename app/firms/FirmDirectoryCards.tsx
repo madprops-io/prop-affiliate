@@ -315,7 +315,10 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
                     label="Platforms"
                     value={Array.isArray(firm.platforms) ? firm.platforms.join(", ") || "N/A" : "N/A"}
                   />
-                  <Detail label="Min days" value={firm.minDays ? `${firm.minDays}` : "-"} />
+                  <Detail
+                    label="Min days (Eval)"
+                    value={firm.minDays === 0 ? "Instant" : typeof firm.minDays === "number" ? `${firm.minDays}` : "-"}
+                  />
                   <Detail label="Days to payout" value={firm.daysToPayout ? `${firm.daysToPayout}` : "-"} />
                   <Detail label="Payout" value={formatPercent(payoutPct)} />
                   <Detail label="Max funding" value={formatMoney(firm.maxFunding)} />

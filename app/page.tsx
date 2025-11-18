@@ -97,6 +97,12 @@ function parseDaysToNumber(value: unknown) {
   return null;
 }
 
+function formatMinDaysDisplay(value?: number | null) {
+  if (value === 0) return "Instant";
+  if (typeof value === "number" && Number.isFinite(value)) return `${value}`;
+  return "-";
+}
+
 function parseListParam(value?: string | null) {
   if (!value) return [];
   return value
@@ -340,6 +346,7 @@ const [minPayout, setMinPayout] = useState<number>(DEFAULT_MIN_PAYOUT);
   const [drawdownFilter, setDrawdownFilter] = useState<string>("");
   const [payoutSpeedFilter, setPayoutSpeedFilter] = useState<string>("");
   const [oneDayEvalOnly, setOneDayEvalOnly] = useState(false);
+  const [instantFundedOnly, setInstantFundedOnly] = useState(false);
   const [refundOnly, setRefundOnly] = useState(false);
   const [discountOnly, setDiscountOnly] = useState(false);
   const [minTrust, setMinTrust] = useState<number>(DEFAULT_MIN_TRUST);
@@ -388,6 +395,24 @@ const [sort, setSort] = useState<SortKey>("score");
   const handleManualFilterChange = () => {
     if (fireDealsMode) deactivateFireDeals();
     setCardsPage(1);
+  };
+
+  const toggleFastPass = () => {
+    handleManualFilterChange();
+    setOneDayEvalOnly((prev) => {
+      const next = !prev;
+      if (next) setInstantFundedOnly(false);
+      return next;
+    });
+  };
+
+  const toggleInstantFunded = () => {
+    handleManualFilterChange();
+    setInstantFundedOnly((prev) => {
+      const next = !prev;
+      if (next) setOneDayEvalOnly(false);
+      return next;
+    });
   };
 
   const handleExportFavorites = () => {
@@ -451,6 +476,7 @@ const [sort, setSort] = useState<SortKey>("score");
     setDrawdownFilter("");
     setPayoutSpeedFilter("");
     setOneDayEvalOnly(false);
+    setInstantFundedOnly(false);
     setRefundOnly(false);
     setDiscountOnly(false);
     setMinTrust(DEFAULT_MIN_TRUST);
@@ -567,10 +593,12 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
       const drawdownOk =
         !drawdownFilter ||
         (f.drawdownType || "").toLowerCase().includes(drawdownFilter.toLowerCase());
+      const minDaysValue = typeof f.minDays === "number" ? f.minDays : null;
       const payoutSpeedOk =
         !payoutSpeedFilter ||
         ((f.payoutDaysValue ?? Number.POSITIVE_INFINITY) <= (payoutMax ?? Number.POSITIVE_INFINITY));
-      const evalSpeedOk = !oneDayEvalOnly || (f.minDays ?? Number.POSITIVE_INFINITY) <= 1;
+      const evalSpeedOk = !oneDayEvalOnly || minDaysValue === 1;
+      const instantFundedOk = !instantFundedOnly || minDaysValue === 0;
       const refundOk = !refundOnly || !!f.feeRefund;
     const discountValue =
       f.discount?.percent ?? (f.discount as { amount?: number } | undefined)?.amount ?? f.pricing?.discountPct ?? 0;
@@ -594,7 +622,8 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         discountOk &&
         lowCostOk &&
         trustOk &&
-        favoritesOk
+        favoritesOk &&
+        instantFundedOk
       );
     });
   }, [
@@ -608,6 +637,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     drawdownFilter,
     payoutSpeedFilter,
     oneDayEvalOnly,
+    instantFundedOnly,
     refundOnly,
     discountOnly,
     fireDealsMode,
@@ -726,6 +756,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         maxMinFunding > 0 ||
         minPayout !== DEFAULT_MIN_PAYOUT ||
         oneDayEvalOnly ||
+        instantFundedOnly ||
         refundOnly ||
         discountOnly ||
         fireDealsMode ||
@@ -1039,21 +1070,6 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             </div>
           </div>
 
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Eval speed</p>
-            <label className="mt-2 flex items-center gap-2 text-sm text-white/80">
-              <input
-                type="checkbox"
-                className="h-4 w-4 rounded border border-[#1fffba]/70 bg-[#040c17] text-[#040c17] focus:ring-0 checked:bg-[#1fffba] checked:border-[#1fffba]"
-                checked={oneDayEvalOnly}
-                onChange={(event) => {
-                  handleManualFilterChange();
-                  setOneDayEvalOnly(event.target.checked);
-                }}
-              />
-              Show only firms with 1-day pass
-            </label>
-          </div>
         </div>
 
         <div className="space-y-2">
@@ -1298,7 +1314,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                       <strong>Max funding:</strong> ${f.maxFunding?.toLocaleString() ?? "-"}
                     </li>
                     <li>
-                      <strong>Min days:</strong> {f.minDays ?? "-"}
+                      <strong>Min days (Eval):</strong> {formatMinDaysDisplay(f.minDays)}
                     </li>
                     <li className="col-span-2">
                       <strong>Spreads:</strong> {f.spreads ?? "-"}
@@ -1421,7 +1437,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                   <th className="p-2 text-left">Platforms</th>
                   <th className="p-2 text-left">Payout</th>
                   <th className="p-2 text-left">Max Funding</th>
-                  <th className="p-2 text-left">Min Days</th>
+                  <th className="p-2 text-left">Min Days (Eval)</th>
                   <th className="p-2 text-left">Rules</th>
                 </tr>
               </thead>
@@ -1433,7 +1449,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                     <td className="p-2">{f.platforms.join(", ")}</td>
                     <td className="p-2">{Math.round((f.payout ?? 0) * 100)}%</td>
                     <td className="p-2">${(f.maxFunding ?? 0).toLocaleString()}</td>
-                    <td className="p-2">{f.minDays ?? "—"}</td>
+                    <td className="p-2">{formatMinDaysDisplay(f.minDays)}</td>
                     <td className="p-2">
                       <div className="flex flex-wrap gap-2">
                         <Badge variant="outline">News: {f.newsTrading ? "OK" : "No"}</Badge>
@@ -1467,6 +1483,10 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           firms={firms}
           fireDealsMode={fireDealsMode}
           onToggleFireDeals={toggleFireDeals}
+          fastPassActive={oneDayEvalOnly}
+          instantFundedActive={instantFundedOnly}
+          onToggleFastPass={toggleFastPass}
+          onToggleInstantFunded={toggleInstantFunded}
         />
 
         <FAQ />

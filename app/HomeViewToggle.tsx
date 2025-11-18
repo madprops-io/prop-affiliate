@@ -12,9 +12,22 @@ type Props = {
   firms: FirmRow[];
   fireDealsMode: boolean;
   onToggleFireDeals: () => void;
+  fastPassActive: boolean;
+  instantFundedActive: boolean;
+  onToggleFastPass: () => void;
+  onToggleInstantFunded: () => void;
 };
 
-export default function HomeViewToggle({ cards, firms, fireDealsMode, onToggleFireDeals }: Props) {
+export default function HomeViewToggle({
+  cards,
+  firms,
+  fireDealsMode,
+  onToggleFireDeals,
+  fastPassActive,
+  instantFundedActive,
+  onToggleFastPass,
+  onToggleInstantFunded,
+}: Props) {
   const sp = useSearchParams();
   const router = useRouter();
   const columnsPortalRef = useRef<HTMLDivElement | null>(null);
@@ -32,28 +45,50 @@ export default function HomeViewToggle({ cards, firms, fireDealsMode, onToggleFi
 
   const controls = (
     <div className="mb-1 flex flex-wrap items-center gap-3">
-      <button
-        onClick={() => setView("table")}
-        className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
-          view === "table"
-            ? "bg-emerald-400 text-black"
-            : "border border-white/20 bg-transparent text-white/70 hover:text-white"
-        }`}
-      >
-        Table
-      </button>
       {view === "table" ? (
+        <>
+          <button
+            onClick={onToggleFireDeals}
+            aria-pressed={fireDealsMode}
+            className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] shadow transition ${
+              fireDealsMode
+                ? "border border-orange-300/70 bg-transparent text-orange-200 shadow-[0_8px_20px_-10px_rgba(255,188,87,0.6)]"
+                : "bg-gradient-to-r from-orange-500 via-amber-400 to-amber-300 text-black/80 opacity-80 hover:opacity-100"
+            }`}
+          >
+            Fire Deals
+          </button>
+          <button
+            onClick={onToggleFastPass}
+            aria-pressed={fastPassActive}
+            className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
+              fastPassActive
+                ? "bg-white text-black"
+                : "border border-white/20 bg-transparent text-white/70 hover:text-white"
+            }`}
+          >
+            Fast Pass
+          </button>
+          <button
+            onClick={onToggleInstantFunded}
+            aria-pressed={instantFundedActive}
+            className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
+              instantFundedActive
+                ? "bg-emerald-300 text-black"
+                : "border border-white/20 bg-transparent text-white/70 hover:text-white"
+            }`}
+          >
+            Instant Funded
+          </button>
+        </>
+      ) : (
         <button
-          onClick={onToggleFireDeals}
-          className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] shadow transition ${
-            fireDealsMode
-              ? "bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-200 text-black shadow-[0_8px_20px_-10px_rgba(255,140,0,0.6)]"
-              : "bg-gradient-to-r from-orange-500 via-amber-400 to-amber-300 text-black/80 opacity-80 hover:opacity-100"
-          }`}
+          onClick={() => setView("table")}
+          className="rounded-full border border-emerald-400/50 bg-transparent px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300 hover:text-white"
         >
-          Fire Deals
+          Table view
         </button>
-      ) : null}
+      )}
       <button
         onClick={() => setView("cards")}
         className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
@@ -77,7 +112,13 @@ export default function HomeViewToggle({ cards, firms, fireDealsMode, onToggleFi
           ) : null}
         </div>
         {view === "table" && (
-          <FirmsTable firms={firms} fireDealsMode={fireDealsMode} columnsPortalRef={columnsPortalRef} />
+          <FirmsTable
+            firms={firms}
+            fireDealsMode={fireDealsMode}
+            columnsPortalRef={columnsPortalRef}
+            fastPassOnly={fastPassActive}
+            instantFundedOnly={instantFundedActive}
+          />
         )}
       </div>
       {view === "cards" ? cards : null}

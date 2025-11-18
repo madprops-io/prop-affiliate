@@ -62,6 +62,12 @@ const formatPayoutDays = (daysToPayout?: number | string | null) => {
   return payout !== null ? `${payout}` : "-";
 };
 
+const formatMinDays = (value?: number | null) => {
+  if (value === 0) return "Instant";
+  if (typeof value === "number" && Number.isFinite(value)) return `${value}`;
+  return "-";
+};
+
 const getDaySortValue = (value: number | string | null | undefined) => {
   if (typeof value === "number" && Number.isFinite(value)) return value;
   if (typeof value === "string") {
@@ -78,9 +84,17 @@ type FirmTableProps = {
   firms?: TableFirm[] | { data?: TableFirm[] };
   fireDealsMode: boolean;
   columnsPortalRef?: React.RefObject<HTMLDivElement | null>;
+  fastPassOnly?: boolean;
+  instantFundedOnly?: boolean;
 };
 
-export default function FirmTable({ firms, fireDealsMode, columnsPortalRef }: FirmTableProps) {
+export default function FirmTable({
+  firms,
+  fireDealsMode,
+  columnsPortalRef,
+  fastPassOnly = false,
+  instantFundedOnly = false,
+}: FirmTableProps) {
   let list: TableFirm[] = [];
   if (Array.isArray(firms)) {
     list = firms;
@@ -88,7 +102,16 @@ export default function FirmTable({ firms, fireDealsMode, columnsPortalRef }: Fi
     list = firms.data ?? [];
   }
 
-  const rowsBase = [...list].sort(
+  const shouldIncludeByMinDays = (firm: TableFirm) => {
+    const value = typeof firm.minDays === "number" ? firm.minDays : null;
+    if (fastPassOnly && value !== 1) return false;
+    if (instantFundedOnly && value !== 0) return false;
+    return true;
+  };
+
+  const filteredList = list.filter(shouldIncludeByMinDays);
+
+  const rowsBase = [...filteredList].sort(
     (a, b) =>
       (a.true_cost ?? a.trueCost ?? Number.POSITIVE_INFINITY) -
       (b.true_cost ?? b.trueCost ?? Number.POSITIVE_INFINITY)
@@ -202,7 +225,7 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
   eval: "Eval Cost",
   activation: "Activation",
   code: "Code",
-  minDays: "Min Days",
+  minDays: "Min Days (Eval)",
   ddt: "DDT",
   daysToPayout: "Days to Payout",
   cta: "Get Eval",
@@ -421,7 +444,7 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
             {columns.minDays && (
               <th className={headerClass("minDays")}>
                 <button className={headerButtonClass("minDays")} onClick={() => setSort("minDays")}>
-                  Min Days {arrow("minDays")}
+                  Min Days (Eval) {arrow("minDays")}
                 </button>
               </th>
             )}
@@ -537,7 +560,7 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
                     )}
                   </td>
                 )}
-                {columns.minDays && <td className={cellClass("minDays", "text-center")}>{typeof minDays === "number" ? minDays : "-"}</td>}
+                {columns.minDays && <td className={cellClass("minDays", "text-center")}>{formatMinDays(minDays)}</td>}
                 {columns.ddt && <td className={cellClass("ddt", "text-center")}>{ddt || "-"}</td>}
                 {columns.daysToPayout && (
                   <td className={cellClass("daysToPayout", "font-mono text-sm text-white/80 text-center")}>{formatPayoutDays(daysToPayout)}</td>
