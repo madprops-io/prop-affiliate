@@ -55,7 +55,7 @@ const ACCOUNT_SIZE_OPTIONS = [
 const MAX_FUNDING_PRESETS = [0, 50_000, 100_000, 200_000, 300_000, 500_000, 1_000_000] as const;
 const DRAW_DOWN_OPTIONS = ["EOD", "EOT TRAILING", "INTRADAY", "STATIC"] as const;
 const MIN_PAYOUT_PRESETS = [0, 50, 60, 70, 80, 90] as const;
-const TRUST_OPTIONS = Array.from({ length: 11 }, (_, idx) => idx * 0.5) as const;
+const TRUST_OPTIONS = Array.from({ length: 11 }, (_, idx) => idx * 0.5) as readonly number[];
 const PLATFORM_PREVIEW_FALLBACK_COUNT = 8;
 const FIRE_DEAL_TRUST_MIN = 3;
 const FIRE_DEAL_TRUECOST_MAX = 600;
