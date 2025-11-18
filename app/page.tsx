@@ -1462,7 +1462,12 @@ function platformConnectionsText(f: UIFirmWithConn): string {
         <AffiliateNotice />
 
         {/* Toggle: default view = Table; switch to Cards with ?view=cards */}
-        <HomeViewToggle cards={HomeCards} firms={firms} />
+        <HomeViewToggle
+          cards={HomeCards}
+          firms={firms}
+          fireDealsMode={fireDealsMode}
+          onToggleFireDeals={toggleFireDeals}
+        />
 
         <FAQ />
         <Footer />
