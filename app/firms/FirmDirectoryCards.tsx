@@ -273,7 +273,12 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
         const toggle = () => setExpandedKey(isOpen ? null : firm.key);
         const signupUrl = buildAffiliateUrl(firm.signup ?? firm.homepage ?? "", firm.key);
         const homepage = firm.homepage || `/firm/${firm.key}`;
-        const programBlurb = firm.notes ?? `Models: ${(firm.model ?? []).join(", ") || "N/A"}`;
+        const models = Array.isArray(firm.model)
+          ? firm.model
+          : typeof firm.model === "string"
+          ? [firm.model]
+          : [];
+        const programBlurb = firm.notes ?? `Models: ${models.join(", ") || "N/A"}`;
         const payoutPct = typeof firm.payout === "number" ? firm.payout : undefined;
         const logoSrc = firm.logo?.trim() ? firm.logo.trim() : `/logos/${firm.key}.png`;
 
