@@ -271,7 +271,7 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
         const accounts = (firm as GroupedFirm).accounts ?? [];
         const isOpen = expandedKey === firm.key;
         const toggle = () => setExpandedKey(isOpen ? null : firm.key);
-        const signupUrl = buildAffiliateUrl(firm.signup, firm.key);
+        const signupUrl = buildAffiliateUrl(firm.signup ?? firm.homepage ?? "", firm.key);
         const homepage = firm.homepage || `/firm/${firm.key}`;
         const programBlurb = firm.notes ?? `Models: ${(firm.model ?? []).join(", ") || "N/A"}`;
         const payoutPct = typeof firm.payout === "number" ? firm.payout : undefined;
