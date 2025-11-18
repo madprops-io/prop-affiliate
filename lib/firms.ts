@@ -8,10 +8,13 @@ export type Firm = {
   model: string[];
   platforms: string[];
   maxFunding: number;
+  accountSize?: number;
   payout: number;
 
   // optional facts
   minDays?: number;
+  daysToPayout?: number | string | null;
+  drawdownType?: string | null;
   spreads?: string;
   feeRefund?: boolean;
   newsTrading?: boolean;
