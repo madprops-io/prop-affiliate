@@ -2,14 +2,14 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import FirmsTable from "@/components/FirmTable";
-import type { Firm } from "@/lib/types";
+import type { FirmRow } from "@/lib/useFirms";
 import { useRef } from "react";
 
 type ToggleView = "table" | "cards";
 
 type Props = {
   cards: React.ReactNode;
-  firms: Firm[];
+  firms: FirmRow[];
   fireDealsMode: boolean;
   onToggleFireDeals: () => void;
 };
@@ -70,9 +70,11 @@ export default function HomeViewToggle({ cards, firms, fireDealsMode, onToggleFi
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {controls}
-          {view === "table" ? <div ref={columnsPortalRef} className="ml-auto" /> : null}
+          {view === "table" ? (
+            <div ref={columnsPortalRef} className="relative z-20 ml-auto flex justify-end min-w-[130px]" />
+          ) : null}
         </div>
         {view === "table" && (
           <FirmsTable firms={firms} fireDealsMode={fireDealsMode} columnsPortalRef={columnsPortalRef} />
