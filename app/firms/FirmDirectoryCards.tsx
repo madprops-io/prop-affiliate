@@ -13,7 +13,12 @@ type Props = {
   initialExpandedKey?: string | null;
 };
 
-type GroupedFirm = Firm & { accounts: AccountRow[]; slugKey: string; payoutDisplay?: string | null };
+type GroupedFirm = Firm & {
+  accounts: AccountRow[];
+  slugKey: string;
+  payoutDisplay?: string | null;
+  drawdownType?: string | null;
+};
 type AccountRow = {
   name: string;
   label?: string | null;
