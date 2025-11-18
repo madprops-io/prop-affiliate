@@ -572,8 +572,8 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         ((f.payoutDaysValue ?? Number.POSITIVE_INFINITY) <= (payoutMax ?? Number.POSITIVE_INFINITY));
       const evalSpeedOk = !oneDayEvalOnly || (f.minDays ?? Number.POSITIVE_INFINITY) <= 1;
       const refundOk = !refundOnly || !!f.feeRefund;
-      const discountValue =
-        f.discount?.percent ?? f.discount?.amount ?? f.pricing?.discountPct ?? 0;
+    const discountValue =
+      f.discount?.percent ?? (f.discount as { amount?: number } | undefined)?.amount ?? f.pricing?.discountPct ?? 0;
       const discountRequired = discountOnly || fireDealsMode;
       const discountOk = !discountRequired || Number(discountValue) > 0;
       const trustRequirement = Math.max(minTrust ?? 0, fireDealsMode ? FIRE_DEAL_TRUST_MIN : 0);
