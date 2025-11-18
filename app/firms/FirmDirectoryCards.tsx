@@ -310,8 +310,11 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
             {isOpen ? (
               <div className="mt-4 space-y-4 border-t border-white/10 pt-4 text-sm text-white/80">
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  <Detail label="Models" value={(firm.model ?? []).join(", ") || "N/A"} />
-                  <Detail label="Platforms" value={(firm.platforms ?? []).join(", ") || "N/A"} />
+                  <Detail label="Models" value={models.join(", ") || "N/A"} />
+                  <Detail
+                    label="Platforms"
+                    value={Array.isArray(firm.platforms) ? firm.platforms.join(", ") || "N/A" : "N/A"}
+                  />
                   <Detail label="Min days" value={firm.minDays ? `${firm.minDays}` : "-"} />
                   <Detail label="Days to payout" value={firm.daysToPayout ? `${firm.daysToPayout}` : "-"} />
                   <Detail label="Payout" value={formatPercent(payoutPct)} />
