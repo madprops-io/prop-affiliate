@@ -651,7 +651,10 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
           return (f.drawdownType || "").toLowerCase().includes("static") ? 100 : 60;
         case "discount": {
           const discountValue =
-            f.discount?.percent ?? f.discount?.amount ?? f.pricing?.discountPct ?? 0;
+            f.discount?.percent ??
+            ("amount" in (f.discount ?? {}) ? (f.discount as { amount?: number }).amount : undefined) ??
+            f.pricing?.discountPct ??
+            0;
           return Number(discountValue) > 0 ? 100 : 40;
         }
         case "evalspeed": {
