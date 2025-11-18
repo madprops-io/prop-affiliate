@@ -32,8 +32,8 @@ export default function Navbar() {
 
   return (
     <header className={headerClass}>
-      <div className="container mx-auto max-w-6xl flex items-center justify-between gap-4 px-4 py-4">
-        <Link href="/" className="relative z-10 flex flex-col leading-tight group hover:opacity-95 text-left">
+      <div className="container mx-auto max-w-6xl flex items-center gap-4 px-4 py-4">
+        <Link href="/" className="relative z-10 flex flex-col leading-tight group hover:opacity-95 text-left flex-shrink-0">
           <span className="text-lg md:text-2xl font-semibold uppercase tracking-[0.5em] text-[#5fffc2]">
             MADPROPS
           </span>
@@ -42,7 +42,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-3">
+        <nav className="hidden md:flex items-center justify-center gap-4 mx-auto">
           <Link href="/" className={cn(linkBase, pathname === "/" && active)}>
             Home
           </Link>

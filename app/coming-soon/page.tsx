@@ -30,6 +30,7 @@ type Partner = {
 
 export default function ComingSoon() {
   const livePartners: Partner[] = [
+    { name: "FundedNext Futures", blurb: "Global brand; futures program.", href: "https://fundednext.com/?fpr=troy49", logo: "/logos/fundednext.png", status: "affiliate" },
     { name: "Lucid Trading", blurb: "Pick your path. Direct funded or eval. Use code MAD.", href: "https://lucidtrading.com/ref/madprops/", logo: "/logos/lucid.png", status: "affiliate" },
     { name: "Elite Trader Funding", blurb: "Flexible evaluations & resets.", href: "https://elitetraderfunding.app/evaluations?ref=MadProps", logo: "/logos/etf.png", status: "affiliate" },
     { name: "Funded Futures Network (FFN)", blurb: "Standard & Express evaluations. Use code MAD", href: "https://www.fundedfuturesnetwork.com/?via=madprops", logo: "/logos/ffn.png", status: "affiliate" },
@@ -49,7 +50,6 @@ export default function ComingSoon() {
     { name: "Take Profit Trader", blurb: "Daily payouts. Straight to funded options.", href: "https://takeprofittrader.com/", logo: "/logos/tpt.png", status: "pending" },
     { name: "Apex Trader Funding", blurb: "Large community & frequent promos.", href: "https://apextraderfunding.com/", logo: "/logos/apex.png", status: "pending" },
     { name: "Tradeify", blurb: "Simple pricing tiers.", href: "https://tradeify.co/", logo: "/logos/tradeify.png", status: "pending" },
-    { name: "FundedNext Futures", blurb: "Global brand; futures program.", href: "https://fundednext.com/futures", logo: "/logos/fundednext.png", status: "pending" },
     { name: "My Funded Futures", blurb: "Clean 1-phase futures model.", href: "https://myfundedfutures.com", logo: "/logos/mff.png", status: "pending" },
     { name: "Legends Trading", blurb: "Education-forward approach.", href: "https://thelegendstrading.com/", logo: "/logos/legends.png", status: "pending" },
     { name: "E8 Futures", blurb: "Trusted brand branching to futures.", href: "https://e8markets.com/", logo: "/logos/e8.png", status: "pending" },
