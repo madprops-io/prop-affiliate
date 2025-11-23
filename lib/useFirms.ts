@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { FIRMS as FALLBACK_FIRMS, type Firm } from "./firms";
+import { normalizeModelList } from "./modelTags";
 
 type RawRow = Record<string, string>;
 
@@ -26,7 +27,9 @@ export type FirmRow = {
   drawdownType?: string | null;
   spreads?: string | null;
   feeRefund?: boolean;
-  newsTrading?: boolean;
+  newsTrading?: boolean | null;
+  newsTradingEval?: boolean | null;
+  newsTradingFunded?: boolean | null;
   weekendHolding?: boolean;
   homepage?: string | null;
   signup?: string | null;
@@ -49,6 +52,16 @@ export type FirmRow = {
 
 function parseBool(v: string | undefined) {
   return (v ?? "").toLowerCase().trim() === "true";
+}
+function parseBoolLoose(v: string | undefined) {
+  const trimmed = (v ?? "").trim();
+  if (!trimmed) return undefined;
+  const normalized = trimmed.toLowerCase();
+  const trueTokens = ["true", "yes", "y", "ok", "allowed", "allow"];
+  const falseTokens = ["false", "no", "n", "restricted", "not allowed", "ban", "banned"];
+  if (trueTokens.includes(normalized)) return true;
+  if (falseTokens.includes(normalized)) return false;
+  return undefined;
 }
 function parseNum(v: string | undefined) {
   const n = Number((v ?? "").replace(/[^0-9.\-]/g, ""));
@@ -108,8 +121,29 @@ function splitList(v: string | undefined) {
 
 /** Map one CSV row -> FirmRow */
 function mapRow(r: RawRow): FirmRow {
-  const evalCost = parseNum(r["eval_cost_usd"]);
-  const activationFee = parseNum(r["activation_fee_usd"]);
+  const pick = (...keys: string[]) => {
+    for (const k of keys) {
+      const val = r[k];
+      if (val && String(val).trim()) return val;
+    }
+    return undefined;
+  };
+  const pickNum = (...keys: string[]) => {
+    const val = pick(...keys);
+    return parseNum(val);
+  };
+
+  const evalCost = pickNum(
+    "eval_cost_usd",
+    "evaluation_fee",
+    "evaluation_fee_usd",
+    "evaluation_cost",
+    "evaluation_cost_usd",
+    "eval_fee",
+    "eval_fee_usd",
+    "eval_cost"
+  );
+  const activationFee = pickNum("activation_fee_usd", "activation_fee", "activationfee", "activation");
   const discountPctRaw = r["discount_pct"];
   const discountValue = parseNum(discountPctRaw);
   const rawPayout = r["payout_pct"] ?? r["payout"] ?? r["payout_split"];
@@ -154,15 +188,6 @@ function mapRow(r: RawRow): FirmRow {
   const firmKey = r["firm_key"] ?? r["key"] ?? r["slug"] ?? "";
   const firmName = r["firm_name"] ?? r["name"] ?? "";
 
-  // helpers to pick the first non-empty from multiple possible column names
-  const pick = (...keys: string[]) => {
-    for (const k of keys) {
-      const val = r[k];
-      if (val && String(val).trim()) return val;
-    }
-    return undefined;
-  };
-
   const accountLabel = pick("account_label", "Account Label", "program_name", "Program Name", "account_name", "Account Name");
   const platformsStr =
     pick("platforms", "platform", "Platforms", "trading_platforms", "Trading Platforms", "Platform") ||
@@ -191,6 +216,13 @@ function mapRow(r: RawRow): FirmRow {
   const effectiveKey =
     (typeof firmKey === "string" && firmKey.trim().length > 0 ? firmKey.trim() : normalizedKey || firmName || "").trim();
   const fallbackLogoKey = normalizedKey;
+  const newsEval = parseBoolLoose(r["news_trading_eval"]);
+  const newsFunded = parseBoolLoose(r["news_trading_funded"]);
+  const newsSingle = parseBoolLoose(r["news_trading"]);
+  const newsTrading =
+    typeof newsEval === "boolean" || typeof newsFunded === "boolean" || typeof newsSingle === "boolean"
+      ? Boolean([newsEval, newsFunded, newsSingle].includes(true))
+      : null;
 
   return {
     key: effectiveKey,
@@ -201,7 +233,7 @@ function mapRow(r: RawRow): FirmRow {
     maxFunding,
     accountSize: accountSize ?? maxFunding ?? null,
     platforms: splitList(platformsStr),
-    model: splitList(modelStr),
+    model: normalizeModelList(splitList(modelStr)),
     minDays: (() => {
       const source =
         r["min_days (Eval)"] ??
@@ -210,9 +242,11 @@ function mapRow(r: RawRow): FirmRow {
         r["min_days_eval"] ??
         r["min_days"] ??
         r["minDays"];
-      const normalized = (source ?? "").trim().toLowerCase();
+      const fallback = pick("min_days_eval", "min_days", "minimum_days");
+      const sourceVal = source ?? fallback;
+      const normalized = (sourceVal ?? "").trim().toLowerCase();
       if (normalized === "instant" || normalized === "instant funded") return 0;
-      const parsed = parseNum(source);
+      const parsed = parseNum(sourceVal);
       return typeof parsed === "number" ? parsed : undefined;
     })(),
     daysToPayout: (() => {
@@ -220,10 +254,12 @@ function mapRow(r: RawRow): FirmRow {
       return typeof parsed === "number" || typeof parsed === "string" ? parsed : null;
     })(),
     drawdownType: (drawdownType ?? "").trim() || null,
-    spreads: r["spreads"] ?? null,
-    feeRefund: parseBool(r["fee_refund"]),
-    newsTrading: parseBool(r["news_trading"]),
-    weekendHolding: parseBool(r["weekend_holding"]),
+    spreads: pick("spreads", "spread_type", "spread") ?? null,
+    feeRefund: parseBoolLoose(r["fee_refund"]),
+    newsTrading,
+    newsTradingEval: typeof newsEval === "boolean" ? newsEval : null,
+    newsTradingFunded: typeof newsFunded === "boolean" ? newsFunded : null,
+    weekendHolding: parseBoolLoose(r["weekend_holding"]),
     homepage: r["homepage_url"] || r["url"] || null,
     signup: r["signup_url"] || r["url"] || null,
     trustpilot,
@@ -256,13 +292,15 @@ function firmToRow(f: Firm): FirmRow {
     maxFunding: f.maxFunding ?? null,
     accountSize: typeof f.accountSize === "number" ? f.accountSize : f.maxFunding ?? null,
     platforms: Array.isArray(f.platforms) ? f.platforms : [],
-    model: Array.isArray(f.model) ? f.model : [],
+    model: normalizeModelList(Array.isArray(f.model) ? f.model : typeof f.model === "string" ? [f.model] : []),
     minDays: f.minDays ?? null,
     daysToPayout: f.daysToPayout ?? null,
     drawdownType: f.drawdownType ?? null,
     spreads: f.spreads ?? null,
     feeRefund: f.feeRefund ?? false,
     newsTrading: f.newsTrading ?? false,
+    newsTradingEval: typeof f.newsTrading === "boolean" ? f.newsTrading : null,
+    newsTradingFunded: typeof f.newsTrading === "boolean" ? f.newsTrading : null,
     weekendHolding: f.weekendHolding ?? false,
     homepage: f.homepage ?? null,
     signup: f.signup ?? null,

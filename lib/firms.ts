@@ -1,5 +1,7 @@
 // lib/firms.ts
 
+import { normalizeModelList } from "./modelTags";
+
 export type Firm = {
   key: string;
   name: string;
@@ -99,7 +101,7 @@ export const AFFILIATE_LINKS: Record<string, string> = {
 
 // ────────────────────────────────────────────────────────────────
 // ✅ All firms (trimmed summaries; you can add more fields anytime)
-export const FIRMS: Firm[] = [
+const RAW_FIRMS: Firm[] = [
   {
     key: "tpt",
     name: "Take Profit Trader",
@@ -242,6 +244,11 @@ export const FIRMS: Firm[] = [
   { key: "tradeday", name: "Trade Day", homepage: "", logo: "/logos/tradeday.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
   { key: "phidias", name: "Phidias Propfirm", homepage: "", logo: "/logos/phidias.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
 ];
+
+export const FIRMS: Firm[] = RAW_FIRMS.map((firm) => ({
+  ...firm,
+  model: normalizeModelList(firm.model),
+}));
 
 // ────────────────────────────────────────────────────────────────
 // Helpers

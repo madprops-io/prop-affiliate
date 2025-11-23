@@ -39,6 +39,8 @@ export type Firm = {
   // rules
   feeRefund?: boolean | null;
   newsTrading?: boolean | null;
+  newsTradingEval?: boolean | null;
+  newsTradingFunded?: boolean | null;
   weekendHolding?: boolean | null;
 
   // pricing + promos

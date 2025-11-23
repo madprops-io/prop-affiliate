@@ -2,6 +2,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import Papa from "papaparse";
 import type { Firm } from "@/lib/types";
+import { normalizeModelField } from "@/lib/modelTags";
 
 export const revalidate = 600;
 
@@ -63,14 +64,11 @@ function normalizeRow(r: FirmCsvRow, i: number) {
   // model/program
   const rawProgram =
     first(r.model, r.Model, r.Program, r["Program Type"], r.program) ?? "";
-  let model: Firm["model"] | string = rawProgram;
-  if (typeof model === "string") {
-    const p = model.toLowerCase();
-    if (/(instant|instant funding)/.test(p)) model = "Instant";
-    else if (/(^1$|^one$|1[\s-]?phase|one[\s-]?(phase|step))/.test(p)) model = "1-Phase";
-    else if (/(^2$|^two$|2[\s-]?phase|two[\s-]?(phase|step))/.test(p)) model = "2-Phase";
-    else if (/scal(e|ing)/.test(p)) model = "Scaling";
-  }
+  const normalizedModel = normalizeModelField(rawProgram);
+  let model: Firm["model"] | string = "";
+  if (Array.isArray(normalizedModel)) model = normalizedModel;
+  else if (normalizedModel) model = normalizedModel;
+  else if (rawProgram.trim()) model = rawProgram.trim();
 
   // funding (aka “account size”)
   const maxFunding =

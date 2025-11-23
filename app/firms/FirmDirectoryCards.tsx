@@ -31,6 +31,8 @@ type AccountRow = {
   spreads?: string | null;
   feeRefund?: boolean | null;
   newsTrading?: boolean | null;
+  newsTradingEval?: boolean | null;
+  newsTradingFunded?: boolean | null;
   weekendHolding?: boolean | null;
   pricing?: any;
 };
@@ -44,6 +46,14 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
     const baseName = row.name || "";
     const baseNameKey = baseName.toLowerCase().trim();
     const directoryKey = directoryMap?.get(baseNameKey) ?? null;
+    const rawModelField = (row as any).model;
+    const rowModels = Array.isArray(rawModelField)
+      ? rawModelField
+          .map((value) => (typeof value === "string" ? value.trim() : ""))
+          .filter((value): value is string => Boolean(value))
+      : typeof rawModelField === "string" && rawModelField.trim()
+      ? [rawModelField.trim()]
+      : [];
     const rawKey = (row as FirmRow).key ?? (row as Firm).key ?? "";
     const normalizedKey = slugify(rawKey);
     const nameSlug = slugify(baseName);
@@ -59,7 +69,7 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
       homepage: (row as any).homepage ?? null,
       signup: (row as any).signup ?? null,
       logo: (row as any).logo ?? (canonicalKey ? `/logos/${canonicalKey}.png` : null),
-      model: Array.isArray((row as any).model) ? (row as any).model : [],
+      model: [],
       platforms: Array.isArray((row as any).platforms) ? (row as any).platforms : [],
       maxFunding: typeof (row as any).maxFunding === "number" ? (row as any).maxFunding : null,
       payout: typeof (row as any).payoutSplit === "number" ? (row as any).payoutSplit / 100 : null,
@@ -72,6 +82,8 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
       spreads: (row as any).spreads ?? null,
       feeRefund: (row as any).feeRefund ?? null,
       newsTrading: (row as any).newsTrading ?? null,
+      newsTradingEval: (row as any).newsTradingEval ?? null,
+      newsTradingFunded: (row as any).newsTradingFunded ?? null,
       weekendHolding: (row as any).weekendHolding ?? null,
       trustpilot: typeof (row as any).trustpilot === "number" ? (row as any).trustpilot : null,
       pricing: (row as any).pricing ?? null,
@@ -79,6 +91,16 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
       notes: (row as any).notes ?? null,
       accounts: [],
     };
+
+    if (rowModels.length > 0) {
+      const mergedModels = base.model.length > 0 ? [...base.model] : [];
+      rowModels.forEach((model) => {
+        if (!mergedModels.includes(model)) {
+          mergedModels.push(model);
+        }
+      });
+      base.model = mergedModels;
+    }
 
     base.accounts.push({
       name:
@@ -95,6 +117,8 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
       spreads: (row as any).spreads ?? null,
       feeRefund: (row as any).feeRefund ?? null,
       newsTrading: (row as any).newsTrading ?? null,
+      newsTradingEval: (row as any).newsTradingEval ?? null,
+      newsTradingFunded: (row as any).newsTradingFunded ?? null,
       weekendHolding: (row as any).weekendHolding ?? null,
       pricing: (row as any).pricing ?? null,
     });
@@ -110,9 +134,65 @@ function formatMoney(value?: number | null) {
   return `$${value.toLocaleString()}`;
 }
 
-function formatPercent(value?: number | null) {
-  if (typeof value !== "number" || !Number.isFinite(value)) return "-";
-  return `${Math.round(value * 100)}%`;
+function formatMinDaysDetail(firm: GroupedFirm, accounts: AccountRow[]) {
+  const seen = new Set<string>();
+  const push = (value?: number | null) => {
+    if (typeof value !== "number" || !Number.isFinite(value)) return;
+    seen.add(value === 0 ? "Instant" : `${value}`);
+  };
+  push(firm.minDays ?? null);
+  accounts.forEach((account) => push(account.minDays ?? null));
+  return seen.size > 0 ? Array.from(seen).join(", ") : "-";
+}
+
+function formatDaysToPayoutDetail(firm: GroupedFirm, accounts: AccountRow[]) {
+  const seen = new Set<string>();
+  const push = (value?: number | string | null) => {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      seen.add(`${value}`);
+    } else if (typeof value === "string" && value.trim()) {
+      seen.add(value.trim());
+    }
+  };
+  push(firm.daysToPayout ?? null);
+  accounts.forEach((account) => push(account.daysToPayout ?? null));
+  return seen.size > 0 ? Array.from(seen).join(", ") : "-";
+}
+
+function normalizePercentValue(value?: number | null) {
+  if (typeof value !== "number" || !Number.isFinite(value)) return null;
+  const normalized = value <= 1 ? value * 100 : value;
+  return Number.isFinite(normalized) ? normalized : null;
+}
+
+function formatPercentDisplay(value?: number | null) {
+  const normalized = normalizePercentValue(value);
+  if (normalized == null) return null;
+  return Number.isInteger(normalized) ? `${normalized}%` : `${normalized.toFixed(1)}%`;
+}
+
+function formatPayoutDetail(firm: GroupedFirm, accounts: AccountRow[]) {
+  const seen = new Set<string>();
+  const push = (value?: number | null) => {
+    const formatted = formatPercentDisplay(value);
+    if (formatted) seen.add(formatted);
+  };
+  push(firm.payout ?? null);
+  push(firm.payoutSplit ?? null);
+  accounts.forEach((account) => push(account.payoutPct ?? null));
+  return seen.size > 0 ? Array.from(seen).join(", ") : "-";
+}
+
+function formatDrawdownDetail(firm: GroupedFirm, accounts: AccountRow[]) {
+  const seen = new Set<string>();
+  const push = (value?: string | null) => {
+    if (typeof value === "string" && value.trim()) {
+      seen.add(value.trim());
+    }
+  };
+  push(firm.drawdownType ?? null);
+  accounts.forEach((account) => push(account.drawdownType ?? null));
+  return seen.size > 0 ? Array.from(seen).join(", ") : "-";
 }
 
 export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
@@ -268,7 +348,8 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
 
       <div className="grid gap-5">
         {filteredFirms.map((firm) => {
-        const accounts = (firm as GroupedFirm).accounts ?? [];
+        const grouped = firm as GroupedFirm;
+        const accounts = grouped.accounts ?? [];
         const isOpen = expandedKey === firm.key;
         const toggle = () => setExpandedKey(isOpen ? null : firm.key);
         const signupUrl = buildAffiliateUrl(firm.signup ?? firm.homepage ?? "", firm.key);
@@ -279,7 +360,10 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
           ? [firm.model]
           : [];
         const programBlurb = firm.notes ?? `Models: ${models.join(", ") || "N/A"}`;
-        const payoutPct = typeof firm.payout === "number" ? firm.payout : undefined;
+        const minDaysDisplay = formatMinDaysDetail(grouped, accounts);
+        const daysToPayoutDisplay = formatDaysToPayoutDetail(grouped, accounts);
+        const payoutDisplay = formatPayoutDetail(grouped, accounts);
+        const drawdownDisplay = formatDrawdownDetail(grouped, accounts);
         const logoSrc = firm.logo?.trim() ? firm.logo.trim() : `/logos/${firm.key}.png`;
 
         return (
@@ -317,20 +401,46 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
                   />
                   <Detail
                     label="Min days (Eval)"
-                    value={firm.minDays === 0 ? "Instant" : typeof firm.minDays === "number" ? `${firm.minDays}` : "-"}
+                    value={minDaysDisplay}
                   />
-                  <Detail label="Days to payout" value={firm.daysToPayout ? `${firm.daysToPayout}` : "-"} />
-                  <Detail label="Payout" value={formatPercent(payoutPct)} />
+                  <Detail label="Days to payout" value={daysToPayoutDisplay} />
+                  <Detail label="Payout" value={payoutDisplay} />
                   <Detail label="Max funding" value={formatMoney(firm.maxFunding)} />
-                  <Detail label="Drawdown" value={firm.drawdownType ?? "-"} />
-                  <Detail label="Spread type" value={firm.spreads ?? "-"} />
+                  <Detail label="Drawdown" value={drawdownDisplay} />
+                  <Detail
+                    label="Weekend hold"
+                    value={
+                      typeof firm.weekendHolding === "boolean"
+                        ? firm.weekendHolding
+                          ? "Allowed"
+                          : "No"
+                        : "Unknown"
+                    }
+                  />
                   <Detail label="Trustpilot" value={typeof firm.trustpilot === "number" ? firm.trustpilot.toFixed(1) : "-"} />
                 </div>
 
                 <div className="flex flex-wrap gap-3 text-xs uppercase tracking-[0.3em]">
-                  <Pill label="Fee refund" active={Boolean(firm.feeRefund)} />
-                  <Pill label="News OK" active={Boolean(firm.newsTrading)} />
-                  <Pill label="Weekend OK" active={Boolean(firm.weekendHolding)} />
+                  <Pill label="Fee refund" value={firm.feeRefund} />
+                  {typeof firm.newsTradingEval === "boolean" || typeof firm.newsTradingFunded === "boolean" ? (
+                    <>
+                      {typeof firm.newsTradingEval === "boolean" ? (
+                        <Pill
+                          label={`News (Eval: ${firm.newsTradingEval ? "Yes" : "No"})`}
+                          value={firm.newsTradingEval}
+                        />
+                      ) : null}
+                      {typeof firm.newsTradingFunded === "boolean" ? (
+                        <Pill
+                          label={`News (Funded: ${firm.newsTradingFunded ? "Yes" : "No"})`}
+                          value={firm.newsTradingFunded}
+                        />
+                      ) : null}
+                    </>
+                  ) : (
+                    <Pill label="News OK" value={firm.newsTrading} />
+                  )}
+                  <Pill label="Weekend OK" value={firm.weekendHolding} />
                 </div>
 
                 <div className="flex flex-wrap gap-3">
@@ -404,11 +514,18 @@ function Detail({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Pill({ label, active }: { label: string; active: boolean }) {
+function Pill({ label, value }: { label: string; value?: boolean | null }) {
+  const isTrue = value === true;
+  const isFalse = value === false;
+
   return (
     <span
       className={`rounded-full px-3 py-1 text-xs font-semibold ${
-        active ? "bg-emerald-300/20 text-emerald-100" : "border border-white/15 text-white/50"
+        isTrue
+          ? "bg-emerald-300/20 text-emerald-100"
+          : isFalse
+          ? "border border-red-300/40 text-red-200"
+          : "border border-white/15 text-white/50"
       }`}
     >
       {label}

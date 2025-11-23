@@ -9,6 +9,12 @@ import { buildAffiliateUrl } from "@/lib/affiliates";
 import { getCosts } from "@/lib/pricing";
 import { FIRMS } from "@/lib/firms";
 import { useFirms } from "@/lib/useFirms";
+import { useMemo } from "react";
+
+const slugify = (value: string | undefined | null) =>
+  (value ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
 
 type FirmProfile = {
   key: string;
@@ -29,6 +35,8 @@ type FirmProfile = {
   trustpilot?: number | null;
   feeRefund?: boolean;
   newsTrading?: boolean;
+  newsTradingEval?: boolean | null;
+  newsTradingFunded?: boolean | null;
   weekendHolding?: boolean;
   pricing?: any;
   discount?: any;
@@ -88,7 +96,12 @@ function normalizeFirmRow(row: any | null | undefined): FirmProfile | null {
     spreads: row.spreads ?? null,
     trustpilot: typeof row.trustpilot === "number" ? row.trustpilot : null,
     feeRefund: Boolean(row.feeRefund),
-    newsTrading: Boolean(row.newsTrading),
+    newsTrading:
+      typeof row.newsTrading === "boolean"
+        ? row.newsTrading
+        : [row.newsTradingEval, row.newsTradingFunded].some((v) => v === true),
+    newsTradingEval: typeof row.newsTradingEval === "boolean" ? row.newsTradingEval : null,
+    newsTradingFunded: typeof row.newsTradingFunded === "boolean" ? row.newsTradingFunded : null,
     weekendHolding: Boolean(row.weekendHolding),
     pricing: normalizedPricing,
     discount: normalizedPricing?.discount ?? row.discount ?? null,
@@ -119,7 +132,12 @@ function normalizeStaticFirm(row: any | null | undefined): FirmProfile | null {
     spreads: row.spreads ?? null,
     trustpilot: typeof row.trustpilot === "number" ? row.trustpilot : null,
     feeRefund: Boolean(row.feeRefund),
-    newsTrading: Boolean(row.newsTrading),
+    newsTrading:
+      typeof row.newsTrading === "boolean"
+        ? row.newsTrading
+        : [row.newsTradingEval, row.newsTradingFunded].some((v) => v === true),
+    newsTradingEval: typeof row.newsTradingEval === "boolean" ? row.newsTradingEval : null,
+    newsTradingFunded: typeof row.newsTradingFunded === "boolean" ? row.newsTradingFunded : null,
     weekendHolding: Boolean(row.weekendHolding),
     pricing: normalizedPricing,
     discount: normalizedPricing?.discount ?? row.discount ?? null,
@@ -138,10 +156,42 @@ function formatPercent(value?: number | null) {
 
 export default function FirmDetailPage() {
   const params = useParams<{ key: string }>();
-  const firmKey = (params?.key as string)?.toLowerCase() ?? "";
+  const firmKey = slugify(params?.key as string) ?? "";
   const { firms, isLive, loading } = useFirms();
 
-  const csvFirm = Array.isArray(firms) ? firms.find((row) => row.key === firmKey) : null;
+  const matchingRows = useMemo(() => {
+    if (!Array.isArray(firms)) return null;
+    const matches = firms.filter((row: any) => {
+      const rowKey = typeof row.key === "string" ? row.key : "";
+      const rowSlug = slugify(rowKey);
+      const nameSlug = slugify(row.name);
+      return rowKey === firmKey || rowSlug === firmKey || nameSlug === firmKey;
+    });
+    return matches;
+  }, [firms, firmKey]);
+  const csvFirm = Array.isArray(matchingRows) && matchingRows.length > 0 ? matchingRows[0] : null;
+
+  const normalizedMatches: FirmProfile[] = useMemo(() => {
+    if (!Array.isArray(matchingRows)) return [];
+    return matchingRows
+      .map((row) => normalizeFirmRow(row))
+      .filter((row): row is FirmProfile => row != null);
+  }, [matchingRows]);
+
+  const featuredAccountSize = useMemo(() => {
+    const pool = normalizedMatches.filter((row) => typeof row.accountSize === "number");
+    if (!pool.length) return null;
+    const target50k = pool.filter((row) => Math.abs((row.accountSize ?? 0) - 50_000) < 1);
+    const candidates = target50k.length > 0 ? target50k : pool;
+    return candidates.reduce<{ size: number; cost: number } | null>((best, row) => {
+      const size = row.accountSize ?? 0;
+      const cost = getCosts({ pricing: row.pricing, feeRefund: row.feeRefund }).trueCost;
+      if (!best) return { size, cost };
+      if (cost < best.cost) return { size, cost };
+      if (cost === best.cost && size < best.size) return { size, cost };
+      return best;
+    }, null)?.size ?? null;
+  }, [normalizedMatches]);
   const selected =
     normalizeFirmRow(csvFirm) ||
     normalizeStaticFirm(
@@ -264,7 +314,10 @@ export default function FirmDetailPage() {
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <Stat label="Payout split" value={formatPercent(selected.payoutPct)} />
             <Stat label="Max funding" value={formatCurrency(selected.maxFunding)} />
-            <Stat label="Featured account size" value={formatCurrency(selected.accountSize)} />
+            <Stat
+              label="Featured account size"
+              value={formatCurrency(featuredAccountSize ?? selected.accountSize)}
+            />
             <Stat
               label="Min days (Eval)"
               value={selected.minDays === 0 ? "Instant" : selected.minDays ? `${selected.minDays}` : "-"}
@@ -283,7 +336,18 @@ export default function FirmDetailPage() {
           <h2 className="text-xl font-semibold text-white">Rules snapshot</h2>
           <div className="mt-4 flex flex-wrap gap-3">
             <RuleChip label="Fee refund" active={Boolean(selected.feeRefund)} />
-            <RuleChip label="News trading" active={Boolean(selected.newsTrading)} />
+            {typeof selected.newsTradingEval === "boolean" || typeof selected.newsTradingFunded === "boolean" ? (
+              <>
+                {typeof selected.newsTradingEval === "boolean" ? (
+                  <RuleChip label={`News (Eval: ${selected.newsTradingEval ? "Yes" : "No"})`} active={Boolean(selected.newsTradingEval)} />
+                ) : null}
+                {typeof selected.newsTradingFunded === "boolean" ? (
+                  <RuleChip label={`News (Funded: ${selected.newsTradingFunded ? "Yes" : "No"})`} active={Boolean(selected.newsTradingFunded)} />
+                ) : null}
+              </>
+            ) : (
+              <RuleChip label="News trading" active={Boolean(selected.newsTrading)} />
+            )}
             <RuleChip label="Weekend holding" active={Boolean(selected.weekendHolding)} />
           </div>
         </section>

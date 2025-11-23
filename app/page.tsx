@@ -13,6 +13,7 @@ import { useFirms } from "@/lib/useFirms";
 import { useFavorites } from "@/lib/useFavorites";
 import { getCosts } from "@/lib/pricing";
 import { FIRMS } from "@/lib/firms";
+import { MODEL_TAGS } from "@/lib/modelTags";
 import { buildAffiliateUrl } from "@/lib/affiliates";
 import { formatStarIcons } from "@/lib/useStarRating";
 
@@ -27,7 +28,7 @@ import { ExternalLink, Heart, Info, LinkIcon, Search, Star } from "lucide-react"
  * Table is the default view; toggle to cards with filters.
  */
 
-const MODELS = ["Instant", "1-Phase", "2-Phase", "Scaling"] as const;
+const MODELS = MODEL_TAGS;
 const FALLBACK_PLATFORMS = ["MT4", "MT5", "cTrader", "TradingView", "Rithmic", "NinjaTrader", "Tradovate"];
 const POPULAR_PLATFORM_ORDER = [
   "TradingView",
@@ -203,6 +204,7 @@ export default function Page() {
   type UIFirm = {
     key: string;
     name: string;
+    accountLabel?: string | null;
     model: string[];
     platforms: string[];
     payout: number | null;
@@ -223,7 +225,29 @@ export default function Page() {
     spreads?: string | null;
     feeRefund?: boolean | null;
     newsTrading?: boolean | null;
+    newsTradingEval?: boolean | null;
+    newsTradingFunded?: boolean | null;
     weekendHolding?: boolean | null;
+  };
+
+  const formatNewsTrading = (f: UIFirm) => {
+    const evalStatus =
+      typeof f.newsTradingEval === "boolean" ? (f.newsTradingEval ? "Allowed" : "Restricted") : null;
+    const fundedStatus =
+      typeof f.newsTradingFunded === "boolean" ? (f.newsTradingFunded ? "Allowed" : "Restricted") : null;
+
+    if (evalStatus || fundedStatus) {
+      const parts = [];
+      if (evalStatus) parts.push(`Eval: ${evalStatus}`);
+      if (fundedStatus) parts.push(`Funded: ${fundedStatus}`);
+      return parts.join(" / ");
+    }
+
+    if (typeof f.newsTrading === "boolean") {
+      return f.newsTrading ? "Allowed" : "Restricted";
+    }
+
+    return "Unknown";
   };
 
   const nFirms: UIFirm[] = useMemo(() => {
@@ -242,6 +266,7 @@ export default function Page() {
       return {
         key: f.key,
         name: f.name,
+        accountLabel: f.accountLabel ?? null,
         model: modelArray,
         platforms: Array.isArray(f.platforms) ? f.platforms.filter(Boolean) : [],
         payout,
@@ -263,9 +288,11 @@ export default function Page() {
         discount: f.discount ?? null,
         minDays: f.minDays ?? null,
         spreads: f.spreads ?? null,
-        feeRefund: !!f.feeRefund,
-        newsTrading: !!f.newsTrading,
-        weekendHolding: !!f.weekendHolding,
+        feeRefund: typeof f.feeRefund === "boolean" ? f.feeRefund : null,
+        newsTrading: typeof f.newsTrading === "boolean" ? f.newsTrading : null,
+        newsTradingEval: typeof f.newsTradingEval === "boolean" ? f.newsTradingEval : null,
+        newsTradingFunded: typeof f.newsTradingFunded === "boolean" ? f.newsTradingFunded : null,
+        weekendHolding: typeof f.weekendHolding === "boolean" ? f.weekendHolding : null,
       };
     });
   }, [firms]);
@@ -1270,6 +1297,9 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                     {f.name}
                   </Link>
                 </h2>
+                {f.accountLabel ? (
+                  <p className="text-xs uppercase tracking-[0.25em] text-white/50">{f.accountLabel}</p>
+                ) : null}
 
                 <div className="flex flex-wrap gap-2">
                   {(f.model ?? []).map((m: string) => (
@@ -1317,13 +1347,13 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                       <strong>Min days (Eval):</strong> {formatMinDaysDisplay(f.minDays)}
                     </li>
                     <li className="col-span-2">
-                      <strong>Spreads:</strong> {f.spreads ?? "-"}
+                      <strong>Platforms:</strong> {(f.platforms ?? []).join(" / ")}
                     </li>
                     <li>
                       <strong>Refund:</strong> {f.feeRefund ? "Yes" : "No"}
                     </li>
                     <li>
-                      <strong>News trading:</strong> {f.newsTrading ? "Allowed" : "Restricted"}
+                      <strong>News trading:</strong> {formatNewsTrading(f)}
                     </li>
                     <li>
                       <strong>Weekend hold:</strong> {f.weekendHolding ? "Yes" : "No"}
@@ -1452,7 +1482,18 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                     <td className="p-2">{formatMinDaysDisplay(f.minDays)}</td>
                     <td className="p-2">
                       <div className="flex flex-wrap gap-2">
-                        <Badge variant="outline">News: {f.newsTrading ? "OK" : "No"}</Badge>
+                        {typeof f.newsTradingEval === "boolean" || typeof f.newsTradingFunded === "boolean" ? (
+                          <>
+                            {typeof f.newsTradingEval === "boolean" ? (
+                              <Badge variant="outline">News Eval: {f.newsTradingEval ? "OK" : "No"}</Badge>
+                            ) : null}
+                            {typeof f.newsTradingFunded === "boolean" ? (
+                              <Badge variant="outline">News Funded: {f.newsTradingFunded ? "OK" : "No"}</Badge>
+                            ) : null}
+                          </>
+                        ) : (
+                          <Badge variant="outline">News: {f.newsTrading ? "OK" : "No"}</Badge>
+                        )}
                         <Badge variant="outline">Weekend: {f.weekendHolding ? "OK" : "No"}</Badge>
                         <Badge variant="outline">Refund: {f.feeRefund ? "Yes" : "No"}</Badge>
                       </div>
