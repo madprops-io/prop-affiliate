@@ -93,7 +93,7 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
     };
 
     if (rowModels.length > 0) {
-      const mergedModels = base.model.length > 0 ? [...base.model] : [];
+      const mergedModels = Array.isArray(base.model) && base.model.length > 0 ? [...base.model] : [];
       rowModels.forEach((model) => {
         if (!mergedModels.includes(model)) {
           mergedModels.push(model);
