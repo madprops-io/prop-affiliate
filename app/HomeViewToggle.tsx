@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import FirmsTable from "@/components/FirmTable";
 import type { FirmRow } from "@/lib/useFirms";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 type ToggleView = "table" | "cards";
 
@@ -11,26 +11,39 @@ type Props = {
   cards: React.ReactNode;
   firms: FirmRow[];
   fireDealsMode: boolean;
+  tableFireDealsMode: boolean;
+  onToggleTableFireDeals: () => void;
   onToggleFireDeals: () => void;
   fastPassActive: boolean;
   instantFundedActive: boolean;
   onToggleFastPass: () => void;
   onToggleInstantFunded: () => void;
+  searchQuery: string;
+  tableAccountSize: string;
+  tableAccountSizeOptions: readonly string[];
+  onTableAccountSizeChange: (value: string) => void;
 };
 
 export default function HomeViewToggle({
   cards,
   firms,
   fireDealsMode,
+  tableFireDealsMode,
+  onToggleTableFireDeals,
   onToggleFireDeals,
   fastPassActive,
   instantFundedActive,
   onToggleFastPass,
   onToggleInstantFunded,
+  searchQuery,
+  tableAccountSize,
+  tableAccountSizeOptions,
+  onTableAccountSizeChange,
 }: Props) {
   const sp = useSearchParams();
   const router = useRouter();
   const columnsPortalRef = useRef<HTMLDivElement | null>(null);
+  const [showAccountSizePicker, setShowAccountSizePicker] = useState(false);
 
   // derive the view from the URL, default to "table"
   const viewParam = sp.get("view");
@@ -43,17 +56,21 @@ export default function HomeViewToggle({
     router.replace(`${url.pathname}${url.search}`, { scroll: false });
   };
 
+  const accountSizeLabel = tableAccountSize
+    ? `$${Number(tableAccountSize).toLocaleString()}`
+    : "All sizes";
+
   const controls = (
     <div className="mb-1 flex flex-wrap items-center gap-3">
       {view === "table" ? (
         <>
           <button
-            onClick={onToggleFireDeals}
-            aria-pressed={fireDealsMode}
+            onClick={onToggleTableFireDeals}
+            aria-pressed={tableFireDealsMode}
             className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] shadow transition ${
-              fireDealsMode
-                ? "border border-orange-300/70 bg-transparent text-orange-200 shadow-[0_8px_20px_-10px_rgba(255,188,87,0.6)]"
-                : "bg-gradient-to-r from-orange-500 via-amber-400 to-amber-300 text-black/80 opacity-80 hover:opacity-100"
+              tableFireDealsMode
+                ? "bg-gradient-to-r from-orange-500 via-amber-400 to-amber-300 text-black/90 shadow-[0_8px_20px_-10px_rgba(255,140,0,0.6)]"
+                : "border border-orange-300/70 bg-transparent text-orange-200 hover:text-orange-100"
             }`}
           >
             Fire Deals
@@ -80,6 +97,49 @@ export default function HomeViewToggle({
           >
             Instant Funded
           </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowAccountSizePicker((prev) => !prev)}
+              aria-expanded={showAccountSizePicker}
+              className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
+                showAccountSizePicker
+                  ? "bg-white text-black shadow-[0_10px_30px_-15px_rgba(255,255,255,0.8)]"
+                  : "border border-white/20 bg-transparent text-white/80 hover:text-white"
+              }`}
+            >
+              <span>Account size: {accountSizeLabel}</span>
+              <span className="text-[10px] leading-none">{showAccountSizePicker ? "▲" : "▼"}</span>
+            </button>
+            {showAccountSizePicker && (
+              <div className="absolute right-0 mt-2 w-48 rounded-2xl border border-white/15 bg-[#040d19]/95 p-3 text-xs text-white shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)] backdrop-blur-xl z-30">
+                <p className="mb-2 text-[11px] uppercase tracking-[0.2em] text-white/60">Choose size</p>
+                <div className="grid gap-1.5">
+                  {tableAccountSizeOptions.map((opt, idx) => {
+                    const label = opt ? `$${Number(opt).toLocaleString()}` : "All sizes";
+                    const active = opt === tableAccountSize;
+                    return (
+                      <button
+                        key={opt || `size-${idx}`}
+                        className={`flex w-full items-center justify-between rounded-full px-3 py-1.5 text-left text-[12px] transition ${
+                          active
+                            ? "bg-[#26ffd4]/20 text-[#26ffd4] ring-1 ring-[#26ffd4]/70"
+                            : "bg-white/5 text-white/80 hover:bg-white/10"
+                        }`}
+                        onClick={() => {
+                          onTableAccountSizeChange(opt);
+                          setShowAccountSizePicker(false);
+                        }}
+                        type="button"
+                      >
+                        <span>{label}</span>
+                        {active ? <span className="text-[10px] uppercase tracking-[0.15em]">Active</span> : null}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         </>
       ) : (
         <button
@@ -114,10 +174,12 @@ export default function HomeViewToggle({
         {view === "table" && (
           <FirmsTable
             firms={firms}
-            fireDealsMode={fireDealsMode}
+            fireDealsMode={tableFireDealsMode}
             columnsPortalRef={columnsPortalRef}
             fastPassOnly={fastPassActive}
             instantFundedOnly={instantFundedActive}
+            searchTerm={searchQuery}
+            accountSizeFilter={tableAccountSize ? Number(tableAccountSize) : null}
           />
         )}
       </div>

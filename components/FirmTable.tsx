@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { formatStarIcons } from "@/lib/useStarRating";
+import { buildAffiliateUrl } from "@/lib/affiliates";
 import type { FirmRow } from "@/lib/useFirms";
 import { FIRMS } from "@/lib/firms";
 
@@ -86,6 +87,8 @@ type FirmTableProps = {
   columnsPortalRef?: React.RefObject<HTMLDivElement | null>;
   fastPassOnly?: boolean;
   instantFundedOnly?: boolean;
+  searchTerm?: string;
+  accountSizeFilter?: number | null;
 };
 
 export default function FirmTable({
@@ -94,6 +97,8 @@ export default function FirmTable({
   columnsPortalRef,
   fastPassOnly = false,
   instantFundedOnly = false,
+  searchTerm = "",
+  accountSizeFilter = null,
 }: FirmTableProps) {
   let list: TableFirm[] = [];
   if (Array.isArray(firms)) {
@@ -101,6 +106,7 @@ export default function FirmTable({
   } else if (firms && Array.isArray(firms.data)) {
     list = firms.data ?? [];
   }
+  const normalizedSearch = (searchTerm || "").trim().toLowerCase();
 
   const shouldIncludeByMinDays = (firm: TableFirm) => {
     const value = typeof firm.minDays === "number" ? firm.minDays : null;
@@ -196,12 +202,12 @@ export default function FirmTable({
     | "activation"
     | "discount"
     | "trueCost";
-  const [sortKey, setSortKey] = useState<SortKey>("trueCost");
+  const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const ROWS_PER_PAGE = 18;
   const [tablePage, setTablePage] = useState(1);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
-  const prevSortRef = useRef<{ key: SortKey; dir: "asc" | "desc" }>({ key: "trueCost", dir: "asc" });
+  const prevSortRef = useRef<{ key: SortKey; dir: "asc" | "desc" }>({ key: "name", dir: "asc" });
   const prevFireRef = useRef<boolean>(fireDealsMode);
   const DEFAULT_COLUMNS = {
     accountSize: true,
@@ -239,7 +245,7 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
 
   useEffect(() => {
     setTablePage(1);
-  }, [enriched.length, fireDealsMode]);
+  }, [enriched.length, fireDealsMode, accountSizeFilter]);
 
   useEffect(() => {
     if (!copiedCode) return;
@@ -315,15 +321,33 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
   }, [enriched, sortKey, sortDir]);
 
   const filteredRows = useMemo(() => {
-    if (!fireDealsMode) return sorted;
-    return sorted.filter((row) => {
-      const percent =
-        row.discountPct ?? row.firm?.pricing?.discount?.percent ?? row.firm?.pricing?.discountPct ?? 0;
-      const amount = row.discountAmt ?? row.firm?.pricing?.discount?.amount ?? 0;
-      const code = row.discountCode ?? row.firm?.pricing?.discount?.code;
-      return (Number(percent) > 0 || Number(amount) > 0 || Boolean(code)) && Number(row.trueCost ?? 0) > 0;
-    });
-  }, [sorted, fireDealsMode]);
+    let rows = sorted;
+    if (normalizedSearch) {
+      rows = rows.filter((row) => (row.firm?.name || "").toLowerCase().includes(normalizedSearch));
+    }
+    if (typeof accountSizeFilter === "number" && Number.isFinite(accountSizeFilter) && accountSizeFilter > 0) {
+      const targetSize = Math.round(accountSizeFilter);
+      const seen = new Set<string>();
+      rows = rows.filter((row) => {
+        if (Math.round(row.accountSize ?? 0) !== targetSize) return false;
+        const key = row.firm?.key ?? row.firm?.name ?? "";
+        if (!key) return false;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+    if (fireDealsMode) {
+      rows = rows.filter((row) => {
+        const percent =
+          row.discountPct ?? row.firm?.pricing?.discount?.percent ?? row.firm?.pricing?.discountPct ?? 0;
+        const amount = row.discountAmt ?? row.firm?.pricing?.discount?.amount ?? 0;
+        const code = row.discountCode ?? row.firm?.pricing?.discount?.code;
+        return (Number(percent) > 0 || Number(amount) > 0 || Boolean(code)) && Number(row.trueCost ?? 0) > 0;
+      });
+    }
+    return rows;
+  }, [sorted, fireDealsMode, normalizedSearch, accountSizeFilter]);
 
   const totalRows = filteredRows.length;
   const tablePageCount = Math.max(1, Math.ceil(totalRows / ROWS_PER_PAGE));
@@ -496,16 +520,22 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
               discountPct,
               discountAmt,
               discountCode,
-              minDays,
-              payoutDisplay,
-              payoutPct,
-              trueCost,
-              daysToPayout,
-              ddt,
-              accountSize,
-            } = r;
+          minDays,
+          payoutDisplay,
+          payoutPct,
+          trueCost,
+          daysToPayout,
+          ddt,
+          accountSize,
+          firm: { accountLabel },
+        } = r;
             const rowKey = `${firm.key}:${program}:${firm.maxFunding ?? ""}`;
             const fallbackSlug = typeof firm.key === "string" ? firm.key.toLowerCase().replace(/[^a-z0-9]+/g, "") : "";
+            const discountCodeLabel = (discountCode ?? "").trim();
+            const isUseLinkCode = discountCodeLabel.toLowerCase() === "use link";
+            const affiliateHref = isUseLinkCode
+              ? buildAffiliateUrl(firm.signup || firm.homepage || "", firm.key)
+              : null;
             return (
               <tr
                 key={rowKey}
@@ -540,7 +570,14 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
                   </div>
                 </td>
                 {columns.accountSize && (
-                  <td className={cellClass("accountSize", "text-center")}>{typeof accountSize === "number" ? fmtMoney(accountSize) : "-"}</td>
+                  <td className={cellClass("accountSize", "text-center")}>
+                    <div>{typeof accountSize === "number" ? fmtMoney(accountSize) : "-"}</div>
+                    {accountLabel ? (
+                      <div className="mt-0.5 text-[11px] uppercase tracking-[0.08em] text-white/50">
+                        {accountLabel}
+                      </div>
+                    ) : null}
+                  </td>
                 )}
                 {columns.trueCost && <td className={cellClass("trueCost", "text-center")}>{fmtMoney(trueCost)}</td>}
                 {columns.eval && <td className={cellClass("eval", "text-center")}>{fmtMoney(evalCost)}</td>}
@@ -548,13 +585,24 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
                 {columns.code && (
                   <td className={cellClass(undefined, "text-center")}>
                     {discountCode ? (
-                      <button
-                        type="button"
-                        onClick={() => copyCode(discountCode)}
-                        className="inline-flex h-7 min-w-[110px] items-center justify-center rounded-full border border-[#26ffd4]/50 bg-[#26ffd4]/15 px-4 text-[11px] font-semibold uppercase tracking-wide text-[#b3ffe9] shadow-[0_12px_25px_-18px_#1dfbd0] transition hover:border-[#26ffd4]/80 hover:bg-[#26ffd4]/25 hover:text-white"
-                      >
-                        {copiedCode === discountCode ? "Copied!" : discountCode}
-                      </button>
+                      isUseLinkCode && affiliateHref ? (
+                        <a
+                          href={affiliateHref}
+                          target="_blank"
+                          rel="nofollow sponsored noopener"
+                          className="inline-flex h-7 min-w-[110px] items-center justify-center rounded-full border border-[#26ffd4]/50 bg-[#26ffd4]/15 px-4 text-[11px] font-semibold uppercase tracking-wide text-[#b3ffe9] shadow-[0_12px_25px_-18px_#1dfbd0] transition hover:border-[#26ffd4]/80 hover:bg-[#26ffd4]/25 hover:text-white"
+                        >
+                          {discountCodeLabel || "Use link"}
+                        </a>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => copyCode(discountCode)}
+                          className="inline-flex h-7 min-w-[110px] items-center justify-center rounded-full border border-[#26ffd4]/50 bg-[#26ffd4]/15 px-4 text-[11px] font-semibold uppercase tracking-wide text-[#b3ffe9] shadow-[0_12px_25px_-18px_#1dfbd0] transition hover:border-[#26ffd4]/80 hover:bg-[#26ffd4]/25 hover:text-white"
+                        >
+                          {copiedCode === discountCode ? "Copied!" : discountCode}
+                        </button>
+                      )
                     ) : (
                       <span className="text-white/40">-</span>
                     )}
