@@ -4,6 +4,7 @@ const STATS = [
   { label: "Firms tracked", value: "21 live" },
   { label: "Evaluation accounts", value: "150+ programs" },
   { label: "Filters", value: "Platforms, payouts, rules, trustpilot" },
+  { label: "Fresh data", value: "Updated daily with new rules & firms" },
 ];
 
 export default function HeroBanner() {
