@@ -89,6 +89,7 @@ type FirmTableProps = {
   instantFundedOnly?: boolean;
   searchTerm?: string;
   accountSizeFilter?: number | null;
+  firmNameFilter?: string;
 };
 
 export default function FirmTable({
@@ -99,6 +100,7 @@ export default function FirmTable({
   instantFundedOnly = false,
   searchTerm = "",
   accountSizeFilter = null,
+  firmNameFilter = "",
 }: FirmTableProps) {
   let list: TableFirm[] = [];
   if (Array.isArray(firms)) {
@@ -322,8 +324,12 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
 
   const filteredRows = useMemo(() => {
     let rows = sorted;
+    const normalizedFirmName = (firmNameFilter || "").trim().toLowerCase();
     if (normalizedSearch) {
       rows = rows.filter((row) => (row.firm?.name || "").toLowerCase().includes(normalizedSearch));
+    }
+    if (normalizedFirmName) {
+      rows = rows.filter((row) => (row.firm?.name || "").toLowerCase() === normalizedFirmName);
     }
     if (typeof accountSizeFilter === "number" && Number.isFinite(accountSizeFilter) && accountSizeFilter > 0) {
       const targetSize = Math.round(accountSizeFilter);
@@ -347,7 +353,7 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
       });
     }
     return rows;
-  }, [sorted, fireDealsMode, normalizedSearch, accountSizeFilter]);
+  }, [sorted, fireDealsMode, normalizedSearch, accountSizeFilter, firmNameFilter]);
 
   const totalRows = filteredRows.length;
   const tablePageCount = Math.max(1, Math.ceil(totalRows / ROWS_PER_PAGE));

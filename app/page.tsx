@@ -383,6 +383,7 @@ const [minPayout, setMinPayout] = useState<number>(DEFAULT_MIN_PAYOUT);
   const [fireDealsMode, setFireDealsMode] = useState(false);
   const [tableFireDealsMode, setTableFireDealsMode] = useState(false);
   const [tableAccountSize, setTableAccountSize] = useState<string>("50000");
+  const [tableFirmName, setTableFirmName] = useState<string>("");
   const [compare, setCompare] = useState<string[]>([]);
 const [sort, setSort] = useState<SortKey>("score");
   const [showAllPlatforms, setShowAllPlatforms] = useState(false);
@@ -520,6 +521,7 @@ const [sort, setSort] = useState<SortKey>("score");
     setCardsPage(1);
     setFavoritesOnly(false);
     setTableAccountSize("50000");
+    setTableFirmName("");
     fireDealsPrevFilters.current = null;
   };
 
@@ -1518,8 +1520,13 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           searchQuery={q}
           tableAccountSize={tableAccountSize}
           tableAccountSizeOptions={ACCOUNT_SIZE_OPTIONS}
+          tableFirmName={tableFirmName}
+          tableFirmOptions={firmNameOptions}
           onTableAccountSizeChange={(value) => {
             setTableAccountSize(value || "");
+          }}
+          onTableFirmChange={(value) => {
+            setTableFirmName(value || "");
           }}
         />
 

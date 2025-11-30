@@ -22,6 +22,9 @@ type Props = {
   tableAccountSize: string;
   tableAccountSizeOptions: readonly string[];
   onTableAccountSizeChange: (value: string) => void;
+  tableFirmName: string;
+  tableFirmOptions: readonly string[];
+  onTableFirmChange: (value: string) => void;
 };
 
 export default function HomeViewToggle({
@@ -39,11 +42,15 @@ export default function HomeViewToggle({
   tableAccountSize,
   tableAccountSizeOptions,
   onTableAccountSizeChange,
+  tableFirmName,
+  tableFirmOptions,
+  onTableFirmChange,
 }: Props) {
   const sp = useSearchParams();
   const router = useRouter();
   const columnsPortalRef = useRef<HTMLDivElement | null>(null);
   const [showAccountSizePicker, setShowAccountSizePicker] = useState(false);
+  const [showFirmPicker, setShowFirmPicker] = useState(false);
 
   // derive the view from the URL, default to "table"
   const viewParam = sp.get("view");
@@ -56,9 +63,14 @@ export default function HomeViewToggle({
     router.replace(`${url.pathname}${url.search}`, { scroll: false });
   };
 
-  const accountSizeLabel = tableAccountSize
-    ? `$${Number(tableAccountSize).toLocaleString()}`
-    : "All sizes";
+  const formatAccountSizeLabel = (value: string) => {
+    const n = Number(value);
+    if (!Number.isFinite(n) || n <= 0) return "All";
+    return new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 0 }).format(n);
+  };
+
+  const accountSizeLabel = tableAccountSize ? `$${formatAccountSizeLabel(tableAccountSize)}` : "All sizes";
+  const firmLabel = tableFirmName ? tableFirmName : "All firms";
 
   const controls = (
     <div className="flex flex-wrap items-center gap-3">
@@ -101,13 +113,13 @@ export default function HomeViewToggle({
             <button
               onClick={() => setShowAccountSizePicker((prev) => !prev)}
               aria-expanded={showAccountSizePicker}
-              className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
+              className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
                 showAccountSizePicker
                   ? "bg-white text-black shadow-[0_10px_30px_-15px_rgba(255,255,255,0.8)]"
                   : "border border-white/20 bg-transparent text-white/80 hover:text-white"
               }`}
             >
-              <span>Account size: {accountSizeLabel}</span>
+              <span>Acct size: {accountSizeLabel}</span>
               <span className="text-[10px] leading-none">{showAccountSizePicker ? "▲" : "▼"}</span>
             </button>
             {showAccountSizePicker && (
@@ -136,6 +148,50 @@ export default function HomeViewToggle({
                       </button>
                     );
                   })}
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="relative">
+            <button
+              onClick={() => setShowFirmPicker((prev) => !prev)}
+              aria-expanded={showFirmPicker}
+              className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
+                showFirmPicker
+                  ? "bg-white text-black shadow-[0_10px_30px_-15px_rgba(255,255,255,0.8)]"
+                  : "border border-white/20 bg-transparent text-white/80 hover:text-white"
+              }`}
+            >
+              <span>Firm: {firmLabel}</span>
+              <span className="text-[10px] leading-none">{showFirmPicker ? "▲" : "▼"}</span>
+            </button>
+            {showFirmPicker && (
+              <div className="absolute right-0 mt-2 w-56 max-h-[320px] overflow-auto rounded-2xl border border-white/15 bg-[#040d19]/95 p-3 text-xs text-white shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)] backdrop-blur-xl z-30">
+                <p className="mb-2 text-[11px] uppercase tracking-[0.2em] text-white/60">Choose firm</p>
+                <div className="grid gap-1.5">
+                  {[{ label: "All firms", value: "" }, ...tableFirmOptions.map((name) => ({ label: name, value: name }))].map(
+                    (opt, idx) => {
+                      const active = opt.value === tableFirmName;
+                      return (
+                        <button
+                          key={opt.value || `firm-${idx}`}
+                          className={`flex w-full items-center justify-between rounded-full px-3 py-1.5 text-left text-[12px] transition ${
+                            active
+                              ? "bg-[#26ffd4]/20 text-[#26ffd4] ring-1 ring-[#26ffd4]/70"
+                              : "bg-white/5 text-white/80 hover:bg-white/10"
+                          }`}
+                          onClick={() => {
+                            onTableFirmChange(opt.value);
+                            setShowFirmPicker(false);
+                          }}
+                          type="button"
+                        >
+                          <span className="truncate">{opt.label}</span>
+                          {active ? <span className="text-[10px] uppercase tracking-[0.15em]">Active</span> : null}
+                        </button>
+                      );
+                    }
+                  )}
                 </div>
               </div>
             )}
@@ -180,6 +236,7 @@ export default function HomeViewToggle({
             instantFundedOnly={instantFundedActive}
             searchTerm={searchQuery}
             accountSizeFilter={tableAccountSize ? Number(tableAccountSize) : null}
+            firmNameFilter={tableFirmName}
           />
         )}
       </div>
