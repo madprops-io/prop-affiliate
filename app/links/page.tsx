@@ -20,8 +20,9 @@ const buildLinks = (firms: Array<Record<string, any>>): FirmLink[] => {
   const links: FirmLink[] = [];
   firms.forEach((firm) => {
     const baseKey = (firm.key || firm.name || "").toString();
-    const slug = slugifyKey(baseKey);
-    if (!slug || seen.has(slug)) return;
+    const nameKey = slugifyKey((firm.name || baseKey) as string);
+    const urlKey = slugifyKey(baseKey);
+    if (!nameKey || seen.has(nameKey)) return;
 
     const baseUrl =
       firm.signup ||
@@ -33,14 +34,14 @@ const buildLinks = (firms: Array<Record<string, any>>): FirmLink[] => {
       "";
     if (!baseUrl) return;
 
-    const href = buildAffiliateUrl(baseUrl, slug, "links-page");
+    const href = buildAffiliateUrl(baseUrl, urlKey || nameKey, "links-page");
     links.push({
-      key: slug,
+      key: nameKey,
       name: firm.name || baseKey,
       logo: firm.logo || (firm.key ? `/logos/${firm.key}.png` : null),
       href,
     });
-    seen.add(slug);
+    seen.add(nameKey);
   });
   return links.sort((a, b) => a.name.localeCompare(b.name));
 };
