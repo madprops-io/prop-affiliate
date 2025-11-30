@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { buildAffiliateUrl } from "@/lib/affiliates";
 import { FIRMS } from "@/lib/firms";
+import { useFirms } from "@/lib/useFirms";
 
 type FirmLink = {
   key: string;
@@ -12,23 +13,25 @@ type FirmLink = {
   href: string;
 };
 
-const dedupeFirms = (): FirmLink[] => {
+const buildLinks = (firms: Array<Record<string, any>>): FirmLink[] => {
   const seen = new Set<string>();
-  return FIRMS.filter((firm) => {
+  const links: FirmLink[] = [];
+  firms.forEach((firm) => {
     const key = firm.key || firm.name;
-    if (!key) return false;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return Boolean(firm.signup || firm.homepage);
-  }).map((firm) => {
-    const href = buildAffiliateUrl(firm.signup || firm.homepage || "/", firm.key, "links-page");
-    return {
-      key: firm.key || firm.name,
-      name: firm.name,
+    if (!key || seen.has(key)) return;
+    const baseUrl =
+      firm.signup || firm.homepage || firm.affiliateUrl || firm.url || firm.home_page || firm.signup_url || "";
+    if (!baseUrl) return;
+    const href = buildAffiliateUrl(baseUrl, key, "links-page");
+    links.push({
+      key,
+      name: firm.name || key,
       logo: firm.logo || (firm.key ? `/logos/${firm.key}.png` : null),
       href,
-    };
+    });
+    seen.add(key);
   });
+  return links;
 };
 
 function FirmLogo({ name, src }: { name: string; src?: string | null }) {
@@ -64,7 +67,10 @@ function FirmLogo({ name, src }: { name: string; src?: string | null }) {
 }
 
 export default function LinksPage() {
-  const firms = dedupeFirms();
+  const { firms, loading } = useFirms();
+  const liveList = Array.isArray(firms) && firms.length > 0 ? buildLinks(firms as any) : [];
+  const fallbackList = liveList.length ? liveList : buildLinks(FIRMS as any);
+  const list = fallbackList;
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-12 text-white">
@@ -76,7 +82,7 @@ export default function LinksPage() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {firms.map((firm) => (
+        {list.map((firm) => (
           <Link
             key={firm.key}
             href={firm.href}
