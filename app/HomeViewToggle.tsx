@@ -61,7 +61,7 @@ export default function HomeViewToggle({
     : "All sizes";
 
   const controls = (
-    <div className="mb-1 flex flex-wrap items-center gap-3">
+    <div className="flex flex-wrap items-center gap-3">
       {view === "table" ? (
         <>
           <button
