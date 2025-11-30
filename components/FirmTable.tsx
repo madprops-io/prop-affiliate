@@ -204,12 +204,12 @@ export default function FirmTable({
     | "activation"
     | "discount"
     | "trueCost";
-  const [sortKey, setSortKey] = useState<SortKey>("name");
+  const [sortKey, setSortKey] = useState<SortKey>("trueCost");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const ROWS_PER_PAGE = 18;
   const [tablePage, setTablePage] = useState(1);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
-  const prevSortRef = useRef<{ key: SortKey; dir: "asc" | "desc" }>({ key: "name", dir: "asc" });
+  const prevSortRef = useRef<{ key: SortKey; dir: "asc" | "desc" }>({ key: "trueCost", dir: "asc" });
   const prevFireRef = useRef<boolean>(fireDealsMode);
   const DEFAULT_COLUMNS = {
     accountSize: true,
