@@ -228,16 +228,18 @@ export default function HomeViewToggle({
           ) : null}
         </div>
         {view === "table" && (
-          <FirmsTable
-            firms={firms}
-            fireDealsMode={tableFireDealsMode}
-            columnsPortalRef={columnsPortalRef}
-            fastPassOnly={fastPassActive}
-            instantFundedOnly={instantFundedActive}
-            searchTerm={searchQuery}
-            accountSizeFilter={tableAccountSize ? Number(tableAccountSize) : null}
-            firmNameFilter={tableFirmName}
-          />
+          <div className="-mt-2">
+            <FirmsTable
+              firms={firms}
+              fireDealsMode={tableFireDealsMode}
+              columnsPortalRef={columnsPortalRef}
+              fastPassOnly={fastPassActive}
+              instantFundedOnly={instantFundedActive}
+              searchTerm={searchQuery}
+              accountSizeFilter={tableAccountSize ? Number(tableAccountSize) : null}
+              firmNameFilter={tableFirmName}
+            />
+          </div>
         )}
       </div>
       {view === "cards" ? cards : null}
