@@ -20,7 +20,13 @@ const buildLinks = (firms: Array<Record<string, any>>): FirmLink[] => {
     const key = firm.key || firm.name;
     if (!key || seen.has(key)) return;
     const baseUrl =
-      firm.signup || firm.homepage || firm.affiliateUrl || firm.url || firm.home_page || firm.signup_url || "";
+      firm.signup ||
+      firm.signup_url ||
+      firm.homepage ||
+      firm.affiliateUrl ||
+      firm.url ||
+      firm.home_page ||
+      "";
     if (!baseUrl) return;
     const href = buildAffiliateUrl(baseUrl, key, "links-page");
     links.push({
