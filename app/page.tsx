@@ -364,6 +364,7 @@ export default function Page() {
   const searchParams = useSearchParams();
   const viewParam = searchParams.get("view");
   const isCardsView = viewParam === "cards";
+  const prevViewRef = useRef<string | null>(viewParam);
 
   // ===== state =====
   const [q, setQ] = useState("");
@@ -524,6 +525,37 @@ const [sort, setSort] = useState<SortKey>("score");
     setTableFirmName("");
     fireDealsPrevFilters.current = null;
   };
+
+  const resetCardsFilters = () => {
+    if (fireDealsMode) deactivateFireDeals();
+    setQ("");
+    setSearchDraft("");
+    setModel("");
+    setSelectedPlatforms([]);
+    setMaxMinFunding(0);
+    setMinPayout(DEFAULT_MIN_PAYOUT);
+    setSort("score");
+    setCompare([]);
+    setAccountSizeFilter([]);
+    setDrawdownFilter("");
+    setPayoutSpeedFilter("");
+    setOneDayEvalOnly(false);
+    setInstantFundedOnly(false);
+    setDiscountOnly(false);
+    setMinTrust(DEFAULT_MIN_TRUST);
+    setScoreFocus([]);
+    setShowAllPlatforms(false);
+    setCardsPage(1);
+    setFavoritesOnly(false);
+  };
+
+  useEffect(() => {
+    const prev = prevViewRef.current;
+    if (isCardsView && prev !== "cards") {
+      resetCardsFilters();
+    }
+    prevViewRef.current = viewParam;
+  }, [isCardsView, viewParam]);
 
   // ===== read from URL =====
   useEffect(() => {
