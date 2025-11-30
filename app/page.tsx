@@ -1502,21 +1502,6 @@ function platformConnectionsText(f: UIFirmWithConn): string {
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 space-y-6">
         <Script id="ld-json" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-        {/* Tip for full filtering */}
-        <div className="flex items-center gap-2 px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60 max-w-[1400px] mx-auto">
-          <Info size={12} className="text-white/50" />
-          <span>
-            Want more filters? Switch to{" "}
-            <Link
-              href={{ pathname: "/", query: { view: "cards" } }}
-              className="text-[#f6c850] underline-offset-4 hover:underline"
-            >
-              Score Cards
-            </Link>{" "}
-            for the full filter set.
-          </span>
-        </div>
-
         {/* Top disclosure */}
         <AffiliateNotice />
 
