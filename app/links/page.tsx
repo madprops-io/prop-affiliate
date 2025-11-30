@@ -17,8 +17,10 @@ const buildLinks = (firms: Array<Record<string, any>>): FirmLink[] => {
   const seen = new Set<string>();
   const links: FirmLink[] = [];
   firms.forEach((firm) => {
-    const key = firm.key || firm.name;
+    const baseKey = (firm.key || firm.name || "").toString();
+    const key = baseKey.toLowerCase();
     if (!key || seen.has(key)) return;
+
     const baseUrl =
       firm.signup ||
       firm.signup_url ||
@@ -28,10 +30,11 @@ const buildLinks = (firms: Array<Record<string, any>>): FirmLink[] => {
       firm.home_page ||
       "";
     if (!baseUrl) return;
+
     const href = buildAffiliateUrl(baseUrl, key, "links-page");
     links.push({
       key,
-      name: firm.name || key,
+      name: firm.name || baseKey,
       logo: firm.logo || (firm.key ? `/logos/${firm.key}.png` : null),
       href,
     });
