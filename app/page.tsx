@@ -1209,6 +1209,12 @@ function platformConnectionsText(f: UIFirmWithConn): string {
               ? `${rawPercent}% off`
               : null);
           const fundingDisplay = formatFundingOrAccounts(f.maxFunding, f.maxAccounts);
+          const payoutDaysText =
+            typeof f.daysToPayout === "string" && f.daysToPayout.trim()
+              ? f.daysToPayout
+              : typeof f.payoutDaysValue === "number" && Number.isFinite(f.payoutDaysValue)
+              ? `${Math.round(f.payoutDaysValue)} days`
+              : "–";
           return (
             <Card
               key={`${f.key}-${idx}`}
@@ -1310,6 +1316,10 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                     )}
                     <li>
                       <strong>Payout:</strong> {f.payoutPct ?? 0}%
+                    </li>
+                    <li className="text-[#f6c850] font-semibold">
+                      <span className="text-white/70">First payout:</span>{" "}
+                      <span className="text-[#f6c850]">{payoutDaysText}</span>
                     </li>
                     <li>
                       {fundingDisplay ? (
