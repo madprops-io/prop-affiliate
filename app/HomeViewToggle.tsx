@@ -221,10 +221,10 @@ export default function HomeViewToggle({
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {controls}
           {view === "table" ? (
-            <div ref={columnsPortalRef} className="relative z-20 ml-auto flex justify-end min-w-[130px]" />
+            <div ref={columnsPortalRef} className="relative z-20 ml-auto flex min-w-[115px] flex-shrink-0 justify-end" />
           ) : null}
         </div>
         {view === "table" && (
