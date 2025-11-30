@@ -43,8 +43,8 @@ export default function ComingSoon() {
         <div className="space-y-3 text-sm text-white/70">
           <p>Need affiliate help or want an early preview?</p>
           <p className="text-base font-semibold text-white">
-            <Link href="mailto:hello@madprops.io" className="underline hover:text-emerald-300">
-              hello@madprops.io
+            <Link href="mailto:hello@madprops.com" className="underline hover:text-emerald-300">
+              hello@madprops.com
             </Link>
           </p>
         </div>

@@ -20,6 +20,7 @@ export type FirmRow = {
   payoutDisplay?: string | null; // e.g., "80/90%" or "80-90%"
   maxFunding?: number | null;
   accountSize?: number | null;
+  maxAccounts?: number | null;
   platforms?: string[];
   model?: string[];
   minDays?: number | null;
@@ -71,6 +72,8 @@ function parseMoney(v: string | undefined) {
   const n = Number((v ?? "").replace(/[^0-9.\-]/g, ""));
   return Number.isFinite(n) ? n : undefined;
 }
+const normalizePositiveNumber = (value: number | undefined) =>
+  typeof value === "number" && Number.isFinite(value) && value > 0 ? value : undefined;
 function parsePayout(raw: string | undefined): { pct?: number; display?: string } {
   const s = (raw ?? "").trim();
   if (!s) return {};
@@ -175,8 +178,17 @@ function mapRow(r: RawRow): FirmRow {
     discountAmount = parsedLabel.amount;
     discountPercent = undefined;
   }
-  const maxFunding = parseNum(r["max_funding_usd"]);
-  const accountSize = parseNum(r["account_size_usd"] ?? r["account_size"] ?? r["account_size"]);
+  const maxFunding = normalizePositiveNumber(parseNum(r["max_funding_usd"]));
+  const maxAccounts = normalizePositiveNumber(
+    parseNum(
+      r["max_accounts"] ??
+        r["max_accounts_per_trader"] ??
+        r["max_accounts_allowed"] ??
+        r["max_num_accounts"] ??
+        r["max accounts"]
+    )
+  );
+  const accountSize = normalizePositiveNumber(parseNum(r["account_size_usd"] ?? r["account_size"] ?? r["account_size"]));
   const trustpilot = parseNum(
     r["trustpilot"] ??
       r["trustpilot_score"] ??
@@ -231,6 +243,7 @@ function mapRow(r: RawRow): FirmRow {
     payoutSplit: typeof payoutPct === "number" ? Math.round(payoutPct) : undefined,
     payoutDisplay: payoutParsed.display ?? null,
     maxFunding,
+    maxAccounts: maxAccounts ?? null,
     accountSize: accountSize ?? maxFunding ?? null,
     platforms: splitList(platformsStr),
     model: normalizeModelList(splitList(modelStr)),
@@ -290,6 +303,7 @@ function firmToRow(f: Firm): FirmRow {
     payoutSplit: typeof f.payout === "number" ? Math.round(f.payout * 100) : null,
     payoutDisplay: undefined,
     maxFunding: f.maxFunding ?? null,
+    maxAccounts: normalizePositiveNumber(f.maxAccounts ?? undefined) ?? null,
     accountSize: typeof f.accountSize === "number" ? f.accountSize : f.maxFunding ?? null,
     platforms: Array.isArray(f.platforms) ? f.platforms : [],
     model: normalizeModelList(Array.isArray(f.model) ? f.model : typeof f.model === "string" ? [f.model] : []),

@@ -6,17 +6,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BadgeList } from "./BadgeList";
 import { RatingStars } from "./RatingStars";
 import type { FirmRow } from "@/lib/useFirms";
+import { formatFundingOrAccounts } from "@/lib/funding";
 
 type CardFirm = FirmRow & {
   rating?: number | null;
   url?: string | null;
   model?: FirmRow["model"] | string | string[] | null;
   payout?: number | null;
-};
-
-const formatMoney = (value: number | null | undefined) => {
-  if (typeof value !== "number" || !Number.isFinite(value)) return "-";
-  return `$${value.toLocaleString()}`;
 };
 
 export function FirmCard({ firm }: { firm: CardFirm }) {
@@ -67,11 +63,16 @@ export function FirmCard({ firm }: { firm: CardFirm }) {
     </div>
   );
 
+  const fundingDisplay = formatFundingOrAccounts(firm.maxFunding, firm.maxAccounts);
   const stats = [
-    {
-      label: "Max funding",
-      value: formatMoney(firm.maxFunding ?? null),
-    },
+    ...(fundingDisplay
+      ? [
+          {
+            label: fundingDisplay.label,
+            value: fundingDisplay.value,
+          },
+        ]
+      : []),
     {
       label: "Payout",
       value: payoutPct != null ? `${payoutPct}%` : "-",

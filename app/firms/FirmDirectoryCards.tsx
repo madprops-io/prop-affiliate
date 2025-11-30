@@ -7,6 +7,7 @@ import type { Firm } from "@/lib/types";
 import { buildAffiliateUrl } from "@/lib/affiliates";
 import { Button } from "@/components/ui/button";
 import { useFirms, type FirmRow } from "@/lib/useFirms";
+import { formatFundingOrAccounts } from "@/lib/funding";
 
 type Props = {
   firms: Firm[];
@@ -18,6 +19,7 @@ type GroupedFirm = Firm & {
   slugKey: string;
   payoutDisplay?: string | null;
   drawdownType?: string | null;
+  maxAccounts?: number | null;
 };
 type AccountRow = {
   name: string;
@@ -72,6 +74,7 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
       model: [],
       platforms: Array.isArray((row as any).platforms) ? (row as any).platforms : [],
       maxFunding: typeof (row as any).maxFunding === "number" ? (row as any).maxFunding : null,
+      maxAccounts: typeof (row as any).maxAccounts === "number" ? (row as any).maxAccounts : null,
       payout: typeof (row as any).payoutSplit === "number" ? (row as any).payoutSplit / 100 : null,
       payoutSplit: typeof (row as any).payoutSplit === "number" ? (row as any).payoutSplit : null,
       payoutDisplay: (row as any).payoutDisplay ?? null,
@@ -127,11 +130,6 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
   });
 
   return Array.from(map.values());
-}
-
-function formatMoney(value?: number | null) {
-  if (typeof value !== "number" || !Number.isFinite(value)) return "-";
-  return `$${value.toLocaleString()}`;
 }
 
 function formatMinDaysDetail(firm: GroupedFirm, accounts: AccountRow[]) {
@@ -364,6 +362,7 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
         const daysToPayoutDisplay = formatDaysToPayoutDetail(grouped, accounts);
         const payoutDisplay = formatPayoutDetail(grouped, accounts);
         const drawdownDisplay = formatDrawdownDetail(grouped, accounts);
+        const fundingDisplay = formatFundingOrAccounts(firm.maxFunding, firm.maxAccounts);
         const logoSrc = firm.logo?.trim() ? firm.logo.trim() : `/logos/${firm.key}.png`;
 
         return (
@@ -405,7 +404,7 @@ export function FirmDirectoryCards({ firms, initialExpandedKey }: Props) {
                   />
                   <Detail label="Days to payout" value={daysToPayoutDisplay} />
                   <Detail label="Payout" value={payoutDisplay} />
-                  <Detail label="Max funding" value={formatMoney(firm.maxFunding)} />
+                  {fundingDisplay ? <Detail label={fundingDisplay.label} value={fundingDisplay.value} /> : null}
                   <Detail label="Drawdown" value={drawdownDisplay} />
                   <Detail
                     label="Weekend hold"

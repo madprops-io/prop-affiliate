@@ -10,6 +10,7 @@ import { getCosts } from "@/lib/pricing";
 import { FIRMS } from "@/lib/firms";
 import { useFirms } from "@/lib/useFirms";
 import { useMemo } from "react";
+import { formatFundingOrAccounts } from "@/lib/funding";
 
 const slugify = (value: string | undefined | null) =>
   (value ?? "")
@@ -28,6 +29,7 @@ type FirmProfile = {
   payoutPct?: number | null;
   maxFunding?: number | null;
   accountSize?: number | null;
+  maxAccounts?: number | null;
   minDays?: number | null;
   daysToPayout?: number | string | null;
   drawdownType?: string | null;
@@ -89,6 +91,7 @@ function normalizeFirmRow(row: any | null | undefined): FirmProfile | null {
     platforms: normalizeArray(row.platforms),
     payoutPct: typeof payout === "number" ? Math.round(payout) : null,
     maxFunding: typeof row.maxFunding === "number" ? row.maxFunding : null,
+    maxAccounts: typeof row.maxAccounts === "number" && row.maxAccounts > 0 ? row.maxAccounts : null,
     accountSize: typeof row.accountSize === "number" ? row.accountSize : row.maxFunding ?? null,
     minDays: typeof row.minDays === "number" ? row.minDays : null,
     daysToPayout: row.daysToPayout ?? row.days_to_payout ?? null,
@@ -125,6 +128,7 @@ function normalizeStaticFirm(row: any | null | undefined): FirmProfile | null {
         ? Math.round(row.payout * (row.payout <= 1 ? 100 : 1))
         : null,
     maxFunding: typeof row.maxFunding === "number" ? row.maxFunding : null,
+    maxAccounts: typeof row.maxAccounts === "number" && row.maxAccounts > 0 ? row.maxAccounts : null,
     accountSize: typeof row.accountSize === "number" ? row.accountSize : row.maxFunding ?? null,
     minDays: typeof row.minDays === "number" ? row.minDays : null,
     daysToPayout: row.daysToPayout ?? null,
@@ -226,6 +230,7 @@ export default function FirmDetailPage() {
     pricing: selected.pricing ?? undefined,
     feeRefund: selected.feeRefund,
   });
+  const fundingDisplay = formatFundingOrAccounts(selected.maxFunding, selected.maxAccounts);
 
   const affiliateUrl = buildAffiliateUrl(selected.signup ?? selected.homepage ?? "", selected.key);
 
@@ -313,7 +318,7 @@ export default function FirmDetailPage() {
           <h2 className="text-xl font-semibold text-white">Snapshot</h2>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <Stat label="Payout split" value={formatPercent(selected.payoutPct)} />
-            <Stat label="Max funding" value={formatCurrency(selected.maxFunding)} />
+            {fundingDisplay ? <Stat label={fundingDisplay.label} value={fundingDisplay.value} /> : null}
             <Stat
               label="Featured account size"
               value={formatCurrency(featuredAccountSize ?? selected.accountSize)}

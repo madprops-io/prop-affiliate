@@ -71,9 +71,21 @@ function normalizeRow(r: FirmCsvRow, i: number) {
   else if (rawProgram.trim()) model = rawProgram.trim();
 
   // funding (aka “account size”)
-  const maxFunding =
+  const maxFundingRaw =
     toNumber(first(r.maxFunding, r["Max Funding"], r["Maximum Funding"], r.account_size_usd)) ??
     toNumber(first(r.funding, r.Funding));
+  const maxFunding = maxFundingRaw && maxFundingRaw > 0 ? maxFundingRaw : null;
+
+  const maxAccountsRaw = toInt(
+    first(
+      r.maxAccounts,
+      r["Max Accounts"],
+      r["Max Accounts Allowed"],
+      r["max_accounts"],
+      r["max accounts"]
+    ) ?? null
+  );
+  const maxAccounts = maxAccountsRaw && maxAccountsRaw > 0 ? maxAccountsRaw : null;
 
   // payout split (supports "70 - 80")
   const rawSplit =
@@ -141,6 +153,7 @@ function normalizeRow(r: FirmCsvRow, i: number) {
     name,
     model, // string|string[]
     maxFunding: maxFunding ?? null,
+    maxAccounts: maxAccounts ?? null,
     payoutSplit: payoutSplit ?? null,
     platforms,
     cap: cap ?? null,

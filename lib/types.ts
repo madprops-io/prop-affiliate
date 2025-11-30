@@ -28,6 +28,7 @@ export type Firm = {
   // numbers we use in UI
   maxFunding?: number | null;
   accountSize?: number | null;
+  maxAccounts?: number | null;
   payout?: number | null;
   payoutSplit?: number | null;
   cap?: number | null;
