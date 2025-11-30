@@ -10,6 +10,7 @@ export type Firm = {
   model: string[];
   platforms: string[];
   maxFunding: number;
+  maxAccounts?: number;
   accountSize?: number;
   payout: number;
 
@@ -56,7 +57,7 @@ export const AFFILIATE_CODES: Record<string, string> = {
   daytraders: "madprops",
   fundedfutures: "TJ",
   legendstrading: "TJ",
-  lucidtrading: "TJ",
+  lucidtrading: "MAD",
   myfundedfutures: "TJ",
   bulenox: "TJ",
   elitetraderfunding: "TJ",
