@@ -67,10 +67,10 @@ export default function HomeViewToggle({
           <button
             onClick={onToggleTableFireDeals}
             aria-pressed={tableFireDealsMode}
-            className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] shadow transition ${
+            className={`rounded-full border px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] shadow transition ${
               tableFireDealsMode
-                ? "bg-gradient-to-r from-orange-500 via-amber-400 to-amber-300 text-black/90 shadow-[0_8px_20px_-10px_rgba(255,140,0,0.6)]"
-                : "border border-orange-300/70 bg-transparent text-orange-200 hover:text-orange-100"
+                ? "border-orange-300/70 bg-gradient-to-r from-orange-500 via-amber-400 to-amber-300 text-black/90 shadow-[0_8px_20px_-10px_rgba(255,140,0,0.6)]"
+                : "border-orange-300/70 bg-transparent text-orange-200 hover:text-orange-100"
             }`}
           >
             Fire Deals
@@ -78,10 +78,10 @@ export default function HomeViewToggle({
           <button
             onClick={onToggleFastPass}
             aria-pressed={fastPassActive}
-            className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
+            className={`rounded-full border px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
               fastPassActive
-                ? "bg-white text-black"
-                : "border border-white/20 bg-transparent text-white/70 hover:text-white"
+                ? "border-white/40 bg-white text-black"
+                : "border-white/20 bg-transparent text-white/70 hover:text-white"
             }`}
           >
             Fast Pass
@@ -89,10 +89,10 @@ export default function HomeViewToggle({
           <button
             onClick={onToggleInstantFunded}
             aria-pressed={instantFundedActive}
-            className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
+            className={`rounded-full border px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
               instantFundedActive
-                ? "bg-emerald-300 text-black"
-                : "border border-white/20 bg-transparent text-white/70 hover:text-white"
+                ? "border-emerald-200/60 bg-emerald-300 text-black"
+                : "border-white/20 bg-transparent text-white/70 hover:text-white"
             }`}
           >
             Instant Funded
