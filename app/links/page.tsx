@@ -6,6 +6,8 @@ import { buildAffiliateUrl } from "@/lib/affiliates";
 import { FIRMS } from "@/lib/firms";
 import { useFirms } from "@/lib/useFirms";
 
+const slugifyKey = (value: string) => value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "");
+
 type FirmLink = {
   key: string;
   name: string;
@@ -18,8 +20,8 @@ const buildLinks = (firms: Array<Record<string, any>>): FirmLink[] => {
   const links: FirmLink[] = [];
   firms.forEach((firm) => {
     const baseKey = (firm.key || firm.name || "").toString();
-    const key = baseKey.toLowerCase();
-    if (!key || seen.has(key)) return;
+    const slug = slugifyKey(baseKey);
+    if (!slug || seen.has(slug)) return;
 
     const baseUrl =
       firm.signup ||
@@ -31,16 +33,16 @@ const buildLinks = (firms: Array<Record<string, any>>): FirmLink[] => {
       "";
     if (!baseUrl) return;
 
-    const href = buildAffiliateUrl(baseUrl, key, "links-page");
+    const href = buildAffiliateUrl(baseUrl, slug, "links-page");
     links.push({
-      key,
+      key: slug,
       name: firm.name || baseKey,
       logo: firm.logo || (firm.key ? `/logos/${firm.key}.png` : null),
       href,
     });
-    seen.add(key);
+    seen.add(slug);
   });
-  return links;
+  return links.sort((a, b) => a.name.localeCompare(b.name));
 };
 
 function FirmLogo({ name, src }: { name: string; src?: string | null }) {
