@@ -1521,6 +1521,9 @@ function platformConnectionsText(f: UIFirmWithConn): string {
 
         {/* Top disclosure */}
         <AffiliateNotice />
+        <p className="px-4 text-[12px] text-white/60 max-w-[1400px] mx-auto">
+          Data is updated daily from public sources and firm submissions. Terms can change—please confirm details on the firm&rsquo;s site before signing up.
+        </p>
 
         {/* Toggle: default view = Table; switch to Cards with ?view=cards */}
         <HomeViewToggle
