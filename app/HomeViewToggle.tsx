@@ -228,7 +228,7 @@ export default function HomeViewToggle({
           ) : null}
         </div>
         {view === "table" && (
-          <div className="-mt-2">
+          <div className="mt-2">
             <FirmsTable
               firms={firms}
               fireDealsMode={tableFireDealsMode}

@@ -1503,7 +1503,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
         <Script id="ld-json" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
         {/* Tip for full filtering */}
-        <div className="flex items-center gap-2 px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
+        <div className="flex items-center gap-2 px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60 max-w-[1400px] mx-auto">
           <Info size={12} className="text-white/50" />
           <span>
             Want more filters? Switch to{" "}
