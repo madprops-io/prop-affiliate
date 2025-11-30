@@ -16,6 +16,7 @@ import { FIRMS } from "@/lib/firms";
 import { MODEL_TAGS } from "@/lib/modelTags";
 import { buildAffiliateUrl } from "@/lib/affiliates";
 import { formatStarIcons } from "@/lib/useStarRating";
+import { formatFundingOrAccounts } from "@/lib/funding";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -72,8 +73,6 @@ const SCORE_FOCUS_PRESETS = [
   { value: "funding", label: "Max funding" },
   { value: "cost", label: "Low cost" },
   { value: "payoutspeed", label: "Fast payouts" },
-  { value: "refund", label: "Refundable" },
-  { value: "drawdown", label: "Flexible drawdown" },
   { value: "discount", label: "Has discount" },
   { value: "evalspeed", label: "Quick eval" },
 ] as const;
@@ -210,6 +209,7 @@ export default function Page() {
     payout: number | null;
     payoutPct: number | null;
     maxFunding: number | null;
+    maxAccounts?: number | null;
     accountSize?: number | null;
     drawdownType?: string | null;
     drawdownTokens?: string[];
@@ -272,6 +272,7 @@ export default function Page() {
         payout,
         payoutPct: payout != null ? Math.round(payout * 100) : null,
         maxFunding: typeof f.maxFunding === "number" ? f.maxFunding : null,
+        maxAccounts: typeof f.maxAccounts === "number" ? f.maxAccounts : null,
         accountSize: typeof f.accountSize === "number" ? f.accountSize : f.maxFunding ?? null,
         drawdownType: typeof f.drawdownType === "string" ? f.drawdownType : f.drawdown_type ?? null,
         drawdownTokens: Array.isArray(f.drawdownTokens) ? f.drawdownTokens : [],
@@ -361,6 +362,8 @@ export default function Page() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const viewParam = searchParams.get("view");
+  const isCardsView = viewParam === "cards";
 
   // ===== state =====
   const [q, setQ] = useState("");
@@ -374,11 +377,12 @@ const [minPayout, setMinPayout] = useState<number>(DEFAULT_MIN_PAYOUT);
   const [payoutSpeedFilter, setPayoutSpeedFilter] = useState<string>("");
   const [oneDayEvalOnly, setOneDayEvalOnly] = useState(false);
   const [instantFundedOnly, setInstantFundedOnly] = useState(false);
-  const [refundOnly, setRefundOnly] = useState(false);
   const [discountOnly, setDiscountOnly] = useState(false);
   const [minTrust, setMinTrust] = useState<number>(DEFAULT_MIN_TRUST);
   const [scoreFocus, setScoreFocus] = useState<ScoreCriterion[]>([]);
   const [fireDealsMode, setFireDealsMode] = useState(false);
+  const [tableFireDealsMode, setTableFireDealsMode] = useState(false);
+  const [tableAccountSize, setTableAccountSize] = useState<string>("50000");
   const [compare, setCompare] = useState<string[]>([]);
 const [sort, setSort] = useState<SortKey>("score");
   const [showAllPlatforms, setShowAllPlatforms] = useState(false);
@@ -419,6 +423,10 @@ const [sort, setSort] = useState<SortKey>("score");
     else activateFireDeals();
   };
 
+  const toggleTableFireDeals = () => {
+    setTableFireDealsMode((prev) => !prev);
+  };
+
   const handleManualFilterChange = () => {
     if (fireDealsMode) deactivateFireDeals();
     setCardsPage(1);
@@ -449,7 +457,7 @@ const [sort, setSort] = useState<SortKey>("score");
       "Key",
       "Models",
       "Account Size",
-      "Max Funding",
+      "Max Funding / Accounts",
       "Platforms",
       "Payout %",
       "True Cost",
@@ -458,12 +466,13 @@ const [sort, setSort] = useState<SortKey>("score");
     ];
     const rows = favoriteFirms.map((firm) => {
       const cost = getCosts(firm as any);
+      const fundingValue = formatFundingOrAccounts(firm.maxFunding, firm.maxAccounts)?.value ?? "";
       const values = [
         firm.name ?? "",
         firm.key ?? "",
         (firm.model ?? []).join(" / "),
         firm.accountSize ? `$${firm.accountSize.toLocaleString()}` : "",
-        firm.maxFunding ? `$${firm.maxFunding.toLocaleString()}` : "",
+        fundingValue,
         (firm.platforms ?? []).join(" / "),
         typeof firm.payoutPct === "number" ? `${firm.payoutPct}%` : "",
         `$${cost.trueCost.toLocaleString()}`,
@@ -504,13 +513,13 @@ const [sort, setSort] = useState<SortKey>("score");
     setPayoutSpeedFilter("");
     setOneDayEvalOnly(false);
     setInstantFundedOnly(false);
-    setRefundOnly(false);
     setDiscountOnly(false);
     setMinTrust(DEFAULT_MIN_TRUST);
     setScoreFocus([]);
     setShowAllPlatforms(false);
     setCardsPage(1);
     setFavoritesOnly(false);
+    setTableAccountSize("50000");
     fireDealsPrevFilters.current = null;
   };
 
@@ -626,7 +635,6 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         ((f.payoutDaysValue ?? Number.POSITIVE_INFINITY) <= (payoutMax ?? Number.POSITIVE_INFINITY));
       const evalSpeedOk = !oneDayEvalOnly || minDaysValue === 1;
       const instantFundedOk = !instantFundedOnly || minDaysValue === 0;
-      const refundOk = !refundOnly || !!f.feeRefund;
     const discountValue =
       f.discount?.percent ?? (f.discount as { amount?: number } | undefined)?.amount ?? f.pricing?.discountPct ?? 0;
       const discountRequired = discountOnly || fireDealsMode;
@@ -645,7 +653,6 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         drawdownOk &&
         payoutSpeedOk &&
         evalSpeedOk &&
-        refundOk &&
         discountOk &&
         lowCostOk &&
         trustOk &&
@@ -665,7 +672,6 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     payoutSpeedFilter,
     oneDayEvalOnly,
     instantFundedOnly,
-    refundOnly,
     discountOnly,
     fireDealsMode,
     minTrust,
@@ -691,7 +697,8 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         case "trust":
           return ((f.trustpilot ?? 0) / 5) * 100;
         case "funding":
-          return Math.min((f.maxFunding ?? 0) / 1000, 100);
+          // Emphasize higher caps; clamp very large numbers to avoid runaway scores
+          return Math.min((f.maxFunding ?? 0) / 50_000, 120);
         case "cost": {
           const cost = getTrueCost(f);
           if (!Number.isFinite(cost) || cost <= 0) return 50;
@@ -702,10 +709,6 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
           const clamped = Math.min(Math.max(days, 0), 45);
           return ((45 - clamped) / 45) * 100;
         }
-        case "refund":
-          return f.feeRefund ? 100 : 40;
-        case "drawdown":
-          return (f.drawdownType || "").toLowerCase().includes("static") ? 100 : 60;
         case "discount": {
           const discountValue =
             f.discount?.percent ??
@@ -717,6 +720,8 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         case "evalspeed": {
           const min = f.minDays ?? Number.POSITIVE_INFINITY;
           if (!Number.isFinite(min)) return 40;
+          // Ignore instant programs (minDays === 0) for quick-eval scoring
+          if (min <= 0) return 20;
           if (min <= 1) return 100;
           if (min <= 3) return 80;
           if (min <= 5) return 60;
@@ -771,7 +776,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     scoreFocus.length === 0 ||
     (scoreFocus.length === DEFAULT_SCORE_FOCUS.length &&
       DEFAULT_SCORE_FOCUS.every((criterion) => scoreFocus.includes(criterion)));
-  const scoreFocusPresets = SCORE_FOCUS_PRESETS.filter((preset) => preset.value !== "discount");
+  const scoreFocusPresets = SCORE_FOCUS_PRESETS;
   const hasActiveFilters =
     Boolean(
       q ||
@@ -784,7 +789,6 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         minPayout !== DEFAULT_MIN_PAYOUT ||
         oneDayEvalOnly ||
         instantFundedOnly ||
-        refundOnly ||
         discountOnly ||
         fireDealsMode ||
         minTrust > 0 ||
@@ -860,91 +864,40 @@ function platformConnectionsText(f: UIFirmWithConn): string {
 
       {/* Controls */}
       <section className="surface golden-filter-panel rounded-2xl border border-[#f6c850]/40 p-4 md:p-6 shadow-[0_0_40px_rgba(246,200,80,0.25)] space-y-6">
-        <div>
-          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
-            <Search size={16} /> Search firms
-          </p>
-          <form
-            className="mt-2 flex flex-wrap items-center gap-2"
-            onSubmit={(event) => {
-              event.preventDefault();
-              handleManualFilterChange();
-              setQ(searchDraft);
-            }}
-          >
-            <Input
-              placeholder="Search by name"
-              list="home-firm-search-options"
-              value={searchDraft}
-              onChange={(event) => setSearchDraft(event.target.value)}
-              className="flex-1 min-w-0 border-2 border-[#f6c850]/60 bg-[#050b15] text-white placeholder:text-white/60 shadow-[0_0_25px_rgba(246,200,80,0.25)] focus-visible:ring-2 focus-visible:ring-[#f6c850] focus-visible:ring-offset-0 focus-visible:border-[#f6c850]"
-            />
-            <datalist id="home-firm-search-options">
-              {firmNameOptions
-                .filter((name) => {
-                  const drafted = searchDraft.trim().toLowerCase();
-                  if (!drafted) return false;
-                  return name.toLowerCase().startsWith(drafted);
-                })
-                .map((name) => (
-                  <option key={name} value={name} />
-                ))}
-            </datalist>
-            <button
-              type="submit"
-              className="rounded-full bg-gradient-to-r from-[#f7d778] via-[#f6c850] to-[#f0b429] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-950 shadow-[0_8px_20px_-10px_rgba(246,200,80,0.8)] transition hover:brightness-110"
-            >
-              Search
-            </button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="text-white/70 hover:text-white"
-              onClick={() => {
+        <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-white/70">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border border-[#5fffc2]/60 bg-[#050c17] text-[#050c17] focus:ring-0 checked:bg-[#5fffc2] checked:border-[#5fffc2]"
+              checked={favoritesOnly}
+              onChange={(event) => {
                 handleManualFilterChange();
-                setSearchDraft("");
-                setQ("");
+                setFavoritesOnly(event.target.checked);
               }}
-            >
-              Clear
-            </Button>
-          </form>
-          <div className="mt-3 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-white/70">
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                className="h-4 w-4 rounded border border-[#5fffc2]/60 bg-[#050c17] text-[#050c17] focus:ring-0 checked:bg-[#5fffc2] checked:border-[#5fffc2]"
-                checked={favoritesOnly}
-                onChange={(event) => {
-                  handleManualFilterChange();
-                  setFavoritesOnly(event.target.checked);
-                }}
-              />
-              Favorites only ({favorites.length})
-            </label>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={favoriteFirms.length === 0}
-              onClick={handleExportFavorites}
-              className="rounded-full border border-[#5fffc2]/50 text-xs font-semibold uppercase tracking-[0.2em] text-[#5fffc2] disabled:opacity-40"
-            >
-              Export favorites
-              {favoriteFirms.length > 0 ? ` (${favoriteFirms.length})` : ""}
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              disabled={favorites.length === 0}
-              onClick={clearFavorites}
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60 hover:text-white disabled:opacity-30"
-            >
-              Clear favorites
-            </Button>
-          </div>
+            />
+            Favorites only ({favorites.length})
+          </label>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={favoriteFirms.length === 0}
+            onClick={handleExportFavorites}
+            className="rounded-full border border-[#5fffc2]/50 text-xs font-semibold uppercase tracking-[0.2em] text-[#5fffc2] disabled:opacity-40"
+          >
+            Export favorites
+            {favoriteFirms.length > 0 ? ` (${favoriteFirms.length})` : ""}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            disabled={favorites.length === 0}
+            onClick={clearFavorites}
+            className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60 hover:text-white disabled:opacity-30"
+          >
+            Clear favorites
+          </Button>
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
@@ -1118,7 +1071,8 @@ function platformConnectionsText(f: UIFirmWithConn): string {
               All criteria
             </button>
             {scoreFocusPresets.map((preset) => {
-              const active = scoreFocus.includes(preset.value);
+              const isDiscount = preset.value === "discount";
+              const active = isDiscount ? discountOnly : scoreFocus.includes(preset.value);
               return (
                 <button
                   key={preset.value}
@@ -1126,11 +1080,27 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                   className={chipClasses(active)}
                   onClick={() => {
                     handleManualFilterChange();
-                    setScoreFocus((prev) =>
-                      prev.includes(preset.value)
-                        ? prev.filter((item) => item !== preset.value)
-                        : [...prev, preset.value]
-                    );
+                    if (preset.value === "funding") {
+                      setSort("cap");
+                    }
+                    if (isDiscount) {
+                      setDiscountOnly((prev) => {
+                        const next = !prev;
+                        setScoreFocus((prevFocus) => {
+                          const has = prevFocus.includes("discount");
+                          if (next && !has) return [...prevFocus, "discount"];
+                          if (!next) return prevFocus.filter((item) => item !== "discount");
+                          return prevFocus;
+                        });
+                        return next;
+                      });
+                    } else {
+                      setScoreFocus((prev) =>
+                        prev.includes(preset.value)
+                          ? prev.filter((item) => item !== preset.value)
+                          : [...prev, preset.value]
+                      );
+                    }
                   }}
                 >
                   {preset.label}
@@ -1150,32 +1120,6 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             />
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-white/80">
-            <input
-              type="checkbox"
-              className="h-4 w-4 rounded border border-[#1fffba]/70 bg-[#040c17] text-[#040c17] focus:ring-0 checked:bg-[#1fffba] checked:border-[#1fffba]"
-              checked={refundOnly}
-              onChange={(event) => {
-                handleManualFilterChange();
-                setRefundOnly(event.target.checked);
-              }}
-            />
-            Refund eligible
-          </label>
-
-          <label className="flex items-center gap-2 text-sm text-white/80">
-            <input
-              type="checkbox"
-              className="h-4 w-4 rounded border border-[#1fffba]/70 bg-[#040c17] text-[#040c17] focus:ring-0 checked:bg-[#1fffba] checked:border-[#1fffba]"
-              checked={discountOnly}
-              onChange={(event) => {
-                handleManualFilterChange();
-                setDiscountOnly(event.target.checked);
-              }}
-            />
-            Has discount
-          </label>
-
           <button
             type="button"
             aria-pressed={fireDealsMode}
@@ -1183,8 +1127,8 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             onClick={toggleFireDeals}
             className={`rounded-full px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] shadow transition ${
               fireDealsMode
-                ? "bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-200 text-black shadow-[0_8px_20px_-10px_rgba(255,140,0,0.6)]"
-                : "bg-gradient-to-r from-orange-500 via-amber-400 to-amber-300 text-black/80 opacity-80 hover:opacity-100"
+                ? "bg-gradient-to-r from-orange-500 via-amber-400 to-amber-300 text-black/90 shadow-[0_8px_20px_-10px_rgba(255,140,0,0.6)]"
+                : "border border-orange-300/70 bg-transparent text-orange-200 hover:text-orange-100"
             }`}
           >
             Fire deals
@@ -1239,6 +1183,30 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           const isFavoriteCard = isFavorite(f.key);
           const fallbackLogo = `/logos/${f.key}.png`;
           const resolvedLogo = f.logo?.trim().length ? f.logo.trim() : fallbackLogo;
+          const discountSource =
+            (f.pricing as any)?.discount ??
+            f.discount ??
+            (f.pricing?.discountPct
+              ? { percent: f.pricing.discountPct, label: f.pricing.discountLabel ?? null }
+              : null);
+          const rawPercent =
+            typeof (discountSource as { percent?: number })?.percent === "number"
+              ? (discountSource as { percent?: number }).percent
+              : typeof f.pricing?.discountPct === "number"
+              ? f.pricing.discountPct
+              : null;
+          const rawAmount =
+            typeof (discountSource as { amount?: number })?.amount === "number"
+              ? (discountSource as { amount?: number }).amount
+              : null;
+          const discountLabel =
+            (discountSource as { label?: string })?.label ??
+            (rawAmount && rawAmount > 0
+              ? `$${rawAmount.toLocaleString()} off`
+              : rawPercent && rawPercent > 0
+              ? `${rawPercent}% off`
+              : null);
+          const fundingDisplay = formatFundingOrAccounts(f.maxFunding, f.maxAccounts);
           return (
             <Card
               key={`${f.key}-${idx}`}
@@ -1256,9 +1224,10 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    {cost.discountPct > 0 ? (
+                    {Boolean(discountLabel) ? (
                       <span className="px-2 py-1 rounded-full text-xs font-semibold bg-amber-400/15 text-amber-300 border border-amber-300/30">
-                        {cost.discountPct}% OFF{f.discount?.code ? ` • ${f.discount.code}` : ""}
+                        {discountLabel}
+                        {f.discount?.code ? ` – ${f.discount.code}` : ""}
                       </span>
                     ) : (
                       <span className="px-2 py-1 rounded-full text-xs bg-white/5 text-white/60 border border-white/10">
@@ -1329,7 +1298,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                     <li>
                       <strong>Activation:</strong> ${Number(f.pricing?.activationFee ?? 0).toLocaleString()}
                     </li>
-                    {f.discount && cost.discountPct > 0 && (
+                    {f.discount && Boolean(discountLabel) && (
                       <li className="col-span-2 text-xs font-medium text-amber-300">
                         {f.discount.label || "Promo"} ({cost.discountPct}% off)
                         {f.discount?.code && (
@@ -1341,7 +1310,11 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                       <strong>Payout:</strong> {f.payoutPct ?? 0}%
                     </li>
                     <li>
-                      <strong>Max funding:</strong> ${f.maxFunding?.toLocaleString() ?? "-"}
+                      {fundingDisplay ? (
+                        <>
+                          <strong>{fundingDisplay.label}:</strong> {fundingDisplay.value}
+                        </>
+                      ) : null}
                     </li>
                     <li>
                       <strong>Min days (Eval):</strong> {formatMinDaysDisplay(f.minDays)}
@@ -1385,6 +1358,15 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                           Get Started
                         </Button>
                       </a>
+
+                      <Link href={`/firm/${f.key}`} className="w-full">
+                        <Button
+                          variant="outline"
+                          className="w-full border-white/20 bg-white/5 text-white hover:border-[#5fffc2] hover:text-[#5fffc2]"
+                        >
+                          More details
+                        </Button>
+                      </Link>
                     </div>
 
                     <div className="flex items-center justify-between">
@@ -1466,40 +1448,43 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                   <th className="p-2 text-left">Model</th>
                   <th className="p-2 text-left">Platforms</th>
                   <th className="p-2 text-left">Payout</th>
-                  <th className="p-2 text-left">Max Funding</th>
+                  <th className="p-2 text-left">Max funding / accounts</th>
                   <th className="p-2 text-left">Min Days (Eval)</th>
                   <th className="p-2 text-left">Rules</th>
                 </tr>
               </thead>
               <tbody>
-                {selected.map((f, idx) => (
-                  <tr key={`cmp-${f.key}-${idx}`} className="border-t">
-                    <td className="p-2 font-medium">{f.name}</td>
-                    <td className="p-2">{f.model.join(", ")}</td>
-                    <td className="p-2">{f.platforms.join(", ")}</td>
-                    <td className="p-2">{Math.round((f.payout ?? 0) * 100)}%</td>
-                    <td className="p-2">${(f.maxFunding ?? 0).toLocaleString()}</td>
-                    <td className="p-2">{formatMinDaysDisplay(f.minDays)}</td>
-                    <td className="p-2">
-                      <div className="flex flex-wrap gap-2">
-                        {typeof f.newsTradingEval === "boolean" || typeof f.newsTradingFunded === "boolean" ? (
-                          <>
-                            {typeof f.newsTradingEval === "boolean" ? (
-                              <Badge variant="outline">News Eval: {f.newsTradingEval ? "OK" : "No"}</Badge>
-                            ) : null}
-                            {typeof f.newsTradingFunded === "boolean" ? (
-                              <Badge variant="outline">News Funded: {f.newsTradingFunded ? "OK" : "No"}</Badge>
-                            ) : null}
-                          </>
-                        ) : (
-                          <Badge variant="outline">News: {f.newsTrading ? "OK" : "No"}</Badge>
-                        )}
-                        <Badge variant="outline">Weekend: {f.weekendHolding ? "OK" : "No"}</Badge>
-                        <Badge variant="outline">Refund: {f.feeRefund ? "Yes" : "No"}</Badge>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {selected.map((f, idx) => {
+                  const fundingDisplay = formatFundingOrAccounts(f.maxFunding, f.maxAccounts);
+                  return (
+                    <tr key={`cmp-${f.key}-${idx}`} className="border-t">
+                      <td className="p-2 font-medium">{f.name}</td>
+                      <td className="p-2">{f.model.join(", ")}</td>
+                      <td className="p-2">{f.platforms.join(", ")}</td>
+                      <td className="p-2">{Math.round((f.payout ?? 0) * 100)}%</td>
+                      <td className="p-2">{fundingDisplay?.value ?? ""}</td>
+                      <td className="p-2">{formatMinDaysDisplay(f.minDays)}</td>
+                      <td className="p-2">
+                        <div className="flex flex-wrap gap-2">
+                          {typeof f.newsTradingEval === "boolean" || typeof f.newsTradingFunded === "boolean" ? (
+                            <>
+                              {typeof f.newsTradingEval === "boolean" ? (
+                                <Badge variant="outline">News Eval: {f.newsTradingEval ? "OK" : "No"}</Badge>
+                              ) : null}
+                              {typeof f.newsTradingFunded === "boolean" ? (
+                                <Badge variant="outline">News Funded: {f.newsTradingFunded ? "OK" : "No"}</Badge>
+                              ) : null}
+                            </>
+                          ) : (
+                            <Badge variant="outline">News: {f.newsTrading ? "OK" : "No"}</Badge>
+                          )}
+                          <Badge variant="outline">Weekend: {f.weekendHolding ? "OK" : "No"}</Badge>
+                          <Badge variant="outline">Refund: {f.feeRefund ? "Yes" : "No"}</Badge>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -1523,12 +1508,75 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           cards={HomeCards}
           firms={firms}
           fireDealsMode={fireDealsMode}
+          tableFireDealsMode={tableFireDealsMode}
+          onToggleTableFireDeals={toggleTableFireDeals}
           onToggleFireDeals={toggleFireDeals}
           fastPassActive={oneDayEvalOnly}
           instantFundedActive={instantFundedOnly}
           onToggleFastPass={toggleFastPass}
           onToggleInstantFunded={toggleInstantFunded}
+          searchQuery={q}
+          tableAccountSize={tableAccountSize}
+          tableAccountSizeOptions={ACCOUNT_SIZE_OPTIONS}
+          onTableAccountSizeChange={(value) => {
+            setTableAccountSize(value || "");
+          }}
         />
+
+        {!isCardsView && (
+          <section className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-sm space-y-3">
+            <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+              <Search size={16} /> Search firms
+            </p>
+            <form
+              className="flex flex-wrap items-center gap-2"
+              onSubmit={(event) => {
+                event.preventDefault();
+                handleManualFilterChange();
+                setQ(searchDraft);
+              }}
+            >
+              <Input
+                placeholder="Search by name"
+                list="home-firm-search-options"
+                value={searchDraft}
+                onChange={(event) => setSearchDraft(event.target.value)}
+                className="flex-1 min-w-0 border border-white/15 bg-[#050b15] text-white placeholder:text-white/60 focus-visible:ring-2 focus-visible:ring-[#f6c850] focus-visible:ring-offset-0"
+              />
+              <datalist id="home-firm-search-options">
+                {firmNameOptions
+                  .filter((name) => {
+                    const drafted = searchDraft.trim().toLowerCase();
+                    if (!drafted) return false;
+                    return name.toLowerCase().startsWith(drafted);
+                  })
+                  .map((name) => (
+                    <option key={name} value={name} />
+                  ))}
+              </datalist>
+              <Button
+                type="submit"
+                size="sm"
+                className="rounded-full bg-gradient-to-r from-[#f7d778] via-[#f6c850] to-[#f0b429] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-950 shadow-[0_8px_20px_-10px_rgba(246,200,80,0.8)] transition hover:brightness-110"
+              >
+                Search
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-white/70 hover:text-white"
+                onClick={() => {
+                  handleManualFilterChange();
+                  setSearchDraft("");
+                  setQ("");
+                }}
+              >
+                Clear
+              </Button>
+            </form>
+          </section>
+        )}
 
         <FAQ />
         <Footer />
@@ -1711,7 +1759,7 @@ function Footer() {
       <p>© {new Date().getFullYear()} MadProps • Educational content only, not financial advice.</p>
       <p className="mt-1">
         Disclosure: <a className="underline" href="/disclosure">Affiliate links</a> •{" "}
-        Contact: <a className="underline" href="mailto:hello@madprops.io">hello@madprops.io</a>
+        Contact: <a className="underline" href="mailto:hello@madprops.com">hello@madprops.com</a>
       </p>
     </footer>
   );
