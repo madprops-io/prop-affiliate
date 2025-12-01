@@ -17,7 +17,7 @@ const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://madprops.io"),
+  metadataBase: new URL("https://madprops.com"),
   title: {
     default: "MadProps — Futures Prop Firm Comparison",
     template: "%s | MadProps",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     "Compare top futures prop firms — payouts, rules, fees, platforms, and real perks — all in one place.",
   openGraph: {
     type: "website",
-    url: "https://madprops.io",
+    url: "https://madprops.com",
     siteName: "MadProps",
     title: "MadProps — Futures Prop Firm Comparison",
     description:
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     images: ["/og/madprops-og.png"],
   },
   robots: { index: true, follow: true },
-  alternates: { canonical: "https://madprops.io" },
+  alternates: { canonical: "https://madprops.com" },
   icons: {
     icon: [
       { url: "/favicon.ico" },

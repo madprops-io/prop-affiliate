@@ -43,9 +43,9 @@ function normalizeLastModified(
 
 function toAbsoluteUrl(pathname: string): string {
   // Replace with your canonical domain if you want it hardcoded:
-  // return new URL(pathname, 'https://madprops.io').toString();
+  // return new URL(pathname, 'https://madprops.com').toString();
   // Using NEXT_PUBLIC_SITE_URL lets you vary in envs:
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://madprops.io';
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://madprops.com';
   return new URL(pathname, base).toString();
 }
 

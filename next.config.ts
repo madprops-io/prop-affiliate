@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "madprops.io", // your future CDN / uploads
+        hostname: "madprops.com", // your future CDN / uploads
         port: "",
         pathname: "/**",
       },
