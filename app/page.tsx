@@ -622,11 +622,13 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
       sp.delete("platforms");
       sp.delete("platform");
     }
-    setOrDelete("cap", debouncedCap || 0);
+    if (debouncedCap && Number(debouncedCap) > 0) setOrDelete("cap", debouncedCap);
+    else setOrDelete("cap", "");
     const payoutParam = Number.isFinite(debouncedPayout) ? debouncedPayout : DEFAULT_MIN_PAYOUT;
     if (payoutParam === DEFAULT_MIN_PAYOUT) setOrDelete("payout", "");
     else setOrDelete("payout", payoutParam);
-    setOrDelete("sort", sort);
+    if (sort !== "score") setOrDelete("sort", sort);
+    else setOrDelete("sort", "");
 
     const validCompare = compare.filter((key) => compareKeyWhitelist.has(key));
     if (validCompare.length > 0) sp.set("compare", validCompare.join(","));
