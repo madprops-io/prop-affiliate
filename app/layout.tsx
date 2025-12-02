@@ -17,33 +17,33 @@ const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://madprops.com"),
+  metadataBase: new URL("https://www.madprops.com"),
   title: {
-    default: "MadProps — Futures Prop Firm Comparison",
+    default: "MadProps - Best Prop Firm Deals, Instant Funding, Reviews and Discounts #MadProps",
     template: "%s | MadProps",
   },
   description:
-    "Compare top futures prop firms — payouts, rules, fees, platforms, and real perks — all in one place.",
+    "Find the best prop firm deals, instant funding options, discount codes, reviews, and challenge comparisons. Updated daily to help traders save money. #MadProps",
   openGraph: {
     type: "website",
-    url: "https://madprops.com",
+    url: "https://www.madprops.com",
     siteName: "MadProps",
-    title: "MadProps — Futures Prop Firm Comparison",
+    title: "MadProps - Best Prop Firm Deals, Instant Funding, Reviews and Discounts #MadProps",
     description:
-      "Transparent, fast, accurate firm comparisons. Launching soon — follow @madprops_io for deals.",
+      "Compare the best prop firms, instant funding options, discount codes, and reviews. Updated daily. #MadProps",
     images: [{ url: "/og/madprops-og.png", width: 1200, height: 630, alt: "MadProps" }],
   },
   twitter: {
     card: "summary_large_image",
     site: "@madprops_io",
     creator: "@madprops_io",
-    title: "MadProps — Futures Prop Firm Comparison",
+    title: "MadProps - Best Prop Firm Deals, Instant Funding, Reviews and Discounts #MadProps",
     description:
-      "Transparent, fast firm comparisons: payouts, rules, fees, platforms, perks.",
+      "Compare the best prop firms, instant funding options, discount codes, and reviews. Updated daily. #MadProps",
     images: ["/og/madprops-og.png"],
   },
   robots: { index: true, follow: true },
-  alternates: { canonical: "https://madprops.com" },
+  alternates: { canonical: "https://www.madprops.com" },
   icons: {
     icon: [
       { url: "/favicon.ico" },

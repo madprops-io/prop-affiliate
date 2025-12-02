@@ -1546,6 +1546,72 @@ function platformConnectionsText(f: UIFirmWithConn): string {
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 space-y-6">
         <Script id="ld-json" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
+        <section className="space-y-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f6c850]">#MadProps</p>
+          <h1 className="text-3xl font-bold text-white">Find the Best Prop Firm Deals & Discounts</h1>
+          <p className="text-sm text-white/70">
+            Compare prop firm deals, instant funding options, discount codes, payouts, and reviews. Updated daily so traders can save money and pick the right partner faster.
+          </p>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold text-white">Today's Best Prop Firm Discounts</h2>
+              <p className="text-sm text-white/70">Jump to live promo codes and stackable discounts.</p>
+              <div className="flex flex-wrap gap-2 text-sm">
+                <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+                  See deals
+                </Link>
+                <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+                  Filter by discount
+                </Link>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold text-white">Compare Instant Funding Prop Firms</h2>
+              <p className="text-sm text-white/70">Sort by payout speed, trust, and platforms in Score Cards.</p>
+              <div className="flex flex-wrap gap-2 text-sm">
+                <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+                  Compare firms
+                </Link>
+                <Link href="/?view=cards&sort=payout" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+                  Sort by payout
+                </Link>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold text-white">Prop Firm Reviews and Ratings</h2>
+              <p className="text-sm text-white/70">Scan trust scores, payouts, rules, and platform support at a glance.</p>
+              <div className="flex flex-wrap gap-2 text-sm">
+                <Link href="/?view=cards&sort=trust" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+                  Trusted firms
+                </Link>
+                <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+                  View details
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold text-white">Choose a Prop Firm by Features</h2>
+              <ul className="list-disc space-y-1 pl-4 text-sm text-white/70">
+                <li>Low-cost challenges and generous fee refunds</li>
+                <li>Fast payouts and weekend holding</li>
+                <li>Instant funding or one-day evaluations</li>
+                <li>Futures, forex, and TradingView-ready platforms</li>
+              </ul>
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold text-white">Why Traders Trust MadProps</h2>
+              <ul className="list-disc space-y-1 pl-4 text-sm text-white/70">
+                <li>Transparent rules, payouts, and platform coverage</li>
+                <li>Ratings and filters to surface real perks quickly</li>
+                <li>Updated daily with new discounts and codes</li>
+                <li>#MadProps community feedback keeps us honest</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
         {/* Tip for full filtering (table view only) */}
         {!isCardsView && (
           <div className="mx-auto flex max-w-[1400px] items-center gap-2 px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">

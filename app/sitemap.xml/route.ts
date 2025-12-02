@@ -40,7 +40,7 @@ function normalizeLastModified(
 }
 
 function toAbsoluteUrl(pathname: string): string {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://madprops.com";
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.madprops.com";
   return new URL(pathname, base).toString();
 }
 
