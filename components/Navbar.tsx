@@ -105,6 +105,12 @@ export default function Navbar() {
           >
             Links
           </Link>
+          <Link
+            href="/learn"
+            className={cn(linkBase, pathname?.startsWith("/learn") && active)}
+          >
+            Learn
+          </Link>
         </nav>
 
         </div>
