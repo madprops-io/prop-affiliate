@@ -1546,64 +1546,43 @@ function platformConnectionsText(f: UIFirmWithConn): string {
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 space-y-6">
         <Script id="ld-json" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-        <section className="space-y-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-6">
-          <h1 className="text-2xl font-bold text-white">Research prop firms without the noise.</h1>
+        <section className="space-y-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f6c850]">#MadProps</p>
+          <h2 className="text-xl font-semibold text-white">Find the best prop firm deals & discounts.</h2>
           <p className="text-sm text-white/70">
-            21 firms. 150+ programs. One clean dashboard for payouts, discounts, rules, and trust — updated daily.
+            Compare prop firm deals, instant funding programs, payouts, discount codes, and reviews - all in one place.
           </p>
-          <div className="flex flex-wrap gap-2 text-xs">
-            <span className="rounded-full border border-white/20 px-3 py-1 text-white/80">Live data feed</span>
-            <span className="rounded-full border border-white/20 px-3 py-1 text-white/80">Updated daily</span>
-          </div>
-          <p className="text-xs text-white/60">Firms tracked: 21 · Accounts: 150+ · Filters: Payouts, rules, Trustpilot</p>
-
-          <div className="space-y-3 rounded-xl border border-white/10 bg-black/30 p-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f6c850]">#MadProps</p>
-            <h2 className="text-xl font-semibold text-white">Find the best prop firm deals &amp; discounts.</h2>
-            <p className="text-sm text-white/70">
-              Compare prop firm deals, instant funding programs, discount codes, payouts, and reviews — all in one place.
-            </p>
-            <p className="text-sm text-white/70">
-              <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                View all deals
-              </Link>{" "}
-              ·{" "}
-              <Link href="/?view=cards&sort=payout" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                Instant funding
-              </Link>{" "}
-              ·{" "}
-              <Link href="/?view=cards&sort=trust" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                Reviews
-              </Link>
-            </p>
-            <p className="text-xs text-white/60">👇 Scroll to see all firms and filters</p>
-          </div>
+          <p className="text-sm text-white/70">
+            <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+              View all deals
+            </Link>{" "}
+            |{" "}
+            <Link href="/?view=cards&sort=payout" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+              Instant funding
+            </Link>{" "}
+            |{" "}
+            <Link href="/?view=cards&sort=trust" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+              Reviews
+            </Link>
+          </p>
+          <p className="text-xs text-white/60">Scroll to see all firms and filters</p>
         </section>
 
-        {/* Tip for full filtering (table view only) */}
-        {!isCardsView && (
-          <div className="mx-auto flex max-w-[1400px] items-center gap-2 px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
-            <Info size={12} className="text-white/50" />
-            <span>
-              Want more filters? Switch to{" "}
-              <Link
-                href={{ pathname: "/", query: { view: "cards" } }}
-                className="text-[#f6c850] underline-offset-4 hover:underline"
-              >
-                Score Cards
-              </Link>{" "}
-              for the full filter set.
-            </span>
-          </div>
-        )}
+        <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-2 px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
+          <span>
+            Want more filters?{" "}
+            <Link
+              href={{ pathname: "/", query: { view: "cards" } }}
+              className="text-[#f6c850] underline-offset-4 hover:underline"
+            >
+              Switch to Score Cards
+            </Link>
+          </span>
+          <span className="text-white/40">|</span>
+          <span>Disclosure: Some links are affiliate links.</span>
+        </div>
 
-        {/* Top disclosure */}
-        <AffiliateNotice />
-        <p className="px-4 text-[12px] text-white/60 max-w-[1400px] mx-auto">
-          Data is updated daily from public sources and firm submissions. Terms can change—please confirm details on the firm&rsquo;s site before signing up.
-        </p>
-
-        {/* Toggle: default view = Table; switch to Cards with ?view=cards */}
+{/* Toggle: default view = Table; switch to Cards with ?view=cards */}
         <HomeViewToggle
           cards={HomeCards}
           firms={firms}
