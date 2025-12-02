@@ -55,11 +55,20 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "MadProps",
+    url: "https://www.madprops.com",
+    logo: "https://www.madprops.com/icon-512.png",
+  };
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${outfit.className}`}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
         {/* Suspense boundary required for pages that use useSearchParams/usePathname/etc */}
-        <Suspense fallback={<main className="p-6">Loading…</main>}>
+        <Suspense fallback={<main className="p-6">Loading...</main>}>
           <LayoutClient>{children}</LayoutClient>
         </Suspense>
 
