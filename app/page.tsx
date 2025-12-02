@@ -1566,6 +1566,13 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             </Link>
           </p>
           <p className="text-xs text-white/60">Scroll to see all firms and filters</p>
+          <p className="text-sm text-slate-400">
+            New? Read our{" "}
+            <Link href="/learn/best-prop-firms-2025" className="text-emerald-400 hover:text-emerald-300">
+              Best Prop Firms 2025
+            </Link>{" "}
+            guide.
+          </p>
         </section>
 
         <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-2 px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
