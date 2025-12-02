@@ -1,7 +1,7 @@
 "use client";
 
 const STATS = [
-  { label: "Firms tracked", value: "21 live" },
+  { label: "Firms tracked", value: "20+ live" },
   { label: "Evaluation accounts", value: "150+ programs" },
   { label: "Filters", value: "Platforms, payouts, rules, trustpilot" },
   { label: "Fresh data", value: "Updated daily with new rules & firms" },
@@ -22,7 +22,7 @@ export default function HeroBanner() {
             Research proprietary trading firms without the noise.
           </h1>
           <p className="text-base text-white/80 md:text-lg">
-            MadProps keeps payouts, account sizes, drawdowns, discounts, and rule-set quirks across 21 firms and 150+
+            MadProps keeps payouts, account sizes, drawdowns, discounts, and rule-set quirks across 20+ firms and 150+
             accounts in one live filterable dashboard. Switch between cards and comparison table, save favorites, and
             export details for your playbook.
           </p>
