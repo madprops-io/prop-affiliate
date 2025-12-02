@@ -4,7 +4,14 @@ import type { MetadataRoute } from "next";
 export const dynamic = "force-static"; // cache at build time
 
 export default function robots(): MetadataRoute.Robots {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.madprops.com").replace(/\/+$/, "");
+  const host = (() => {
+    try {
+      return new URL(siteUrl).host;
+    } catch {
+      return "www.madprops.com";
+    }
+  })();
 
   return {
     rules: [
@@ -14,7 +21,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/admin", "/_next/", "/404"],
       },
     ],
-    sitemap: `${base}/sitemap.xml`,
-    host: base,
+    sitemap: `${siteUrl}/sitemap.xml`,
+    host,
   };
 }
