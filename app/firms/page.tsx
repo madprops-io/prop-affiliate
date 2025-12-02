@@ -38,7 +38,7 @@ export default function FirmsIndexPage({ searchParams }: FirmsPageProps) {
               Jump to the sortable table
             </Link>
             . Prefer the scoring view?{" "}
-            <Link href="/?view=cards" className="text-emerald-300 underline">
+            <Link href="/cards" className="text-emerald-300 underline">
               Open the score cards
             </Link>
             .

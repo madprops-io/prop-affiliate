@@ -1541,7 +1541,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
 
   return (
     <main>
-      <HeroBanner />
+      {!isCardsView && <HeroBanner />}
 
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 space-y-6">
         <Script id="ld-json" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
@@ -1553,15 +1553,15 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             Compare prop firm deals, instant funding programs, payouts, discount codes, and reviews - all in one place.
           </p>
           <p className="text-sm text-white/70">
-            <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+            <Link href="/cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
               View all deals
             </Link>{" "}
             |{" "}
-            <Link href="/?view=cards&sort=payout" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+            <Link href="/cards?sort=payout" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
               Instant funding
             </Link>{" "}
             |{" "}
-            <Link href="/?view=cards&sort=trust" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+            <Link href="/cards?sort=trust" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
               Reviews
             </Link>
           </p>
@@ -1579,7 +1579,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           <span>
             Want more filters?{" "}
             <Link
-              href={{ pathname: "/", query: { view: "cards" } }}
+              href="/cards"
               className="text-[#f6c850] underline-offset-4 hover:underline"
             >
               Switch to Score Cards
@@ -1589,7 +1589,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           <span>Disclosure: Some links are affiliate links.</span>
         </div>
 
-{/* Toggle: default view = Table; switch to Cards with ?view=cards */}
+{/* Toggle: default view = Table; switch to Cards (/cards) */}
         <HomeViewToggle
           cards={HomeCards}
           firms={firms}

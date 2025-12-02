@@ -18,8 +18,9 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const isCardsView = pathname === "/" && searchParams?.get("view") === "cards";
   // Transparent only on the homepage and only at the very top
-  const onHero = pathname === "/";
+  const onHero = pathname === "/" && !isCardsView;
 
   const headerClass = cn(
     "sticky top-0 z-50 w-full transition-colors duration-300",
@@ -32,7 +33,6 @@ export default function Navbar() {
     "transition-colors text-white/70 hover:text-white px-2 py-1 rounded-md whitespace-nowrap text-sm md:text-base";
   const active = "text-primary font-semibold";
 
-  const isCardsView = pathname === "/" && searchParams?.get("view") === "cards";
   const lucidDealHref = buildAffiliateUrl("https://lucidtrading.com", "lucidtrading", "fire-deal-banner");
 
   return (
@@ -76,7 +76,7 @@ export default function Navbar() {
               Home
             </Link>
             <Link
-              href="/?view=cards"
+              href="/cards"
               className={cn(linkBase, isCardsView && active)}
             >
               Score cards

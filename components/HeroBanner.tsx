@@ -9,12 +9,12 @@ const STATS = [
 
 export default function HeroBanner() {
   return (
-    <section className="relative isolate w-full overflow-hidden bg-gradient-to-br from-[#050b16] via-[#050f1e] to-[#041322] py-16 md:py-20">
+    <section className="relative isolate w-full overflow-hidden bg-gradient-to-br from-[#050b16] via-[#050f1e] to-[#041322] py-12 md:py-14 lg:py-16">
       <div className="absolute inset-0 -z-10 opacity-30 bg-[radial-gradient(circle_at_20%_20%,rgba(95,255,194,0.25),transparent_55%)]" />
       <div className="absolute inset-0 -z-10 opacity-20 bg-[radial-gradient(circle_at_80%_0%,rgba(247,215,120,0.25),transparent_55%)]" />
 
-      <div className="container mx-auto flex max-w-6xl flex-col gap-10 px-6 text-white lg:flex-row lg:items-center">
-        <div className="space-y-5 lg:w-3/5">
+      <div className="container mx-auto flex max-w-6xl flex-col gap-6 px-6 text-white lg:flex-row lg:items-center lg:gap-8">
+        <div className="space-y-4 lg:w-3/5">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#5fffc2]">
             Prop firm intelligence
           </p>
@@ -36,7 +36,7 @@ export default function HeroBanner() {
           </div>
         </div>
 
-        <div className="grid flex-1 gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_25px_60px_-30px_rgba(4,12,23,0.8)]">
+        <div className="grid flex-1 gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 lg:gap-4 lg:p-5 shadow-[0_25px_60px_-30px_rgba(4,12,23,0.8)]">
           {STATS.map((stat) => (
             <div key={stat.label} className="rounded-xl border border-white/5 bg-black/20 px-4 py-3">
               <p className="text-xs uppercase tracking-[0.3em] text-white/60">{stat.label}</p>
