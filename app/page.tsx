@@ -1547,72 +1547,36 @@ function platformConnectionsText(f: UIFirmWithConn): string {
         <Script id="ld-json" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
         <section className="space-y-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f6c850]">#MadProps</p>
-          <h1 className="text-3xl font-bold text-white">Find the Best Prop Firm Deals & Discounts</h1>
+          <h1 className="text-2xl font-bold text-white">Research prop firms without the noise.</h1>
           <p className="text-sm text-white/70">
-            Prop firms let traders use company capital to trade futures in exchange for a share of profits.
+            21 firms. 150+ programs. One clean dashboard for payouts, discounts, rules, and trust — updated daily.
           </p>
-          <p className="text-sm text-white/70">
-            Compare prop firm deals, instant funding programs, discount codes, payouts, and reviews. Updated daily so traders can save money, pass funded challenges faster, and choose the right prop firm with confidence. #MadProps
-          </p>
-          <p className="text-sm text-white/70">🔥 Trending today: Updated promos, fast payout programs, and instant funding firms.</p>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-white">Today's Best Prop Firm Discounts</h2>
-              <p className="text-sm text-white/70">Jump to live promo codes and stackable discounts.</p>
-              <div className="flex flex-wrap gap-2 text-sm">
-                <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                  View all deals
-                </Link>
-                <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                  Filter by discount
-                </Link>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-white">Compare Instant Funding Prop Firms</h2>
-              <p className="text-sm text-white/70">Sort by payout speed, trust, and platforms in Score Cards.</p>
-              <div className="flex flex-wrap gap-2 text-sm">
-                <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                  Compare top firms
-                </Link>
-                <Link href="/?view=cards&sort=payout" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                  Sort by payout
-                </Link>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-white">Prop Firm Reviews and Ratings</h2>
-              <p className="text-sm text-white/70">Scan trust scores, payouts, rules, and platform support at a glance.</p>
-              <div className="flex flex-wrap gap-2 text-sm">
-                <Link href="/?view=cards&sort=trust" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                  See trusted ratings
-                </Link>
-                <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                  View details
-                </Link>
-              </div>
-            </div>
+          <div className="flex flex-wrap gap-2 text-xs">
+            <span className="rounded-full border border-white/20 px-3 py-1 text-white/80">Live data feed</span>
+            <span className="rounded-full border border-white/20 px-3 py-1 text-white/80">Updated daily</span>
           </div>
-          <div className="grid gap-3 md:grid-cols-2">
-            <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-white">Choose a Prop Firm by Features</h2>
-              <ul className="list-disc space-y-1 pl-4 text-sm text-white/70">
-                <li>Low-cost challenges and generous fee refunds</li>
-                <li>Fast payouts and clear payout rules</li>
-                <li>Instant funding or one-day evaluations</li>
-                <li>Futures and TradingView-ready platforms</li>
-              </ul>
-            </div>
-            <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-white">Why Traders Trust MadProps</h2>
-              <ul className="list-disc space-y-1 pl-4 text-sm text-white/70">
-                <li>Transparent rules, payouts, and platform coverage</li>
-                <li>Ratings and filters to surface real perks quickly</li>
-                <li>Updated daily with new discounts and codes</li>
-                <li>#MadProps community feedback keeps us honest</li>
-              </ul>
-            </div>
+          <p className="text-xs text-white/60">Firms tracked: 21 · Accounts: 150+ · Filters: Payouts, rules, Trustpilot</p>
+
+          <div className="space-y-3 rounded-xl border border-white/10 bg-black/30 p-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f6c850]">#MadProps</p>
+            <h2 className="text-xl font-semibold text-white">Find the best prop firm deals &amp; discounts.</h2>
+            <p className="text-sm text-white/70">
+              Compare prop firm deals, instant funding programs, discount codes, payouts, and reviews — all in one place.
+            </p>
+            <p className="text-sm text-white/70">
+              <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+                View all deals
+              </Link>{" "}
+              ·{" "}
+              <Link href="/?view=cards&sort=payout" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+                Instant funding
+              </Link>{" "}
+              ·{" "}
+              <Link href="/?view=cards&sort=trust" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+                Reviews
+              </Link>
+            </p>
+            <p className="text-xs text-white/60">👇 Scroll to see all firms and filters</p>
           </div>
         </section>
 
