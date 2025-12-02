@@ -1550,15 +1550,19 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f6c850]">#MadProps</p>
           <h1 className="text-3xl font-bold text-white">Find the Best Prop Firm Deals & Discounts</h1>
           <p className="text-sm text-white/70">
-            Compare prop firm deals, instant funding options, discount codes, payouts, and reviews. Updated daily so traders can save money and pick the right partner faster.
+            Prop firms let traders use company capital to trade futures in exchange for a share of profits.
           </p>
+          <p className="text-sm text-white/70">
+            Compare prop firm deals, instant funding programs, discount codes, payouts, and reviews. Updated daily so traders can save money, pass funded challenges faster, and choose the right prop firm with confidence. #MadProps
+          </p>
+          <p className="text-sm text-white/70">🔥 Trending today: Updated promos, fast payout programs, and instant funding firms.</p>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <div className="space-y-2">
               <h2 className="text-xl font-semibold text-white">Today's Best Prop Firm Discounts</h2>
               <p className="text-sm text-white/70">Jump to live promo codes and stackable discounts.</p>
               <div className="flex flex-wrap gap-2 text-sm">
                 <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                  See deals
+                  View all deals
                 </Link>
                 <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
                   Filter by discount
@@ -1570,7 +1574,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
               <p className="text-sm text-white/70">Sort by payout speed, trust, and platforms in Score Cards.</p>
               <div className="flex flex-wrap gap-2 text-sm">
                 <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                  Compare firms
+                  Compare top firms
                 </Link>
                 <Link href="/?view=cards&sort=payout" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
                   Sort by payout
@@ -1582,7 +1586,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
               <p className="text-sm text-white/70">Scan trust scores, payouts, rules, and platform support at a glance.</p>
               <div className="flex flex-wrap gap-2 text-sm">
                 <Link href="/?view=cards&sort=trust" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-                  Trusted firms
+                  See trusted ratings
                 </Link>
                 <Link href="/?view=cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
                   View details
@@ -1595,9 +1599,9 @@ function platformConnectionsText(f: UIFirmWithConn): string {
               <h2 className="text-xl font-semibold text-white">Choose a Prop Firm by Features</h2>
               <ul className="list-disc space-y-1 pl-4 text-sm text-white/70">
                 <li>Low-cost challenges and generous fee refunds</li>
-                <li>Fast payouts and weekend holding</li>
+                <li>Fast payouts and clear payout rules</li>
                 <li>Instant funding or one-day evaluations</li>
-                <li>Futures, forex, and TradingView-ready platforms</li>
+                <li>Futures and TradingView-ready platforms</li>
               </ul>
             </div>
             <div className="space-y-2">
