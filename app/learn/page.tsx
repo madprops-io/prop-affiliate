@@ -17,9 +17,9 @@ type Guide = {
 const GUIDES: Guide[] = [
   {
     title: "Best Prop Firms 2025 (futures-focused)",
-    description: "Compare payouts, drawdown rules, platform support, and current discounts across top futures prop firms.",
+    description: "Full 2025 futures guide coming soon. Check back for payouts, rules, platforms, and discounts.",
     href: "/learn/best-prop-firms-2025",
-    badge: "Flagship",
+    badge: "Coming soon",
   },
 ];
 
