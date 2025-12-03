@@ -74,21 +74,23 @@ const buildRedirectsFromRecords = (
     const slug = normalizeSlug(rawSlug);
     if (!slug || seen.has(slug)) return;
 
+    // Prefer direct signup_url from the CSV (treat as authoritative).
+    const signup = pick(
+      row,
+      "signup_url",
+      "signup",
+      "url",
+      "homepage_url",
+      "home_page",
+      "homepage"
+    );
     const affiliate = pick(row, "affiliate_link", "affiliate_url", "affiliate");
-    const signup =
-      affiliate ||
-      pick(
-        row,
-        "signup_url",
-        "signup",
-        "url",
-        "homepage_url",
-        "home_page",
-        "homepage"
-      );
-    if (!signup) return;
 
-    const destination = affiliate || buildAffiliateUrl(signup, rawSlug);
+    const destination =
+      signup ||
+      affiliate ||
+      buildAffiliateUrl(affiliate || signup || "", rawSlug);
+
     if (!destination) return;
 
     redirects.push({ source: `/${slug}`, destination, permanent: true });
