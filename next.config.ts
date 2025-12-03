@@ -145,7 +145,16 @@ async function loadCsvRows() {
       return [] as Array<Record<string, string>>;
     }
     const text = await res.text();
-    return parseCsv(text);
+    const rows = parseCsv(text);
+    if (rows.length === 0) {
+      console.warn("CSV redirects: parsed 0 rows");
+    } else {
+      const sampleSlug = rows[0]?.slug || rows[0]?.key || rows[0]?.firm_key || rows[0]?.name || "";
+      console.log(
+        `CSV redirects: loaded ${rows.length} rows${sampleSlug ? `, first slug ${sampleSlug}` : ""}`
+      );
+    }
+    return rows;
   } catch {
     console.error("CSV redirects: fetch threw");
     return [] as Array<Record<string, string>>;
