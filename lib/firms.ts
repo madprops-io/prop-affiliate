@@ -28,7 +28,7 @@ export type Firm = {
 
   // links
   signup: string;
-  affiliateUrl?: string; // ✅ direct affiliate link if you prefer per-firm
+  affiliateUrl?: string; //  direct affiliate link if you prefer per-firm
 
   // pricing & discounts
   pricing?: {
@@ -44,7 +44,7 @@ export type Firm = {
   };
 };
 
-// ────────────────────────────────────────────────────────────────
+// ----------------------------------------------------------------
 // Legacy affiliate codes (you can still keep these if needed)
 export const AFFILIATE_CODES: Record<string, string> = {
   DEFAULT: "MADPROPS",
@@ -71,8 +71,8 @@ export const AFFILIATE_CODES: Record<string, string> = {
   phidias: "TJ",
 };
 
-// ────────────────────────────────────────────────────────────────
-// ✅ Centralized affiliate URLs – fill in as you get each link
+// ----------------------------------------------------------------
+// Centralized affiliate URLs - fill in as you get each link
 export const AFFILIATE_LINKS: Record<string, string> = {
   apex: "https://apextraderfunding.com/?ref=MADPROPS",
   blueguardian: "https://checkout.blueguardianfutures.com/ref/885/",
@@ -86,11 +86,10 @@ export const AFFILIATE_LINKS: Record<string, string> = {
   toponefutures:
     "https://toponefutures.com/?linkId=lp_707970&sourceId=mad&tenantId=toponefutures",
 
-  // 🔻 Fill these in later (unique keys, no duplicates)
+  // Fill these in later (unique keys, no duplicates)
   tpt: "",
   fundedfutures: "",
   legendstrading: "",
-  lucidtrading: "",
   myfundedfutures: "",
   bulenox: "",
   alphafutures: "",
@@ -101,8 +100,8 @@ export const AFFILIATE_LINKS: Record<string, string> = {
   phidias: "",
 };
 
-// ────────────────────────────────────────────────────────────────
-// ✅ All firms (trimmed summaries; you can add more fields anytime)
+// ----------------------------------------------------------------
+//  All firms (trimmed summaries; you can add more fields anytime)
 const RAW_FIRMS: Firm[] = [
   {
     key: "tpt",
@@ -185,7 +184,7 @@ const RAW_FIRMS: Firm[] = [
     homepage: "https://daytraders.com/",
     logo: "/logos/daytraders.png",
     model: ["2-Phase"],
-    platforms: ["Rithmic", "ProjectX"], // ✅ two separate items
+    platforms: ["Rithmic", "ProjectX"], //  two separate items
     maxFunding: 200000,
     payout: 0.85,
     trustpilot: 4.5,
@@ -196,7 +195,7 @@ const RAW_FIRMS: Firm[] = [
     affiliateUrl: "https://daytraders.com/go/madprops?i=1",
   },
 
-  // 🔻 placeholders for the rest (you can expand later)
+  // - placeholders for the rest (you can expand later)
   {
     key: "blueguardian",
     name: "Blue Guardian Futures",
@@ -272,7 +271,7 @@ export const FIRMS: Firm[] = RAW_FIRMS.map((firm) => ({
   model: normalizeModelList(firm.model),
 }));
 
-// ────────────────────────────────────────────────────────────────
+// ----------------------------------------------------------------
 // Helpers
 export type FirmKey = (typeof FIRMS)[number]["key"];
 
@@ -284,10 +283,11 @@ export function getFirmByKey(key: string) {
   return FIRMS.find((f) => f.key === key);
 }
 
-// ✅ Central link selector for buttons
+//  Central link selector for buttons
 export function getSignupLink(firm: Firm): string {
   const fromMap = AFFILIATE_LINKS[firm.key];
   if (fromMap && fromMap.trim()) return fromMap;
   if (firm.affiliateUrl && firm.affiliateUrl.trim()) return firm.affiliateUrl;
   return firm.signup;
 }
+
