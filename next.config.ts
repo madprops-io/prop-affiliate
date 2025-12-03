@@ -9,6 +9,7 @@ const slugify = (value: string) =>
 // Optional slug overrides for branded redirects
 const SLUG_OVERRIDES: Record<string, string> = {
   fundednextfutures: "fundednext",
+  lucid: "lucidtrading",
 };
 
 const normalizeSlug = (raw: string) => SLUG_OVERRIDES[raw] ?? raw;
@@ -25,6 +26,7 @@ const resolveAffiliateKey = (raw: string) =>
 const DOMAIN_SLUG_MAP: Record<string, string> = {
   "fundednext.com": "fundednextfutures",
   "fundingticks.com": "fundingticks",
+  "lucidtrading.com": "lucidtrading",
 };
 
 function detectSlugFromUrl(url: string): string | undefined {
