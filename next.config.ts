@@ -22,6 +22,23 @@ const AFFILIATE_KEY_OVERRIDES: Record<string, string> = {
 const resolveAffiliateKey = (raw: string) =>
   AFFILIATE_KEY_OVERRIDES[raw] ?? raw;
 
+const DOMAIN_SLUG_MAP: Record<string, string> = {
+  "fundednext.com": "fundednextfutures",
+  "fundingticks.com": "fundingticks",
+};
+
+function detectSlugFromUrl(url: string): string | undefined {
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    for (const domain of Object.keys(DOMAIN_SLUG_MAP)) {
+      if (host.includes(domain)) return DOMAIN_SLUG_MAP[domain];
+    }
+  } catch {
+    // ignore invalid URLs
+  }
+  return undefined;
+}
+
 function parseCsv(text: string): Array<Record<string, string>> {
   const trimmed = (text ?? "").trim();
   if (!trimmed) return [];
@@ -94,14 +111,14 @@ const buildRedirectsFromRecords = (
 
     // If the URL clearly identifies the firm (e.g., fundednext.com), force that slug
     const urlForSlug = signup || affiliate || "";
-    if (/fundednext\.com/i.test(urlForSlug)) {
-      rawSlug = "fundednextfutures";
-    }
+    const domainSlug = detectSlugFromUrl(urlForSlug);
+    if (domainSlug) rawSlug = domainSlug;
 
     const slug = normalizeSlug(rawSlug);
     if (!slug || seen.has(slug)) return;
 
-    const destination = affiliate || signup;
+    const affiliateKey = resolveAffiliateKey(rawSlug);
+    const destination = affiliate || (signup ? buildAffiliateUrl(signup, affiliateKey) : "");
     if (!destination) return;
 
     redirects.push({ source: `/${slug}`, destination, permanent: true });
