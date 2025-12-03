@@ -133,14 +133,21 @@ async function loadCsvRows() {
     (process.env.NEXT_PUBLIC_SHEET_CSV_URL as string | undefined) ||
     (process.env.SHEET_CSV_URL as string | undefined) ||
     "";
-  if (!csvUrl) return [] as Array<Record<string, string>>;
+  if (!csvUrl) {
+    console.error("CSV redirects: missing NEXT_PUBLIC_SHEET_CSV_URL");
+    return [] as Array<Record<string, string>>;
+  }
 
   try {
     const res = await fetch(csvUrl, { cache: "no-store" });
-    if (!res.ok) return [] as Array<Record<string, string>>;
+    if (!res.ok) {
+      console.error("CSV redirects: fetch failed", res.status, res.statusText);
+      return [] as Array<Record<string, string>>;
+    }
     const text = await res.text();
     return parseCsv(text);
   } catch {
+    console.error("CSV redirects: fetch threw");
     return [] as Array<Record<string, string>>;
   }
 }
