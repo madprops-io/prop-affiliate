@@ -1,5 +1,5 @@
 // lib/affiliates.ts
-import { AFFILIATE_CODES } from "@/lib/firms";
+import { AFFILIATE_CODES } from "./firms";
 
 type Rule =
   | { type: "query"; param: string }
