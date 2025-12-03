@@ -41,6 +41,11 @@ function detectSlugFromUrl(url: string): string | undefined {
   return undefined;
 }
 
+function logRedirectSample(label: string, list: Redirect[]) {
+  const sample = list.slice(0, 5).map((r) => `${r.source} -> ${r.destination}`);
+  console.log(`Redirect sample [${label}]`, sample);
+}
+
 function parseCsv(text: string): Array<Record<string, string>> {
   const trimmed = (text ?? "").trim();
   if (!trimmed) return [];
@@ -228,6 +233,8 @@ const nextConfig: NextConfig = {
     const seen = new Set<string>();
     const csvRedirects = buildRedirectsFromRecords(await loadCsvRows(), seen);
     const fallbackRedirects = buildRedirectsFromFirms(seen);
+    logRedirectSample("CSV", csvRedirects);
+    logRedirectSample("fallback", fallbackRedirects);
     return [...csvRedirects, ...fallbackRedirects];
   },
 };
