@@ -93,7 +93,7 @@ export const AFFILIATE_LINKS: Record<string, string> = {
   myfundedfutures: "",
   bulenox: "",
   alphafutures: "",
-  fundednextfutures: "",
+  fundednextfutures: "https://fundednext.com/?ref=MADPROPS",
   aquafutures: "",
   e8futures: "",
   tradeday: "",
