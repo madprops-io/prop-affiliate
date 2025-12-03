@@ -77,8 +77,9 @@ const buildRedirectsFromRecords = (
   const redirects: Redirect[] = [];
 
   records.forEach((row) => {
+    // Prefer firm_key/key for slugs so we don't pick product-level slugs
     const rawSlug = slugify(
-      row["slug"] || row["firm_key"] || row["key"] || row["name"] || ""
+      row["firm_key"] || row["key"] || row["slug"] || row["name"] || ""
     );
     const slug = normalizeSlug(rawSlug);
     if (!slug || seen.has(slug)) return;
