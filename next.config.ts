@@ -1,10 +1,138 @@
-import type { NextConfig } from "next";
+import type { NextConfig, Redirect } from "next";
 import path from "path";
+import { buildAffiliateUrl } from "./lib/affiliates";
+import { AFFILIATE_LINKS, FIRMS } from "./lib/firms";
+
+const slugify = (value: string) =>
+  (value ?? "").toString().toLowerCase().trim().replace(/[^a-z0-9]+/g, "");
+
+function parseCsv(text: string): Array<Record<string, string>> {
+  const trimmed = (text ?? "").trim();
+  if (!trimmed) return [];
+  const lines = trimmed.split(/\r?\n/).filter((l) => l.trim().length > 0);
+  if (!lines.length) return [];
+
+  const header = (lines[0] ?? "").replace(/^\uFEFF/, "").split(",").map((h) => h.trim());
+  if (!header.length) return [];
+
+  return lines.slice(1).map((line) => {
+    const cols: string[] = [];
+    let current = "";
+    let inQuote = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        if (inQuote && line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuote = !inQuote;
+        }
+      } else if (ch === "," && !inQuote) {
+        cols.push(current);
+        current = "";
+      } else {
+        current += ch;
+      }
+    }
+    cols.push(current);
+
+    const row: Record<string, string> = {};
+    header.forEach((h, idx) => {
+      row[h] = (cols[idx] ?? "").trim();
+    });
+    return row;
+  });
+}
+
+const pick = (obj: Record<string, string>, ...keys: string[]) => {
+  for (const k of keys) {
+    const v = obj[k];
+    if (typeof v === "string" && v.trim()) return v.trim();
+  }
+  return "";
+};
+
+const buildRedirectsFromRecords = (
+  records: Array<Record<string, string>>,
+  seen: Set<string>
+): Redirect[] => {
+  const redirects: Redirect[] = [];
+
+  records.forEach((row) => {
+    const slug = slugify(
+      row["slug"] || row["firm_key"] || row["key"] || row["name"] || ""
+    );
+    if (!slug || seen.has(slug)) return;
+
+    const affiliate = pick(row, "affiliate_link", "affiliate_url", "affiliate");
+    const signup =
+      affiliate ||
+      pick(
+        row,
+        "signup_url",
+        "signup",
+        "url",
+        "homepage_url",
+        "home_page",
+        "homepage"
+      );
+    if (!signup) return;
+
+    const destination = affiliate || buildAffiliateUrl(signup, slug);
+    if (!destination) return;
+
+    redirects.push({ source: `/${slug}`, destination, permanent: true });
+    seen.add(slug);
+  });
+
+  return redirects;
+};
+
+const buildRedirectsFromFirms = (seen: Set<string>): Redirect[] => {
+  const redirects: Redirect[] = [];
+
+  FIRMS.forEach((firm) => {
+    const slug = slugify(firm.key || firm.name);
+    if (!slug || seen.has(slug)) return;
+
+    const explicit = (AFFILIATE_LINKS[firm.key] ?? firm.affiliateUrl ?? "").trim();
+    const base = explicit || (firm.signup ?? firm.homepage ?? "").trim();
+    if (!base) return;
+
+    const destination = explicit || buildAffiliateUrl(base, slug);
+    if (!destination) return;
+
+    redirects.push({ source: `/${slug}`, destination, permanent: true });
+    seen.add(slug);
+  });
+
+  return redirects;
+};
+
+async function loadCsvRows() {
+  const csvUrl =
+    (process.env.NEXT_PUBLIC_SHEET_CSV_URL as string | undefined) ||
+    (process.env.SHEET_CSV_URL as string | undefined) ||
+    "";
+  if (!csvUrl) return [] as Array<Record<string, string>>;
+
+  try {
+    const res = await fetch(csvUrl, { cache: "no-store" });
+    if (!res.ok) return [] as Array<Record<string, string>>;
+    const text = await res.text();
+    return parseCsv(text);
+  } catch {
+    return [] as Array<Record<string, string>>;
+  }
+}
 
 const nextConfig: NextConfig = {
-  // Donâ€™t fail the Vercel build because of ESLint problems.
-  eslint: { ignoreDuringBuilds: true },  images: {
-    // âœ… Allow remote images from your firm logo sources
+  // Donƒ?Tt fail the Vercel build because of ESLint problems.
+  eslint: { ignoreDuringBuilds: true },
+  images: {
+    // ƒo. Allow remote images from your firm logo sources
     remotePatterns: [
       {
         protocol: "https",
@@ -33,10 +161,17 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // âœ… Webpack alias (unchanged)
+  // ƒo. Webpack alias (unchanged)
   webpack: (config) => {
     config.resolve.alias["@"] = path.resolve(__dirname);
     return config;
+  },
+
+  async redirects() {
+    const seen = new Set<string>();
+    const csvRedirects = buildRedirectsFromRecords(await loadCsvRows(), seen);
+    const fallbackRedirects = buildRedirectsFromFirms(seen);
+    return [...csvRedirects, ...fallbackRedirects];
   },
 };
 
