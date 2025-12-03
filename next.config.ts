@@ -78,13 +78,9 @@ const buildRedirectsFromRecords = (
 
   records.forEach((row) => {
     // Prefer firm_key/key for slugs so we don't pick product-level slugs
-    const rawSlug = slugify(
+    let rawSlug = slugify(
       row["firm_key"] || row["key"] || row["slug"] || row["name"] || ""
     );
-    const slug = normalizeSlug(rawSlug);
-    if (!slug || seen.has(slug)) return;
-
-    // Prefer direct signup_url from the CSV (authoritative; no code rewriting).
     const signup = pick(
       row,
       "signup_url",
@@ -95,6 +91,15 @@ const buildRedirectsFromRecords = (
       "homepage"
     );
     const affiliate = pick(row, "affiliate_link", "affiliate_url", "affiliate");
+
+    // If the URL clearly identifies the firm (e.g., fundednext.com), force that slug
+    const urlForSlug = signup || affiliate || "";
+    if (/fundednext\.com/i.test(urlForSlug)) {
+      rawSlug = "fundednextfutures";
+    }
+
+    const slug = normalizeSlug(rawSlug);
+    if (!slug || seen.has(slug)) return;
 
     const destination = affiliate || signup;
     if (!destination) return;
