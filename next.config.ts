@@ -6,6 +6,13 @@ import { AFFILIATE_LINKS, FIRMS } from "./lib/firms";
 const slugify = (value: string) =>
   (value ?? "").toString().toLowerCase().trim().replace(/[^a-z0-9]+/g, "");
 
+// Optional slug overrides for branded redirects
+const SLUG_OVERRIDES: Record<string, string> = {
+  fundednextfutures: "fundednext",
+};
+
+const normalizeSlug = (raw: string) => SLUG_OVERRIDES[raw] ?? raw;
+
 function parseCsv(text: string): Array<Record<string, string>> {
   const trimmed = (text ?? "").trim();
   if (!trimmed) return [];
@@ -61,9 +68,10 @@ const buildRedirectsFromRecords = (
   const redirects: Redirect[] = [];
 
   records.forEach((row) => {
-    const slug = slugify(
+    const rawSlug = slugify(
       row["slug"] || row["firm_key"] || row["key"] || row["name"] || ""
     );
+    const slug = normalizeSlug(rawSlug);
     if (!slug || seen.has(slug)) return;
 
     const affiliate = pick(row, "affiliate_link", "affiliate_url", "affiliate");
@@ -80,7 +88,7 @@ const buildRedirectsFromRecords = (
       );
     if (!signup) return;
 
-    const destination = affiliate || buildAffiliateUrl(signup, slug);
+    const destination = affiliate || buildAffiliateUrl(signup, rawSlug);
     if (!destination) return;
 
     redirects.push({ source: `/${slug}`, destination, permanent: true });
@@ -94,14 +102,15 @@ const buildRedirectsFromFirms = (seen: Set<string>): Redirect[] => {
   const redirects: Redirect[] = [];
 
   FIRMS.forEach((firm) => {
-    const slug = slugify(firm.key || firm.name);
+    const rawSlug = slugify(firm.key || firm.name);
+    const slug = normalizeSlug(rawSlug);
     if (!slug || seen.has(slug)) return;
 
     const explicit = (AFFILIATE_LINKS[firm.key] ?? firm.affiliateUrl ?? "").trim();
     const base = explicit || (firm.signup ?? firm.homepage ?? "").trim();
     if (!base) return;
 
-    const destination = explicit || buildAffiliateUrl(base, slug);
+    const destination = explicit || buildAffiliateUrl(base, rawSlug);
     if (!destination) return;
 
     redirects.push({ source: `/${slug}`, destination, permanent: true });
@@ -129,10 +138,10 @@ async function loadCsvRows() {
 }
 
 const nextConfig: NextConfig = {
-  // Donƒ?Tt fail the Vercel build because of ESLint problems.
+  // Don't fail the Vercel build because of ESLint problems.
   eslint: { ignoreDuringBuilds: true },
   images: {
-    // ƒo. Allow remote images from your firm logo sources
+    // Allow remote images from your firm logo sources
     remotePatterns: [
       {
         protocol: "https",
@@ -161,7 +170,7 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // ƒo. Webpack alias (unchanged)
+  // Webpack alias (unchanged)
   webpack: (config) => {
     config.resolve.alias["@"] = path.resolve(__dirname);
     return config;
