@@ -82,6 +82,7 @@ export const AFFILIATE_LINKS: Record<string, string> = {
   daytraders: "https://daytraders.com/go/madprops?i=1",
   tradeify: "https://tradeify.co/?ref=MADPROPS",
   elitetraderfunding: "https://elitetraderfunding.app/?ref=MADPROPS",
+  lucidtrading: "https://lucidtrading.com",
   toponefutures:
     "https://toponefutures.com/?linkId=lp_707970&sourceId=mad&tenantId=toponefutures",
 
@@ -235,7 +236,17 @@ const RAW_FIRMS: Firm[] = [
   },
   { key: "fundedfutures", name: "Funded Futures Network", homepage: "", logo: "/logos/ffn.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
   { key: "legendstrading", name: "Legends Trading", homepage: "", logo: "/logos/legends.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
-  { key: "lucidtrading", name: "Lucid Trading", homepage: "", logo: "/logos/lucid.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
+  {
+    key: "lucidtrading",
+    name: "Lucid Trading",
+    homepage: "https://lucidtrading.com/",
+    logo: "/logos/lucid.png",
+    model: [],
+    platforms: [],
+    maxFunding: 0,
+    payout: 0.8,
+    signup: "https://lucidtrading.com/",
+  },
   { key: "myfundedfutures", name: "My Funded Futures", homepage: "", logo: "/logos/mff.png", model: [], platforms: [], maxFunding: 0, payout: 0.9, signup: "" },
   { key: "bulenox", name: "Bulenox", homepage: "", logo: "", model: [], platforms: [], maxFunding: 0, payout: 0.85, signup: "" },
   { key: "alphafutures", name: "Alpha Futures", homepage: "", logo: "/logos/alpha.png", model: [], platforms: [], maxFunding: 0, payout: 0.85, signup: "" },
