@@ -13,6 +13,15 @@ const SLUG_OVERRIDES: Record<string, string> = {
 
 const normalizeSlug = (raw: string) => SLUG_OVERRIDES[raw] ?? raw;
 
+// Map alias slugs to the affiliate-key used for code insertion (fallback path)
+const AFFILIATE_KEY_OVERRIDES: Record<string, string> = {
+  fundednext: "fundednextfutures",
+  fundednextfutures: "fundednextfutures",
+};
+
+const resolveAffiliateKey = (raw: string) =>
+  AFFILIATE_KEY_OVERRIDES[raw] ?? raw;
+
 function parseCsv(text: string): Array<Record<string, string>> {
   const trimmed = (text ?? "").trim();
   if (!trimmed) return [];
@@ -74,7 +83,7 @@ const buildRedirectsFromRecords = (
     const slug = normalizeSlug(rawSlug);
     if (!slug || seen.has(slug)) return;
 
-    // Prefer direct signup_url from the CSV (treat as authoritative).
+    // Prefer direct signup_url from the CSV (authoritative; no code rewriting).
     const signup = pick(
       row,
       "signup_url",
@@ -86,11 +95,7 @@ const buildRedirectsFromRecords = (
     );
     const affiliate = pick(row, "affiliate_link", "affiliate_url", "affiliate");
 
-    const destination =
-      signup ||
-      affiliate ||
-      buildAffiliateUrl(affiliate || signup || "", rawSlug);
-
+    const destination = affiliate || signup;
     if (!destination) return;
 
     redirects.push({ source: `/${slug}`, destination, permanent: true });
@@ -112,7 +117,8 @@ const buildRedirectsFromFirms = (seen: Set<string>): Redirect[] => {
     const base = explicit || (firm.signup ?? firm.homepage ?? "").trim();
     if (!base) return;
 
-    const destination = explicit || buildAffiliateUrl(base, rawSlug);
+    const affiliateKey = resolveAffiliateKey(rawSlug);
+    const destination = explicit || buildAffiliateUrl(base, affiliateKey);
     if (!destination) return;
 
     redirects.push({ source: `/${slug}`, destination, permanent: true });
