@@ -117,8 +117,7 @@ const buildRedirectsFromRecords = (
     const slug = normalizeSlug(rawSlug);
     if (!slug || seen.has(slug)) return;
 
-    const affiliateKey = resolveAffiliateKey(rawSlug);
-    const destination = affiliate || (signup ? buildAffiliateUrl(signup, affiliateKey) : "");
+    const destination = affiliate || signup;
     if (!destination) return;
 
     redirects.push({ source: `/${slug}`, destination, permanent: true });
