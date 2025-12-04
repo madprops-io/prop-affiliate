@@ -83,7 +83,7 @@ type ModelType = (typeof MODELS)[number];
 type PlatformType = string;
 type SortKey = "score" | "payout" | "cap" | "name" | "truecost";
 const DEFAULT_MIN_PAYOUT = 0;
-const DEFAULT_MIN_TRUST = 3;
+const DEFAULT_MIN_TRUST = 0;
 const CARDS_PER_PAGE = 18;
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));

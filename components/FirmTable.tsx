@@ -333,15 +333,7 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
     }
     if (typeof accountSizeFilter === "number" && Number.isFinite(accountSizeFilter) && accountSizeFilter > 0) {
       const targetSize = Math.round(accountSizeFilter);
-      const seen = new Set<string>();
-      rows = rows.filter((row) => {
-        if (Math.round(row.accountSize ?? 0) !== targetSize) return false;
-        const key = row.firm?.key ?? row.firm?.name ?? "";
-        if (!key) return false;
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
+      rows = rows.filter((row) => Math.round(row.accountSize ?? 0) === targetSize);
     }
     if (fireDealsMode) {
       rows = rows.filter((row) => {
