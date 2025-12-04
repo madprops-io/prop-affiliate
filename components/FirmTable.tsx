@@ -367,6 +367,7 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
   const setSort = (key: SortKey) => {
     setSortDir((prev) => (sortKey === key ? (prev === "asc" ? "desc" : "asc") : "asc"));
     setSortKey(key);
+    setTablePage(1);
   };
   const arrow = (key: SortKey) => (sortKey === key ? (sortDir === "asc" ? "^" : "v") : "");
   const isActiveColumn = (key?: SortKey) => (key ? sortKey === key : false);
@@ -432,34 +433,46 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
               <span className="sr-only">Logo</span>
             </th>
             <th className="px-3 py-2 text-center text-xs uppercase tracking-wide">
-              <button className={headerButtonClass("name")} onClick={() => setSort("name")}>
+              <button type="button" className={headerButtonClass("name")} onClick={() => setSort("name")}>
                 Firm {arrow("name")}
               </button>
             </th>
             {columns.accountSize && (
               <th className={headerClass("accountSize")}>
-                <button className={headerButtonClass("accountSize")} onClick={() => setSort("accountSize")}>
+                <button
+                  type="button"
+                  className={headerButtonClass("accountSize")}
+                  onClick={() => setSort("accountSize")}
+                >
                   Account Size {arrow("accountSize")}
                 </button>
               </th>
             )}
             {columns.trueCost && (
               <th className={headerClass("trueCost")}>
-                <button className={headerButtonClass("trueCost")} onClick={() => setSort("trueCost")}>
+                <button
+                  type="button"
+                  className={headerButtonClass("trueCost")}
+                  onClick={() => setSort("trueCost")}
+                >
                   True Cost {arrow("trueCost")}
                 </button>
               </th>
             )}
             {columns.eval && (
               <th className={headerClass("eval")}>
-                <button className={headerButtonClass("eval")} onClick={() => setSort("eval")}>
+                <button type="button" className={headerButtonClass("eval")} onClick={() => setSort("eval")}>
                   Eval {arrow("eval")}
                 </button>
               </th>
             )}
             {columns.activation && (
               <th className={headerClass("activation")}>
-                <button className={headerButtonClass("activation")} onClick={() => setSort("activation")}>
+                <button
+                  type="button"
+                  className={headerButtonClass("activation")}
+                  onClick={() => setSort("activation")}
+                >
                   Activation {arrow("activation")}
                 </button>
               </th>
@@ -467,21 +480,25 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
             {columns.code && <th className="px-3 py-2 text-center text-xs uppercase tracking-wide text-white">Code</th>}
             {columns.minDays && (
               <th className={headerClass("minDays")}>
-                <button className={headerButtonClass("minDays")} onClick={() => setSort("minDays")}>
+                <button type="button" className={headerButtonClass("minDays")} onClick={() => setSort("minDays")}>
                   Min Days (Eval) {arrow("minDays")}
                 </button>
               </th>
             )}
             {columns.ddt && (
               <th className={headerClass("ddt")}>
-                <button className={headerButtonClass("ddt")} onClick={() => setSort("ddt")}>
+                <button type="button" className={headerButtonClass("ddt")} onClick={() => setSort("ddt")}>
                   DDT {arrow("ddt")}
                 </button>
               </th>
             )}
             {columns.daysToPayout && (
               <th className={headerClass("daysToPayout")}>
-                  <button className={headerButtonClass("daysToPayout")} onClick={() => setSort("daysToPayout")}>
+                <button
+                  type="button"
+                  className={headerButtonClass("daysToPayout")}
+                  onClick={() => setSort("daysToPayout")}
+                >
                   Days to Payout {arrow("daysToPayout")}
                 </button>
               </th>
