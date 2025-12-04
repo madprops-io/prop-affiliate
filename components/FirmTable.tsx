@@ -309,8 +309,12 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
           return ((a.payoutPct ?? -1) - (b.payoutPct ?? -1)) * dir;
         case "minDays":
           return ((a.minDays ?? Number.POSITIVE_INFINITY) - (b.minDays ?? Number.POSITIVE_INFINITY)) * dir;
-        case "daysToPayout":
-          return (a.daySort - b.daySort) * dir;
+        case "daysToPayout": {
+          const aDay = Number.isFinite(a.daySort) ? a.daySort : Number.POSITIVE_INFINITY;
+          const bDay = Number.isFinite(b.daySort) ? b.daySort : Number.POSITIVE_INFINITY;
+          if (aDay === bDay) return 0;
+          return aDay > bDay ? dir : -dir;
+        }
         case "eval":
           return ((a.evalCost ?? Number.POSITIVE_INFINITY) - (b.evalCost ?? Number.POSITIVE_INFINITY)) * dir;
         case "activation":
