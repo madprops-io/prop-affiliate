@@ -584,7 +584,7 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
           accountSize,
           firm: { accountLabel },
         } = r;
-            const rowKey = `${firm.key}:${program}:${firm.maxFunding ?? ""}`;
+            const rowKey = `${slugifyKey(firm.key ?? firm.name)}:${program || ""}:${accountSize ?? firm.maxFunding ?? ""}:${accountLabel ?? ""}:${daysToPayout ?? ""}`;
             const fallbackSlug = typeof firm.key === "string" ? firm.key.toLowerCase().replace(/[^a-z0-9]+/g, "") : "";
             const discountCodeLabel = (discountCode ?? "").trim();
             const isUseLinkCode = discountCodeLabel.toLowerCase() === "use link";
