@@ -132,7 +132,9 @@ export default function FirmTable({
       : typeof firm.model === "string"
       ? firm.model
       : "";
-    const k = `${firm.key}:${programStr}:${firm.maxFunding ?? ""}`;
+    const size = firm.accountSize ?? firm.maxFunding ?? null;
+    const accountLabel = firm.accountLabel ?? "";
+    const k = `${slugifyKey(firm.key ?? firm.name)}:${programStr}:${size ?? ""}:${accountLabel}`;
     if (seen.has(k)) return false;
     seen.add(k);
     return true;
