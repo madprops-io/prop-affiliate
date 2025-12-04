@@ -42,6 +42,7 @@ type EnrichedRow = {
   payoutDisplay?: string;
   trueCost: number;
   accountSize: number | null;
+  daySort: number;
 };
 
 const fmtMoney = (n: number | string | null | undefined) => {
@@ -155,6 +156,7 @@ export default function FirmTable({
       const feeRefund = firm?.feeRefund ?? null;
       const minDays = firm?.minDays ?? null;
       const daysToPayout = firm?.daysToPayout ?? null;
+      const daySort = getDaySortValue(daysToPayout);
       const ddt = firm?.drawdownType ?? null;
       const payoutPct = firm?.payoutSplit ?? (typeof firm?.payout === "number" ? Math.round(firm.payout * 100) : null);
       const payoutDisplay: string | undefined = firm?.payoutDisplay ?? (typeof payoutPct === "number" ? `${payoutPct}%` : undefined);
@@ -189,6 +191,7 @@ export default function FirmTable({
         payoutDisplay,
         trueCost,
         accountSize,
+        daySort,
       };
     });
   }, [deduped]);
@@ -307,7 +310,7 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
         case "minDays":
           return ((a.minDays ?? Number.POSITIVE_INFINITY) - (b.minDays ?? Number.POSITIVE_INFINITY)) * dir;
         case "daysToPayout":
-          return (getDaySortValue(a.daysToPayout) - getDaySortValue(b.daysToPayout)) * dir;
+          return (a.daySort - b.daySort) * dir;
         case "eval":
           return ((a.evalCost ?? Number.POSITIVE_INFINITY) - (b.evalCost ?? Number.POSITIVE_INFINITY)) * dir;
         case "activation":
