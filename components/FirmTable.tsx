@@ -60,6 +60,15 @@ const cmp = (a: number, b: number) => {
   return a > b ? 1 : -1;
 };
 
+const compareNumbers = (a: number | null | undefined, b: number | null | undefined, dir: number) => {
+  const av = numVal(a as number | null);
+  const bv = numVal(b as number | null);
+  return cmp(av, bv) * dir;
+};
+
+const compareStrings = (a: string | null | undefined, b: string | null | undefined, dir: number) =>
+  (a || "").localeCompare(b || "") * dir;
+
 const formatDiscountValue = (pct?: number | null, amt?: number | null) => {
   if (typeof amt === "number" && Number.isFinite(amt) && amt > 0) return fmtMoney(amt);
   if (typeof pct === "number" && Number.isFinite(pct) && pct > 0) return `${pct}%`;
@@ -303,40 +312,52 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
   const sorted = useMemo(() => {
     const arr = [...enriched];
     const dir = sortDir === "asc" ? 1 : -1;
-    arr.sort((a, b) => {
-      switch (sortKey) {
+    const getVal = (row: EnrichedRow, key: SortKey): string | number => {
+      switch (key) {
         case "name":
-          return (a.firm.name || "").localeCompare(b.firm.name || "") * dir;
+          return row.firm.name || "";
         case "program":
-          return (a.program || "").localeCompare(b.program || "") * dir;
+          return row.program || "";
         case "platforms":
-          return ((a.firm.platforms || []).join(", ")).localeCompare((b.firm.platforms || []).join(", ")) * dir;
+          return (row.firm.platforms || []).join(", ");
         case "ddt":
-          return ((a.ddt || "") as string).localeCompare((b.ddt || "") as string) * dir;
+          return row.ddt || "";
         case "payout":
-          return ((a.payoutPct ?? -1) - (b.payoutPct ?? -1)) * dir;
+          return numVal(row.payoutPct);
         case "minDays":
-          return cmp(numVal(a.minDays as number | null), numVal(b.minDays as number | null)) * dir;
-        case "daysToPayout": {
-          const primary = cmp(numVal(a.daySort), numVal(b.daySort)) * dir;
-          if (primary !== 0) return primary;
-          // tie-breaker: true cost, then name
-          const costCmp = cmp(numVal(a.trueCost), numVal(b.trueCost)) * dir;
-          if (costCmp !== 0) return costCmp;
-          return (a.firm.name || "").localeCompare(b.firm.name || "");
-        }
+          return numVal(row.minDays as number | null);
+        case "daysToPayout":
+          return numVal(row.daySort);
         case "eval":
-          return ((a.evalCost ?? Number.POSITIVE_INFINITY) - (b.evalCost ?? Number.POSITIVE_INFINITY)) * dir;
+          return numVal(row.evalCost);
         case "activation":
-          return ((a.activationFee ?? Number.POSITIVE_INFINITY) - (b.activationFee ?? Number.POSITIVE_INFINITY)) * dir;
+          return numVal(row.activationFee);
         case "discount":
-          return (((a.discountPct ?? a.discountAmt) ?? -1) - ((b.discountPct ?? b.discountAmt) ?? -1)) * dir;
+          return numVal((row.discountPct ?? row.discountAmt) ?? null);
         case "accountSize":
-          return (((a.accountSize ?? Number.POSITIVE_INFINITY) - (b.accountSize ?? Number.POSITIVE_INFINITY)) * dir);
+          return numVal(row.accountSize);
         case "trueCost":
         default:
-          return ((a.trueCost ?? Number.POSITIVE_INFINITY) - (b.trueCost ?? Number.POSITIVE_INFINITY)) * dir;
+          return numVal(row.trueCost);
       }
+    };
+
+    arr.sort((a, b) => {
+      const aVal = getVal(a, sortKey);
+      const bVal = getVal(b, sortKey);
+
+      if (typeof aVal === "number" && typeof bVal === "number") {
+        const primary = cmp(aVal, bVal) * dir;
+        if (primary !== 0) return primary;
+      } else {
+        const primary = String(aVal).localeCompare(String(bVal)) * dir;
+        if (primary !== 0) return primary;
+      }
+
+      // tie-breakers to force visible ordering
+      const costCmp = cmp(numVal(a.trueCost), numVal(b.trueCost)) * dir;
+      if (costCmp !== 0) return costCmp;
+      return (a.firm.name || "").localeCompare(b.firm.name || "");
     });
     return arr;
   }, [enriched, sortKey, sortDir]);
