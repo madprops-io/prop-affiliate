@@ -52,6 +52,14 @@ const fmtMoney = (n: number | string | null | undefined) => {
     : "$0.00";
 };
 
+const numVal = (v: number | null | undefined) =>
+  typeof v === "number" && Number.isFinite(v) ? v : Number.POSITIVE_INFINITY;
+
+const cmp = (a: number, b: number) => {
+  if (a === b) return 0;
+  return a > b ? 1 : -1;
+};
+
 const formatDiscountValue = (pct?: number | null, amt?: number | null) => {
   if (typeof amt === "number" && Number.isFinite(amt) && amt > 0) return fmtMoney(amt);
   if (typeof pct === "number" && Number.isFinite(pct) && pct > 0) return `${pct}%`;
@@ -308,19 +316,14 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
         case "payout":
           return ((a.payoutPct ?? -1) - (b.payoutPct ?? -1)) * dir;
         case "minDays":
-          return (
-            ((Number.isFinite(a.minDays) ? (a.minDays as number) : Number.POSITIVE_INFINITY) -
-              (Number.isFinite(b.minDays) ? (b.minDays as number) : Number.POSITIVE_INFINITY)) *
-            dir
-          );
+          return cmp(numVal(a.minDays as number | null), numVal(b.minDays as number | null)) * dir;
         case "daysToPayout": {
-          const aDay = Number.isFinite(a.daySort) ? a.daySort : Number.POSITIVE_INFINITY;
-          const bDay = Number.isFinite(b.daySort) ? b.daySort : Number.POSITIVE_INFINITY;
-          if (aDay === bDay) {
-            // tie-breaker to force stable, visible ordering changes
-            return ((a.trueCost ?? Number.POSITIVE_INFINITY) - (b.trueCost ?? Number.POSITIVE_INFINITY)) * dir;
-          }
-          return aDay > bDay ? dir : -dir;
+          const primary = cmp(numVal(a.daySort), numVal(b.daySort)) * dir;
+          if (primary !== 0) return primary;
+          // tie-breaker: true cost, then name
+          const costCmp = cmp(numVal(a.trueCost), numVal(b.trueCost)) * dir;
+          if (costCmp !== 0) return costCmp;
+          return (a.firm.name || "").localeCompare(b.firm.name || "");
         }
         case "eval":
           return ((a.evalCost ?? Number.POSITIVE_INFINITY) - (b.evalCost ?? Number.POSITIVE_INFINITY)) * dir;
