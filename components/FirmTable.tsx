@@ -87,6 +87,12 @@ const formatMinDays = (value?: number | null) => {
   return "-";
 };
 
+const formatNewsValue = (value?: boolean | null) => {
+  if (value === true) return "Yes";
+  if (value === false) return "No";
+  return "-";
+};
+
 const getDaySortValue = (value: number | string | null | undefined) => {
   if (typeof value === "number" && Number.isFinite(value)) return value;
   if (typeof value === "string") {
@@ -243,6 +249,7 @@ export default function FirmTable({
     ddt: true,
     daysToPayout: true,
     cta: true,
+    news: true,
     discount: true,
     payout: true,
     platforms: false,
@@ -259,6 +266,7 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
   ddt: "DDT",
   daysToPayout: "Days to Payout",
   cta: "Get Eval",
+  news: "News Eval/Funded",
   discount: "Discount",
   payout: "Payout %",
   platforms: "Platforms",
@@ -542,6 +550,11 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
               </th>
             )}
             {columns.cta && <th className="px-3 py-2 text-center text-xs uppercase tracking-wide text-white">Get Eval</th>}
+            {columns.news && (
+              <th className="px-3 py-2 text-center text-xs uppercase tracking-wide text-white">
+                News Trading Eval/Funded
+              </th>
+            )}
             {columns.discount && (
               <th className={headerClass("discount")}>
                 <button className={headerButtonClass("discount")} onClick={() => setSort("discount")}>
@@ -684,6 +697,11 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
                         {firm.signup ? "Get Eval" : "Visit Site"}
                       </Button>
                     </a>
+                  </td>
+                )}
+                {columns.news && (
+                  <td className={cellClass(undefined, "text-center font-semibold text-white/90")}>
+                    {formatNewsValue(firm.newsTradingEval)} / {formatNewsValue(firm.newsTradingFunded)}
                   </td>
                 )}
                 {columns.discount && (

@@ -83,7 +83,7 @@ type ModelType = (typeof MODELS)[number];
 type PlatformType = string;
 type SortKey = "score" | "payout" | "cap" | "name" | "truecost";
 const DEFAULT_MIN_PAYOUT = 0;
-const DEFAULT_MIN_TRUST = 0;
+const DEFAULT_MIN_TRUST = 3;
 const CARDS_PER_PAGE = 18;
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
@@ -376,6 +376,8 @@ const [minPayout, setMinPayout] = useState<number>(DEFAULT_MIN_PAYOUT);
   const [accountSizeFilter, setAccountSizeFilter] = useState<string[]>([]);
   const [drawdownFilter, setDrawdownFilter] = useState<string>("");
   const [payoutSpeedFilter, setPayoutSpeedFilter] = useState<string>("");
+  const [newsEvalOnly, setNewsEvalOnly] = useState(false);
+  const [newsFundedOnly, setNewsFundedOnly] = useState(false);
   const [oneDayEvalOnly, setOneDayEvalOnly] = useState(false);
   const [instantFundedOnly, setInstantFundedOnly] = useState(false);
   const [discountOnly, setDiscountOnly] = useState(false);
@@ -515,6 +517,8 @@ const [sort, setSort] = useState<SortKey>("score");
     setPayoutSpeedFilter("");
     setOneDayEvalOnly(false);
     setInstantFundedOnly(false);
+    setNewsEvalOnly(false);
+    setNewsFundedOnly(false);
     setDiscountOnly(false);
     setMinTrust(DEFAULT_MIN_TRUST);
     setScoreFocus([]);
@@ -541,6 +545,8 @@ const [sort, setSort] = useState<SortKey>("score");
     setPayoutSpeedFilter("");
     setOneDayEvalOnly(false);
     setInstantFundedOnly(false);
+    setNewsEvalOnly(false);
+    setNewsFundedOnly(false);
     setDiscountOnly(false);
     setMinTrust(DEFAULT_MIN_TRUST);
     setScoreFocus([]);
@@ -671,8 +677,22 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         ((f.payoutDaysValue ?? Number.POSITIVE_INFINITY) <= (payoutMax ?? Number.POSITIVE_INFINITY));
       const evalSpeedOk = !oneDayEvalOnly || minDaysValue === 1;
       const instantFundedOk = !instantFundedOnly || minDaysValue === 0;
-    const discountValue =
-      f.discount?.percent ?? (f.discount as { amount?: number } | undefined)?.amount ?? f.pricing?.discountPct ?? 0;
+      const newsEvalOk =
+        !newsEvalOnly ||
+        (typeof f.newsTradingEval === "boolean"
+          ? f.newsTradingEval
+          : typeof f.newsTrading === "boolean"
+          ? f.newsTrading
+          : true);
+      const newsFundedOk =
+        !newsFundedOnly ||
+        (typeof f.newsTradingFunded === "boolean"
+          ? f.newsTradingFunded
+          : typeof f.newsTrading === "boolean"
+          ? f.newsTrading
+          : true);
+      const discountValue =
+        f.discount?.percent ?? (f.discount as { amount?: number } | undefined)?.amount ?? f.pricing?.discountPct ?? 0;
       const discountRequired = discountOnly || fireDealsMode;
       const discountOk = !discountRequired || Number(discountValue) > 0;
       const trustRequirement = Math.max(minTrust ?? 0, fireDealsMode ? FIRE_DEAL_TRUST_MIN : 0);
@@ -693,7 +713,9 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         lowCostOk &&
         trustOk &&
         favoritesOk &&
-        instantFundedOk
+        instantFundedOk &&
+        newsEvalOk &&
+        newsFundedOk
       );
     });
   }, [
@@ -706,6 +728,8 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     accountSizeFilter,
     drawdownFilter,
     payoutSpeedFilter,
+    newsEvalOnly,
+    newsFundedOnly,
     oneDayEvalOnly,
     instantFundedOnly,
     discountOnly,
@@ -825,9 +849,11 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         minPayout !== DEFAULT_MIN_PAYOUT ||
         oneDayEvalOnly ||
         instantFundedOnly ||
+        newsEvalOnly ||
+        newsFundedOnly ||
         discountOnly ||
         fireDealsMode ||
-        minTrust > 0 ||
+        minTrust > DEFAULT_MIN_TRUST ||
         favoritesOnly ||
         !usingDefaultScoreFocus
     ) || compare.length > 0;
@@ -1039,6 +1065,37 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                   }}
                 />
               </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">News trading</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  className={chipClasses(newsEvalOnly)}
+                  onClick={() => {
+                    handleManualFilterChange();
+                    setNewsEvalOnly((prev) => !prev);
+                  }}
+                  title="Hide firms that say No for news trading on evaluation."
+                >
+                  Eval allowed
+                </button>
+                <button
+                  type="button"
+                  className={chipClasses(newsFundedOnly)}
+                  onClick={() => {
+                    handleManualFilterChange();
+                    setNewsFundedOnly((prev) => !prev);
+                  }}
+                  title="Hide firms that say No for news trading on funded accounts."
+                >
+                  Funded allowed
+                </button>
+              </div>
+              <p className="mt-1 text-[11px] text-white/50">
+                Filters out firms that list a No for the selected stage(s).
+              </p>
             </div>
 
             <div>
