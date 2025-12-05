@@ -1013,6 +1013,25 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                 ))}
               </div>
             </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Minimum payout split</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {MIN_PAYOUT_PRESETS.map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    className={chipClasses(minPayout === preset)}
+                    onClick={() => {
+                      handleManualFilterChange();
+                      setMinPayout(preset);
+                    }}
+                  >
+                    {preset === 0 ? "All" : `${preset}%`}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="space-y-4">
@@ -1121,28 +1140,6 @@ function platformConnectionsText(f: UIFirmWithConn): string {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="grid gap-5 md:grid-cols-2">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Minimum payout split</p>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {MIN_PAYOUT_PRESETS.map((preset) => (
-                <button
-                  key={preset}
-                  type="button"
-                  className={chipClasses(minPayout === preset)}
-                  onClick={() => {
-                    handleManualFilterChange();
-                    setMinPayout(preset);
-                  }}
-                >
-                  {preset === 0 ? "All" : `${preset}%`}
-                </button>
-              ))}
-            </div>
-          </div>
-
         </div>
 
         <div className="space-y-2">
