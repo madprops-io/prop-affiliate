@@ -274,7 +274,7 @@ function mapRow(r: RawRow): FirmRow {
     newsTradingFunded: typeof newsFunded === "boolean" ? newsFunded : null,
     weekendHolding: parseBoolLoose(r["weekend_holding"]),
     homepage: r["homepage_url"] || r["url"] || null,
-    signup: r["signup_url"] || r["url"] || null,
+    signup: r["signup_link"] || r["signup_url"] || r["url"] || null,
     trustpilot,
     pricing: {
       evalCost,

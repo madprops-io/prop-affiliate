@@ -25,6 +25,8 @@ const buildLinks = (firms: Array<Record<string, any>>): FirmLink[] => {
     if (!nameKey || seen.has(nameKey)) return;
 
     const baseUrl =
+      firm.signup_link ||
+      firm.signupLink ||
       firm.signup ||
       firm.signup_url ||
       firm.homepage ||
