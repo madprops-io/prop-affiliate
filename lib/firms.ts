@@ -85,6 +85,7 @@ export const AFFILIATE_LINKS: Record<string, string> = {
   lucidtrading: "https://lucidtrading.com",
   toponefutures:
     "https://toponefutures.com/?linkId=lp_707970&sourceId=mad&tenantId=toponefutures",
+  purdia: "https://purdia.com?i=MAD",
 
   // Fill these in later (unique keys, no duplicates)
   tpt: "",
@@ -263,6 +264,7 @@ const RAW_FIRMS: Firm[] = [
   { key: "aquafutures", name: "Aqua Futures", homepage: "", logo: "/logos/aqua.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
   { key: "e8futures", name: "E8 Futures", homepage: "", logo: "/logos/e8.png", model: [], platforms: [], maxFunding: 0, payout: 0.85, signup: "" },
   { key: "tradeday", name: "Trade Day", homepage: "", logo: "/logos/tradeday.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
+  { key: "purdia", name: "Purdia Capital", homepage: "https://purdia.com/", logo: "/logos/purdia.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "https://purdia.com?i=MAD" },
   { key: "phidias", name: "Phidias Propfirm", homepage: "", logo: "/logos/phidias.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
 ];
 
@@ -290,4 +292,3 @@ export function getSignupLink(firm: Firm): string {
   if (firm.affiliateUrl && firm.affiliateUrl.trim()) return firm.affiliateUrl;
   return firm.signup;
 }
-
