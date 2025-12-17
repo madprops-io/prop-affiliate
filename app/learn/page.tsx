@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.madprops.com"),
-  title: "Best Futures Prop Firms 2026 - Top 5 Firms Compared (No Particular Order) | MadProps",
+  title: "Best Futures Prop Firms 2026 - Top 5 Profiles (No Particular Order) | MadProps",
   description:
     "A detailed look at five of the top futures prop firms in 2026 - Apex, TradeDay, FundedNext Futures, Funded Futures Network, and Lucid Trading - with pros, cons, rules, payouts, and how to compare them using MadProps live data. #MadProps",
   alternates: {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "article",
     url: "https://www.madprops.com/learn/best-futures-prop-firms-2026",
-    title: "Best Futures Prop Firms 2026 - Top 5 Firms Compared (No Particular Order) | MadProps",
+    title: "Best Futures Prop Firms 2026 - Top 5 Profiles (No Particular Order) | MadProps",
     description:
       "Compare five of the top futures prop firms of 2026 - Apex, TradeDay, FundedNext Futures, Funded Futures Network, and Lucid Trading - with rules, payouts, and pricing powered by MadProps live data.",
     siteName: "MadProps",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@madprops_io",
     creator: "@madprops_io",
-    title: "Best Futures Prop Firms 2026 - Top 5 Firms Compared (No Particular Order) | MadProps",
+    title: "Best Futures Prop Firms 2026 - Top 5 Profiles (No Particular Order) | MadProps",
     description:
       "Deep dive into five of the top futures prop firms in 2026 and see how they compare on rules, payouts, and pricing using MadProps.",
     images: ["/og/madprops-og.png"],
@@ -42,7 +42,7 @@ const ARTICLE_JSON_LD = {
   "@type": "Article",
   "@id": "https://www.madprops.com/learn/best-futures-prop-firms-2026#article",
   mainEntityOfPage: "https://www.madprops.com/learn/best-futures-prop-firms-2026",
-  headline: "Best Futures Prop Firms 2026 - Top 5 Firms Compared (No Particular Order)",
+  headline: "Best Futures Prop Firms 2026 - Top 5 Profiles (No Particular Order)",
   description:
     "A neutral, educational breakdown of five of the top futures prop firms in 2026 - Apex, TradeDay, FundedNext Futures, Funded Futures Network, and Lucid Trading - including rules, payouts, and pricing considerations, powered by MadProps live data.",
   author: {
@@ -100,16 +100,25 @@ const FAQ_JSON_LD = {
 
 const ARTICLES = [
   {
-    title: "Best Futures Prop Firms 2026 (Top 5, No Particular Order)",
+    title: "Best Futures Prop Firms 2026 (Top 5 Profiles, No Particular Order)",
     href: "/learn",
     summary: "Deep dive on Apex, TradeDay, FundedNext Futures, Funded Futures Network, and Lucid Trading.",
     active: true,
+    available: true,
+  },
+  {
+    title: "Which Futures Prop Firms Have the Best Rules? (2026 Guide)",
+    href: "/learn/prop-firms-best-rules-2026",
+    summary: "Neutral look at drawdowns, payouts, and rule types across major futures prop firms.",
+    active: false,
+    available: true,
   },
   {
     title: "Best Prop Firms 2026 (Futures) - Coming Soon",
     href: "/learn/best-prop-firms-2026",
     summary: "Placeholder for the fuller 2026 futures guide. Jump in to see the latest status.",
     active: false,
+    available: false,
   },
 ];
 
@@ -139,7 +148,7 @@ export default function BestFuturesPropFirms2026Page() {
               <p className="text-sm text-slate-300">Choose a guide to open.</p>
             </div>
           </div>
-          <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
             {ARTICLES.map((article) => (
               <Link
                 key={article.href}
@@ -151,7 +160,7 @@ export default function BestFuturesPropFirms2026Page() {
                 }`}
               >
                 <span className="text-xs uppercase tracking-[0.3em] text-emerald-300">
-                  {article.active ? "Current" : "Upcoming"}
+                  {article.active ? "Current" : article.available === false ? "Upcoming" : "Open"}
                 </span>
                 <h3 className="mt-2 text-lg font-semibold text-white">{article.title}</h3>
                 <p className="mt-1 text-sm text-slate-300">{article.summary}</p>
@@ -166,7 +175,7 @@ export default function BestFuturesPropFirms2026Page() {
             Learn / Futures
           </p>
           <h1 className="mt-2 text-3xl font-bold md:text-4xl">
-            Best Futures Prop Firms 2026 (Top 5, In No Particular Order)
+            Best Futures Prop Firms 2026 (Top 5 Profiles, In No Particular Order)
           </h1>
           <p className="mt-4 text-sm text-slate-300 md:text-base">
             Futures prop firms keep changing their rules, pricing, and payout structures. Instead
