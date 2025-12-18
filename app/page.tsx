@@ -1604,26 +1604,24 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f6c850]">#MadProps</p>
           <h2 className="text-xl font-semibold text-white">Find the best prop firm deals & discounts.</h2>
           <p className="text-sm text-white/70">
-            Compare prop firm deals, instant funding programs, payouts, discount codes, and reviews - all in one place.
+            Compare prop firm deals, instant funding programs, payouts, discount codes, and rules - all in one place.
           </p>
           <p className="text-sm text-white/70">
-            <Link href="/cards" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-              View all deals
+            Want a quick summary? See today’s{" "}
+            <Link href="/prop-firm-deals" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+              prop firm deals
             </Link>{" "}
-            |{" "}
-            <Link href="/cards?sort=payout" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-              Instant funding
-            </Link>{" "}
-            |{" "}
-            <Link href="/cards?sort=trust" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-              Reviews
+            and{" "}
+            <Link href="/prop-firm-deals#instant-funding-prop-firm-deals" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+              instant funding deals
             </Link>
+            .
           </p>
           <p className="text-xs text-white/60">Scroll to see all firms and filters</p>
           <p className="text-sm text-slate-400">
             New? Read our{" "}
-            <Link href="/learn/best-prop-firms-2025" className="text-emerald-400 hover:text-emerald-300">
-              Best Prop Firms 2025
+            <Link href="/learn/best-prop-firms-2026" className="text-emerald-400 hover:text-emerald-300">
+              Best Prop Firms 2026
             </Link>{" "}
             guide.
           </p>
@@ -1909,4 +1907,3 @@ function Footer() {
     </footer>
   );
 }
-
