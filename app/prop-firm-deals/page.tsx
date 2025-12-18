@@ -7,7 +7,7 @@ import { FIRMS } from "@/lib/firms";
 const SITE_URL = "https://www.madprops.com";
 const CANONICAL_URL = `${SITE_URL}/prop-firm-deals`;
 
-export const revalidate = 60 * 60 * 24; // daily
+export const revalidate = 86400; // daily
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
