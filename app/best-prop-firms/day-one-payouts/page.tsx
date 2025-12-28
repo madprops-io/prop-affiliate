@@ -9,105 +9,100 @@ export const metadata: Metadata = {
 
 export default function DayOnePayoutsPage() {
   return (
-    <main className="mx-auto max-w-3xl px-6 py-12">
-      <h1>Best Futures Prop Firms With Day-1 Payouts (2026)</h1>
+    <main className="mx-auto max-w-3xl px-6 py-12 space-y-10">
+      <section className="space-y-3">
+        <h1>Best Futures Prop Firms With Day-1 Payouts (2026)</h1>
+        <p>
+          Day-1 payouts refer to how quickly you can request a withdrawal after a funded account is
+          active. Compare futures prop firms by payouts, rules, platforms, and discounts.
+        </p>
+      </section>
 
-      <p>
-        Day-1 payouts are one of the most misunderstood promises in futures prop firms. In practice,
-        the phrase usually means you can request a payout on the first eligible trading day after a
-        new account starts or after you pass an evaluation. It does not always mean you can cash out
-        after a single trade. Most firms still require minimum profit thresholds, proof of rule
-        compliance, and sometimes a delay while trades settle. MadProps compares day-1 payout claims
-        across firms so you can see which programs truly let you access earnings quickly and which
-        hide the real requirements in the fine print.
-      </p>
+      <section className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 space-y-3">
+        <h2 className="text-lg font-semibold">Compare with Scorecards</h2>
+        <p className="text-sm text-white/70">
+          Filter firms by payout timing, drawdown type, and discount availability to see which
+          programs align with faster payout access.
+        </p>
+        <Link href="/score-cards" className="text-sm font-semibold underline underline-offset-4">
+          Open scorecards
+        </Link>
+      </section>
 
-      <p>
-        Traders care about day-1 payouts because time to first withdrawal affects total cost and
-        motivation. If you can request a payout quickly, you reduce the risk of paying multiple months
-        of fees before seeing returns. The tradeoff is that fast-access firms can impose stricter
-        risk limits, tighter drawdowns, or aggressive consistency rules. The right choice depends on
-        your strategy, win rate, and how you scale trades early in a funded account.
-      </p>
+      <section className="space-y-3">
+        <h2>What to verify before buying</h2>
+        <p>
+          Day-1 does not always mean instant cash. Always confirm the minimum profit threshold,
+          eligible trading days, and any payout buffers required after withdrawal. Also review how
+          drawdown is calculated during the early period, since a trailing drawdown can limit
+          aggressive scaling.
+        </p>
+        <ul className="list-disc pl-5 space-y-1">
+          <li>Eligibility timing and payout request window</li>
+          <li>Minimum profit threshold or buffer requirement</li>
+          <li>Daily loss limits and drawdown mechanics</li>
+          <li>Fees, payout cadence, and split terms</li>
+        </ul>
+      </section>
 
-      <nav aria-label="Table of contents">
-        <strong>Table of contents</strong>
-        <ul>
+      <section className="space-y-3">
+        <h2>Common gotchas</h2>
+        <p>
+          Some programs advertise day-1 access but only process withdrawals on a weekly or monthly
+          schedule. Others require a set number of positive trading days before any payout request is
+          approved. The safest approach is to compare the full payout policy, not just the headline
+          promise.
+        </p>
+      </section>
+
+      <section className="space-y-3">
+        <h2>Related guides</h2>
+        <ul className="list-disc pl-5 space-y-1">
           <li>
-            <a href="#what-to-verify">What to verify before buying</a>
+            <Link href="/best-prop-firms">Best prop firms overview</Link>
           </li>
           <li>
-            <a href="#common-gotchas">Common gotchas</a>
+            <Link href="/best-prop-firms/no-consistency-rule">No consistency rule guide</Link>
           </li>
           <li>
-            <a href="#faqs">FAQs</a>
+            <Link href="/best-prop-firms/news-trading">News trading rules guide</Link>
           </li>
         </ul>
-      </nav>
+      </section>
 
-      <h2 id="what-to-verify">What to verify before buying</h2>
-      <p>
-        Start by confirming exactly when the first payout can be requested. Some firms define day-1
-        as the first day of the funded account, while others mean the first day after a minimum
-        number of profitable trading days. Look for explicit language on whether you must wait for
-        end-of-day settlement or for a weekly payout cycle. Verify the minimum profit threshold and
-        whether it must be achieved in a single day or across multiple sessions.
-      </p>
-      <p>
-        Next, evaluate the payout formula. A firm might allow early payouts but take a lower profit
-        split or apply processing fees. If you plan to withdraw quickly, check for limits on payout
-        size, the number of payouts per month, and whether your account needs to be above a buffer
-        level after withdrawal. Finally, confirm how drawdown is calculated during the day-1 period
-        because a trailing drawdown can shrink rapidly if you try to scale too fast.
-      </p>
-      <ul>
-        <li>Eligibility date: day-1 of funded account vs. day-1 after a minimum period.</li>
-        <li>Profit threshold: minimum balance above starting equity before payout requests.</li>
-        <li>Withdrawal limits: caps per payout, number of payouts per month, or required buffers.</li>
-        <li>Risk checks: daily loss limit, trailing drawdown, and consistency rules tied to payouts.</li>
-        <li>Fees and splits: any reduced split or processing fee for early withdrawals.</li>
-      </ul>
+      <section className="space-y-3">
+        <h2>FAQs</h2>
+        <h3>What counts as a day-1 payout?</h3>
+        <p>
+          It typically means you can request a payout on the first eligible trading day, not that the
+          funds arrive instantly.
+        </p>
+        <h3>Do day-1 payouts usually have minimum profit thresholds?</h3>
+        <p>
+          Yes. Most programs require a minimum profit buffer or threshold before a payout request is
+          allowed.
+        </p>
+        <h3>Are day-1 payout programs better for beginners?</h3>
+        <p>
+          Not necessarily. Faster payout access can come with tighter risk limits that are harder to
+          manage for newer traders.
+        </p>
+      </section>
 
-      <h2 id="common-gotchas">Common gotchas</h2>
-      <p>
-        The biggest gotcha is assuming day-1 means instant cash. Many firms allow requests on day-1
-        but process payouts on a weekly cadence. Others require a minimum number of days with
-        positive P&amp;L before any payout, which effectively delays access. Another common surprise
-        is a hidden buffer requirement: you might be able to request a payout only if your balance
-        stays above a set level after the withdrawal.
-      </p>
-      <p>
-        Traders also trip over strict intraday drawdown rules when trying to hit the minimum threshold
-        quickly. A firm can promote day-1 payouts while enforcing tight max loss limits that force
-        you to trade small size. The result is slower profits even if the payout window is open. This
-        is why a fast payout promise should be evaluated alongside the full risk model and the
-        realistic rate of profit generation for your strategy.
-      </p>
-
-      <h2 id="faqs">FAQs</h2>
-      <h3>What counts as a day-1 payout?</h3>
-      <p>
-        It typically means you can submit a payout request on the first eligible trading day of a
-        funded account, not necessarily that the funds arrive the same day. Always check settlement
-        timing and payout processing windows.
-      </p>
-      <h3>Do day-1 payouts usually have minimum profit thresholds?</h3>
-      <p>
-        Yes. Most firms require you to exceed a defined profit target or buffer before requesting a
-        payout, even if the request can be made on day-1.
-      </p>
-      <h3>Are day-1 payout firms better for beginners?</h3>
-      <p>
-        Not always. Newer traders can be pressured to trade aggressively to meet thresholds quickly,
-        which clashes with tight drawdown rules. A steady ruleset often beats a fast payout promise.
-      </p>
-
-      <p>
-        Want to compare policies side by side? Use the{" "}
-        <Link href="/score-cards">score cards</Link> for ranking details, browse{" "}
-        <Link href="/firms">all firms</Link> for full profiles, or check{" "}
-        <Link href="/links">today’s deals and resources</Link>.
-      </p>
+      <section className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 flex flex-wrap gap-3 items-center justify-between">
+        <span className="text-sm text-white/70">Ready to compare programs?</span>
+        <div className="flex flex-wrap gap-3 text-sm font-semibold">
+          <Link href="/score-cards" className="underline underline-offset-4">
+            Scorecards
+          </Link>
+          <Link href="/firms" className="underline underline-offset-4">
+            All firms
+          </Link>
+          <Link href="/links" className="underline underline-offset-4">
+            Links and deals
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }
