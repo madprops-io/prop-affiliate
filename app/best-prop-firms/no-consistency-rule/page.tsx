@@ -8,8 +8,73 @@ export const metadata: Metadata = {
 };
 
 export default function NoConsistencyRulePage() {
+  const baseUrl = "https://www.madprops.com";
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: `${baseUrl}/`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Best Prop Firms",
+        item: `${baseUrl}/best-prop-firms`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "No Consistency Rule",
+        item: `${baseUrl}/best-prop-firms/no-consistency-rule`,
+      },
+    ],
+  };
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What is a consistency rule?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "It limits how much of your total profit can come from a single day or short period.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Is “no consistency rule” always better?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Not always. Removing it can be paired with tighter drawdowns or loss limits.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What other rule matters most if consistency is removed?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "The drawdown model usually matters most because it defines how much room you have to trade.",
+        },
+      },
+    ],
+  };
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 space-y-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([breadcrumbJsonLd, faqJsonLd]),
+        }}
+      />
       <section className="space-y-3">
         <h1>Best Futures Prop Firms With No Consistency Rule (2026)</h1>
         <p>
@@ -18,15 +83,23 @@ export default function NoConsistencyRulePage() {
         </p>
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 space-y-3">
+      <section className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
         <h2 className="text-lg font-semibold">Compare with Scorecards</h2>
         <p className="text-sm text-white/70">
           Use the scorecards to filter by drawdown type, payout timing, and rules that affect how
           profits are distributed.
         </p>
-        <Link href="/score-cards" className="text-sm font-semibold underline underline-offset-4">
-          Open scorecards
-        </Link>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/score-cards"
+            className="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black hover:opacity-90"
+          >
+            Compare with Scorecards
+          </Link>
+          <Link href="/" className="text-sm underline underline-offset-4 opacity-90 hover:opacity-100">
+            Quick table view<span className="ml-2 text-xs opacity-70">Sortable overview</span>
+          </Link>
+        </div>
       </section>
 
       <section className="space-y-3">

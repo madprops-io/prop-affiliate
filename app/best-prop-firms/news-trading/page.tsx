@@ -8,8 +8,73 @@ export const metadata: Metadata = {
 };
 
 export default function NewsTradingPage() {
+  const baseUrl = "https://www.madprops.com";
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: `${baseUrl}/`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Best Prop Firms",
+        item: `${baseUrl}/best-prop-firms`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "News Trading",
+        item: `${baseUrl}/best-prop-firms/news-trading`,
+      },
+    ],
+  };
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What is news trading?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "News trading is placing trades around market-moving releases or unexpected headlines that can spike volatility.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Why do some prop firms block trading during news?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Fast price movement can increase slippage and risk-limit violations, so firms restrict trading to manage exposure.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Does “news trading allowed” mean no restrictions?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "No. Most firms still define time windows or order-type limits, so you should check the policy.",
+        },
+      },
+    ],
+  };
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 space-y-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([breadcrumbJsonLd, faqJsonLd]),
+        }}
+      />
       <section className="space-y-3">
         <h1>Best Futures Prop Firms That Allow News Trading (2026)</h1>
         <p>
@@ -18,15 +83,23 @@ export default function NewsTradingPage() {
         </p>
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 space-y-3">
+      <section className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
         <h2 className="text-lg font-semibold">Compare with Scorecards</h2>
         <p className="text-sm text-white/70">
           Use the scorecards to filter by news trading rules, drawdowns, and payout timing so you can
           align policies with your strategy.
         </p>
-        <Link href="/score-cards" className="text-sm font-semibold underline underline-offset-4">
-          Open scorecards
-        </Link>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/score-cards"
+            className="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black hover:opacity-90"
+          >
+            Compare with Scorecards
+          </Link>
+          <Link href="/" className="text-sm underline underline-offset-4 opacity-90 hover:opacity-100">
+            Quick table view<span className="ml-2 text-xs opacity-70">Sortable overview</span>
+          </Link>
+        </div>
       </section>
 
       <section className="space-y-3">

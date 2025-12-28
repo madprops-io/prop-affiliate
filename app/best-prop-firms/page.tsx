@@ -8,8 +8,73 @@ export const metadata: Metadata = {
 };
 
 export default function BestPropFirmsPage() {
+  const baseUrl = "https://www.madprops.com";
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: `${baseUrl}/`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Best Prop Firms",
+        item: `${baseUrl}/best-prop-firms`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Best Futures Prop Firms (2026)",
+        item: `${baseUrl}/best-prop-firms`,
+      },
+    ],
+  };
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What makes a prop firm a good fit?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "A good fit balances payout access with rules you can follow consistently, including drawdowns and daily loss limits.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Do lower fees always mean better value?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Not necessarily. Lower fees can help, but restrictive rules may slow payouts and raise total cost over time.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Should I choose based on payout split alone?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "No. Payout split is only one factor; drawdown rules and payout eligibility often matter more.",
+        },
+      },
+    ],
+  };
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 space-y-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([breadcrumbJsonLd, faqJsonLd]),
+        }}
+      />
       <section className="space-y-3">
         <h1>Best Futures Prop Firms (2026)</h1>
         <p>
@@ -18,15 +83,23 @@ export default function BestPropFirmsPage() {
         </p>
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 space-y-3">
+      <section className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
         <h2 className="text-lg font-semibold">Compare with Scorecards</h2>
         <p className="text-sm text-white/70">
           Want the fastest way to narrow your options? Use the scorecards to filter by payout terms,
           drawdowns, platforms, and discounts.
         </p>
-        <Link href="/score-cards" className="text-sm font-semibold underline underline-offset-4">
-          Open scorecards
-        </Link>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/score-cards"
+            className="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black hover:opacity-90"
+          >
+            Compare with Scorecards
+          </Link>
+          <Link href="/" className="text-sm underline underline-offset-4 opacity-90 hover:opacity-100">
+            Quick table view<span className="ml-2 text-xs opacity-70">Sortable overview</span>
+          </Link>
+        </div>
       </section>
 
       <section className="space-y-3">

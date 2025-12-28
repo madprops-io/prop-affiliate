@@ -8,8 +8,73 @@ export const metadata: Metadata = {
 };
 
 export default function DayOnePayoutsPage() {
+  const baseUrl = "https://www.madprops.com";
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: `${baseUrl}/`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Best Prop Firms",
+        item: `${baseUrl}/best-prop-firms`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Day-1 Payouts",
+        item: `${baseUrl}/best-prop-firms/day-one-payouts`,
+      },
+    ],
+  };
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What counts as a day-1 payout?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "It usually means you can request a payout on the first eligible trading day, not that funds arrive immediately.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Do day-1 payouts usually have minimum profit thresholds?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Yes. Most programs require a minimum profit buffer or threshold before a payout request is allowed.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Are day-1 payout programs better for beginners?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Not always. Faster access can come with tighter risk limits that may be harder to manage.",
+        },
+      },
+    ],
+  };
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 space-y-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([breadcrumbJsonLd, faqJsonLd]),
+        }}
+      />
       <section className="space-y-3">
         <h1>Best Futures Prop Firms With Day-1 Payouts (2026)</h1>
         <p>
@@ -18,15 +83,23 @@ export default function DayOnePayoutsPage() {
         </p>
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 space-y-3">
+      <section className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
         <h2 className="text-lg font-semibold">Compare with Scorecards</h2>
         <p className="text-sm text-white/70">
           Filter firms by payout timing, drawdown type, and discount availability to see which
           programs align with faster payout access.
         </p>
-        <Link href="/score-cards" className="text-sm font-semibold underline underline-offset-4">
-          Open scorecards
-        </Link>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/score-cards"
+            className="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black hover:opacity-90"
+          >
+            Compare with Scorecards
+          </Link>
+          <Link href="/" className="text-sm underline underline-offset-4 opacity-90 hover:opacity-100">
+            Quick table view<span className="ml-2 text-xs opacity-70">Sortable overview</span>
+          </Link>
+        </div>
       </section>
 
       <section className="space-y-3">
