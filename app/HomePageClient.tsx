@@ -1633,44 +1633,43 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           </section>
         )}
 
-        <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-2 px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
-          <span>
-            Want more filters?{" "}
-            <Link
-              href="/cards"
-              className="text-[#f6c850] underline-offset-4 hover:underline"
-            >
-              Switch to Score Cards
-            </Link>
-          </span>
-          <span className="text-white/40">|</span>
-          <span>Disclosure: Some links are affiliate links.</span>
-        </div>
+        <div className="space-y-2">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-4 text-[10px] font-medium text-white/50">
+            <span>
+              Want more filters?{" "}
+              <Link href="/cards" className="text-[#f6c850]/80 underline-offset-4 hover:underline">
+                Switch to Score Cards
+              </Link>
+            </span>
+            <span className="text-white/30">|</span>
+            <span>Disclosure: Some links are affiliate links.</span>
+          </div>
 
-{/* Toggle: default view = Table; switch to Cards (/cards) */}
-        <HomeViewToggle
-          cards={HomeCards}
-          firms={firms}
-          fireDealsMode={fireDealsMode}
-          tableFireDealsMode={tableFireDealsMode}
-          onToggleTableFireDeals={toggleTableFireDeals}
-          onToggleFireDeals={toggleFireDeals}
-          fastPassActive={oneDayEvalOnly}
-          instantFundedActive={instantFundedOnly}
-          onToggleFastPass={toggleFastPass}
-          onToggleInstantFunded={toggleInstantFunded}
-          searchQuery={q}
-          tableAccountSize={tableAccountSize}
-          tableAccountSizeOptions={ACCOUNT_SIZE_OPTIONS}
-          tableFirmName={tableFirmName}
-          tableFirmOptions={firmNameOptions}
-          onTableAccountSizeChange={(value) => {
-            setTableAccountSize(value || "");
-          }}
-          onTableFirmChange={(value) => {
-            setTableFirmName(value || "");
-          }}
-        />
+          {/* Toggle: default view = Table; switch to Cards (/cards) */}
+          <HomeViewToggle
+            cards={HomeCards}
+            firms={firms}
+            fireDealsMode={fireDealsMode}
+            tableFireDealsMode={tableFireDealsMode}
+            onToggleTableFireDeals={toggleTableFireDeals}
+            onToggleFireDeals={toggleFireDeals}
+            fastPassActive={oneDayEvalOnly}
+            instantFundedActive={instantFundedOnly}
+            onToggleFastPass={toggleFastPass}
+            onToggleInstantFunded={toggleInstantFunded}
+            searchQuery={q}
+            tableAccountSize={tableAccountSize}
+            tableAccountSizeOptions={ACCOUNT_SIZE_OPTIONS}
+            tableFirmName={tableFirmName}
+            tableFirmOptions={firmNameOptions}
+            onTableAccountSizeChange={(value) => {
+              setTableAccountSize(value || "");
+            }}
+            onTableFirmChange={(value) => {
+              setTableFirmName(value || "");
+            }}
+          />
+        </div>
 
         {!isCardsView && (
           <section className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-sm space-y-3">
