@@ -43,6 +43,17 @@ export default function FirmsIndexPage({ searchParams }: FirmsPageProps) {
             </Link>
             .
           </p>
+          <p className="mx-auto max-w-3xl text-base text-white/70">
+            Looking for today’s{" "}
+            <Link href="/prop-firm-deals" className="text-emerald-300 underline">
+              prop firm deals
+            </Link>{" "}
+            and the{" "}
+            <Link href="/prop-firm-deals#cheapest-prop-firm-evaluations" className="text-emerald-300 underline">
+              best prop firm discounts
+            </Link>
+            ? Start with the daily roundup.
+          </p>
         </div>
       </section>
 
@@ -52,5 +63,4 @@ export default function FirmsIndexPage({ searchParams }: FirmsPageProps) {
     </main>
   );
 }
-
 

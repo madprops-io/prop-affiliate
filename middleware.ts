@@ -21,13 +21,15 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/images") ||
     pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|ico|txt|xml|json|css|js)$/);
 
-  if (pathname === "/coming-soon" || isAsset) {
+  if (pathname === "/coming-soon" || pathname === "/ffn" || isAsset) {
     return NextResponse.next();
   }
 
   const url = req.nextUrl.clone();
   url.pathname = "/coming-soon";
-  return NextResponse.redirect(url);
+  const response = NextResponse.redirect(url);
+  response.headers.set("X-Robots-Tag", "noindex");
+  return response;
 }
 
 // Apply middleware to all routes

@@ -189,6 +189,17 @@ export default function BestFuturesPropFirms2026Page() {
             side by side using the <strong>MadProps</strong> dashboard. Always read each firm&apos;s
             official terms before you sign up. <strong>#MadProps</strong>
           </p>
+          <p className="mt-3 text-sm text-slate-300 md:text-base">
+            If you&apos;re here to save on entry costs, browse today&apos;s{" "}
+            <Link href="/prop-firm-deals" className="text-emerald-300 hover:text-emerald-200">
+              prop firm deals
+            </Link>{" "}
+            and{" "}
+            <Link href="/prop-firm-deals#instant-funding-prop-firm-deals" className="text-emerald-300 hover:text-emerald-200">
+              instant funding prop firms
+            </Link>
+            .
+          </p>
 
           <nav className="mt-4 text-xs text-slate-400 md:text-sm">
             <span className="font-semibold text-slate-200">On this page:</span>{" "}

@@ -18,29 +18,9 @@ const dailyRoutes = [
 ];
 
 const weeklyRoutes = [
-  "/learn/what-is-a-prop-firm",
-  "/learn/day-one-payouts-explained",
-  "/prop-firm/alpha-futures",
-  "/prop-firm/apex-trader-funding",
-  "/prop-firm/aqua-futures",
-  "/prop-firm/blue-guardian-futures",
-  "/prop-firm/bulenox",
-  "/prop-firm/daytraders-com",
-  "/prop-firm/e8-futures",
-  "/prop-firm/elite-trader-funding",
-  "/prop-firm/funded-futures-network",
-  "/prop-firm/fundednext-futures",
-  "/prop-firm/funderpro",
-  "/prop-firm/legends-trading",
-  "/prop-firm/lucid-trading",
-  "/prop-firm/my-funded-futures",
-  "/prop-firm/phidias-propfirm",
-  "/prop-firm/purdia-capital",
-  "/prop-firm/take-profit-trader",
-  "/prop-firm/top-one-futures",
-  "/prop-firm/trade-day",
-  "/prop-firm/tradeify",
-  "/prop-firm/tradingfunds",
+  "/learn/best-prop-firms-2025",
+  "/learn/best-prop-firms-2026",
+  "/learn/prop-firms-best-rules-2026",
 ];
 
 const priorities: Record<string, number> = {
