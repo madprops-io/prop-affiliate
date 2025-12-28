@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function ScoreCardsPage() {
   return (
     <>
-      <section className="mx-auto max-w-3xl px-6 pt-6 pb-3">
+      <section className="mx-auto max-w-6xl px-4 pt-6 pb-2">
         <h1>Futures Prop Firm Scorecards</h1>
         <p>Compare futures prop firms by payouts, rules, platforms, and discounts.</p>
       </section>
