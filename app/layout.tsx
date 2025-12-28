@@ -43,7 +43,6 @@ export const metadata: Metadata = {
     images: ["/og/madprops-og.png"],
   },
   robots: { index: true, follow: true },
-  alternates: { canonical: "https://www.madprops.com" },
   themeColor: "#0b1220",
   manifest: "/manifest.json",
 icons: {
@@ -70,7 +69,7 @@ const orgJsonLd = {
   "logo": "https://www.madprops.com/icon-512.png",
   "image": "https://www.madprops.com/icon-512.png",
   "sameAs": [
-    "https://x.com/MadProps", 
+    "https://x.com/madprops_io",
   ]
 };
 
