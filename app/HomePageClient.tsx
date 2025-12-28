@@ -196,7 +196,11 @@ function CopyLinkButton() {
   );
 }
 
-export default function Page() {
+type HomePageClientProps = {
+  showIntro?: boolean;
+};
+
+export default function Page({ showIntro = true }: HomePageClientProps = {}) {
   const { firms, loading, isLive, error } = useFirms();
 
   // ===== Normalize API -> UI shape =====
@@ -1600,7 +1604,8 @@ function platformConnectionsText(f: UIFirmWithConn): string {
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 space-y-6">
         <Script id="ld-json" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-        <section className="space-y-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-5">
+        {showIntro && (
+          <section className="space-y-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f6c850]">#MadProps</p>
           <h2 className="text-xl font-semibold text-white">Find the best prop firm deals & discounts.</h2>
           <p className="text-sm text-white/70">
@@ -1625,7 +1630,8 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             </Link>{" "}
             guide.
           </p>
-        </section>
+          </section>
+        )}
 
         <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-2 px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
           <span>
