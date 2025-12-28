@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
 import HomePageClient from "./HomePageClient";
 
 type PageProps = {
@@ -16,6 +17,13 @@ export function generateMetadata({ searchParams }: PageProps): Metadata {
   };
 }
 
-export default function Page() {
+export default function Page({ searchParams }: PageProps) {
+  const viewParam = searchParams?.view;
+  const isCardsView = Array.isArray(viewParam) ? viewParam.includes("cards") : viewParam === "cards";
+
+  if (isCardsView) {
+    permanentRedirect("/score-cards");
+  }
+
   return <HomePageClient />;
 }

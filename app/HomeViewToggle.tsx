@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import FirmsTable from "@/components/FirmTable";
 import type { FirmRow } from "@/lib/useFirms";
 import { useRef, useState } from "react";
@@ -48,18 +48,32 @@ export default function HomeViewToggle({
 }: Props) {
   const sp = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
   const columnsPortalRef = useRef<HTMLDivElement | null>(null);
   const [showAccountSizePicker, setShowAccountSizePicker] = useState(false);
   const [showFirmPicker, setShowFirmPicker] = useState(false);
 
   // derive the view from the URL, default to "table"
   const viewParam = sp.get("view");
-  const view: ToggleView = viewParam === "cards" ? "cards" : "table";
+  const isScoreCardsRoute = pathname === "/score-cards";
+  const view: ToggleView = isScoreCardsRoute || viewParam === "cards" ? "cards" : "table";
 
   const setView = (v: ToggleView) => {
     const url = new URL(window.location.href);
-    if (v === "table") url.searchParams.delete("view");
-    else url.searchParams.set("view", "cards");
+    if (v === "table") {
+      if (isScoreCardsRoute) {
+        router.replace("/", { scroll: false });
+        return;
+      }
+      url.searchParams.delete("view");
+      router.replace(`${url.pathname}${url.search}`, { scroll: false });
+      return;
+    }
+    if (isScoreCardsRoute) {
+      router.replace("/score-cards", { scroll: false });
+      return;
+    }
+    url.searchParams.set("view", "cards");
     router.replace(`${url.pathname}${url.search}`, { scroll: false });
   };
 
