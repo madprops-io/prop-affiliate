@@ -196,11 +196,8 @@ function CopyLinkButton() {
   );
 }
 
-type HomePageClientProps = {
-  showIntro?: boolean;
-};
-
-export default function Page({ showIntro = true }: HomePageClientProps = {}) {
+export default function ScoreCardsClient() {
+  const showIntro = false;
   const { firms, loading, isLive, error } = useFirms();
 
   // ===== Normalize API -> UI shape =====

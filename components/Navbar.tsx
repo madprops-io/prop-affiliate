@@ -18,7 +18,8 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const isCardsView = pathname === "/" && searchParams?.get("view") === "cards";
+  const isScoreCardsRoute = pathname === "/score-cards";
+  const isCardsView = isScoreCardsRoute || (pathname === "/" && searchParams?.get("view") === "cards");
   // Transparent only on the homepage and only at the very top
   const onHero = pathname === "/" && !isCardsView;
 
@@ -75,10 +76,7 @@ export default function Navbar() {
             <Link href="/" className={cn(linkBase, pathname === "/" && !isCardsView && active)}>
               Home
             </Link>
-            <Link
-              href="/cards"
-              className={cn(linkBase, isCardsView && active)}
-            >
+            <Link href="/cards" className={cn(linkBase, isCardsView && active)}>
               Score cards
             </Link>
             <Link

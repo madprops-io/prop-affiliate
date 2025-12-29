@@ -25,6 +25,9 @@ type Props = {
   tableFirmName: string;
   tableFirmOptions: readonly string[];
   onTableFirmChange: (value: string) => void;
+  leadText?: string;
+  disclosureText?: string;
+  containerClassName?: string;
 };
 
 export default function HomeViewToggle({
@@ -45,6 +48,9 @@ export default function HomeViewToggle({
   tableFirmName,
   tableFirmOptions,
   onTableFirmChange,
+  leadText,
+  disclosureText,
+  containerClassName,
 }: Props) {
   const sp = useSearchParams();
   const router = useRouter();
@@ -232,17 +238,41 @@ export default function HomeViewToggle({
     </div>
   );
 
+  const containerClasses = containerClassName ?? "mx-auto max-w-7xl px-4 sm:px-6";
+  const hasToolbarText = Boolean(leadText || disclosureText);
+
   return (
     <>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex flex-wrap items-center gap-2">
-          {controls}
-          {view === "table" ? (
-            <div ref={columnsPortalRef} className="relative z-20 ml-auto flex min-w-[115px] flex-shrink-0 justify-end" />
-          ) : null}
-        </div>
+      <div className={containerClasses}>
+        {hasToolbarText ? (
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-2">
+              {controls}
+              {view === "table" ? (
+                <div
+                  ref={columnsPortalRef}
+                  className="relative z-20 ml-auto flex min-w-[115px] flex-shrink-0 justify-end"
+                />
+              ) : null}
+            </div>
+            <div className="space-y-1 sm:text-right">
+              {leadText ? <p className="text-sm text-white/70">{leadText}</p> : null}
+              {disclosureText ? <p className="text-[10px] text-white/50">{disclosureText}</p> : null}
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-2">
+            {controls}
+            {view === "table" ? (
+              <div
+                ref={columnsPortalRef}
+                className="relative z-20 ml-auto flex min-w-[115px] flex-shrink-0 justify-end"
+              />
+            ) : null}
+          </div>
+        )}
         {view === "table" && (
-          <div className="mt-1">
+          <div className={hasToolbarText ? "mt-2" : "mt-1"}>
             <FirmsTable
               firms={firms}
               fireDealsMode={tableFireDealsMode}
