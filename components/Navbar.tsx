@@ -31,7 +31,7 @@ export default function Navbar() {
   );
 
   const linkBase =
-    "transition-colors text-white/70 hover:text-white px-2 py-1 rounded-md whitespace-nowrap text-sm md:text-base";
+    "transition-colors text-white/70 hover:text-white px-2 min-h-10 inline-flex items-center rounded-md whitespace-nowrap text-sm md:text-base";
   const active = "text-primary font-semibold";
 
   const lucidDealHref = buildAffiliateUrl("https://lucidtrading.com", "lucidtrading", "fire-deal-banner");
@@ -59,20 +59,20 @@ export default function Navbar() {
         </div>
       </div>
       <header className={headerClass}>
-        <div className="container mx-auto max-w-6xl flex flex-col items-start gap-3 px-4 py-4 md:flex-row md:items-center md:gap-4">
+        <div className="container mx-auto max-w-6xl flex flex-col items-start gap-2 px-4 py-3 md:flex-row md:items-center md:gap-3">
           <Link
             href="/"
             className="relative z-10 flex flex-col leading-tight group hover:opacity-95 text-left flex-shrink-0"
           >
-            <span className="text-lg md:text-2xl font-semibold uppercase tracking-[0.5em] text-[#5fffc2]">
+            <span className="text-base md:text-xl font-semibold uppercase tracking-[0.45em] text-[#5fffc2]">
               MADPROPS
             </span>
-            <span className="text-xs italic text-[#f7d778] md:text-sm tracking-[0.2em]">
+            <span className="text-[11px] italic text-[#f7d778] md:text-xs tracking-[0.18em]">
               Trade smarter.
             </span>
           </Link>
 
-          <nav className="flex w-full items-center gap-3 overflow-x-auto pb-1 -mx-2 px-2 md:mx-auto md:w-auto md:justify-center md:gap-4 md:overflow-visible md:pb-0">
+          <nav className="flex w-full items-center gap-2 overflow-x-auto pb-1 -mx-2 px-2 md:mx-auto md:w-auto md:justify-center md:gap-3 md:overflow-visible md:pb-0">
             <Link href="/" className={cn(linkBase, pathname === "/" && !isCardsView && active)}>
               Home
             </Link>

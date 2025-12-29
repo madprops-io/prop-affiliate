@@ -5,6 +5,7 @@ import Link from "next/link";
 import { buildAffiliateUrl } from "@/lib/affiliates";
 import { FIRMS } from "@/lib/firms";
 import { useFirms } from "@/lib/useFirms";
+import { useMemo } from "react";
 
 const slugifyKey = (value: string) => value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "");
 
@@ -82,9 +83,12 @@ function FirmLogo({ name, src }: { name: string; src?: string | null }) {
 
 export default function LinksPage() {
   const { firms, loading } = useFirms();
-  const liveList = Array.isArray(firms) && firms.length > 0 ? buildLinks(firms as any) : [];
-  const fallbackList = liveList.length ? liveList : buildLinks(FIRMS as any);
-  const list = fallbackList;
+  const fallbackList = useMemo(() => buildLinks(FIRMS as any), []);
+  const liveList = useMemo(
+    () => (Array.isArray(firms) && firms.length > 0 ? buildLinks(firms as any) : []),
+    [firms]
+  );
+  const list = loading ? fallbackList : liveList.length ? liveList : fallbackList;
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-12 text-white">

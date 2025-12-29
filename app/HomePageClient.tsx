@@ -1601,37 +1601,8 @@ function platformConnectionsText(f: UIFirmWithConn): string {
     <main>
       {!isCardsView && <HeroBanner />}
 
-      <div className="mx-auto w-full max-w-[1400px] px-4 py-6 space-y-6">
+      <div className="mx-auto w-full max-w-[1400px] px-4 py-4 space-y-4">
         <Script id="ld-json" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-
-        {showIntro && (
-          <section className="space-y-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f6c850]">#MadProps</p>
-          <h2 className="text-xl font-semibold text-white">Find the best prop firm deals & discounts.</h2>
-          <p className="text-sm text-white/70">
-            Compare prop firm deals, instant funding programs, payouts, discount codes, and rules - all in one place.
-          </p>
-          <p className="text-sm text-white/70">
-            Want a quick summary? See today’s{" "}
-            <Link href="/prop-firm-deals" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-              prop firm deals
-            </Link>{" "}
-            and{" "}
-            <Link href="/prop-firm-deals#instant-funding-prop-firm-deals" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
-              instant funding deals
-            </Link>
-            .
-          </p>
-          <p className="text-xs text-white/60">Scroll to see all firms and filters</p>
-          <p className="text-sm text-slate-400">
-            New? Read our{" "}
-            <Link href="/learn/best-prop-firms-2026" className="text-emerald-400 hover:text-emerald-300">
-              Best Prop Firms 2026
-            </Link>{" "}
-            guide.
-          </p>
-          </section>
-        )}
 
         {isCardsView ? (
           <HomeViewToggle
@@ -1656,11 +1627,11 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             onTableFirmChange={(value) => {
               setTableFirmName(value || "");
             }}
-            leadText="Compare payouts, rules, platforms, discounts, and costs · Affiliate links disclosed"
+            leadText="Compare payouts, rules, platforms, discounts, and costs"
             containerClassName="w-full max-w-[1400px] px-4"
           />
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-1">
             <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-4 text-[10px] font-medium text-white/50">
               <span>
                 Want more filters?{" "}
@@ -1751,6 +1722,37 @@ function platformConnectionsText(f: UIFirmWithConn): string {
                 Clear
               </Button>
             </form>
+          </section>
+        )}
+
+        {showIntro && (
+          <section className="space-y-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f6c850]">#MadProps</p>
+            <h2 className="text-lg font-semibold text-white">Find the best prop firm deals & discounts.</h2>
+            <p className="text-sm text-white/70">
+              Compare prop firm deals, instant funding programs, payouts, discount codes, and rules - all in one place.
+            </p>
+            <p className="text-sm text-white/70">
+              Want a quick summary? See today's{" "}
+              <Link href="/prop-firm-deals" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
+                prop firm deals
+              </Link>{" "}
+              and{" "}
+              <Link
+                href="/prop-firm-deals#instant-funding-prop-firm-deals"
+                className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline"
+              >
+                instant funding deals
+              </Link>
+              .
+            </p>
+            <p className="text-sm text-slate-400">
+              New? Read our{" "}
+              <Link href="/learn/best-prop-firms-2026" className="text-emerald-400 hover:text-emerald-300">
+                Best Prop Firms 2026
+              </Link>{" "}
+              guide.
+            </p>
           </section>
         )}
 

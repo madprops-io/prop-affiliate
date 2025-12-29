@@ -245,14 +245,11 @@ export default function HomeViewToggle({
     <>
       <div className={containerClasses}>
         {hasToolbarText ? (
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap items-center gap-2">
-              {controls}
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-3">{controls}</div>
               {view === "table" ? (
-                <div
-                  ref={columnsPortalRef}
-                  className="relative z-20 ml-auto flex min-w-[115px] flex-shrink-0 justify-end"
-                />
+                <div ref={columnsPortalRef} className="relative z-20 flex-shrink-0" />
               ) : null}
             </div>
             <div className="space-y-1 sm:text-right">
@@ -261,18 +258,15 @@ export default function HomeViewToggle({
             </div>
           </div>
         ) : (
-          <div className="flex flex-wrap items-center gap-2">
-            {controls}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-3">{controls}</div>
             {view === "table" ? (
-              <div
-                ref={columnsPortalRef}
-                className="relative z-20 ml-auto flex min-w-[115px] flex-shrink-0 justify-end"
-              />
+              <div ref={columnsPortalRef} className="relative z-20 flex-shrink-0" />
             ) : null}
           </div>
         )}
         {view === "table" && (
-          <div className={hasToolbarText ? "mt-2" : "mt-1"}>
+          <div id="compare-table" className={hasToolbarText ? "mt-2" : "mt-1"}>
             <FirmsTable
               firms={firms}
               fireDealsMode={tableFireDealsMode}

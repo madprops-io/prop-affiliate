@@ -126,6 +126,15 @@ export default function FirmTable({
   accountSizeFilter = null,
   firmNameFilter = "",
 }: FirmTableProps) {
+  const tableScrollRef = useRef<HTMLDivElement | null>(null);
+  const topScrollTrackRef = useRef<HTMLDivElement | null>(null);
+  const topScrollThumbRef = useRef<HTMLDivElement | null>(null);
+  const [showTopScroll, setShowTopScroll] = useState(false);
+  const [topScrollStyle, setTopScrollStyle] = useState<{ width: number; left: number }>({
+    width: 0,
+    left: 0,
+  });
+  const dragStateRef = useRef<{ startX: number; startScrollLeft: number } | null>(null);
   let list: TableFirm[] = [];
   if (Array.isArray(firms)) {
     list = firms;
@@ -317,6 +326,57 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
     }
   };
 
+  const syncTopScroll = () => {
+    if (!tableScrollRef.current) return;
+    const { scrollWidth, clientWidth, scrollLeft } = tableScrollRef.current;
+    const shouldShow = scrollWidth > clientWidth + 1;
+    setShowTopScroll(shouldShow);
+    if (!shouldShow || !topScrollTrackRef.current) {
+      if (!shouldShow) setTopScrollStyle({ width: 0, left: 0 });
+      return;
+    }
+    const trackWidth = topScrollTrackRef.current.clientWidth;
+    if (trackWidth === 0) {
+      setTopScrollStyle({ width: 0, left: 0 });
+      return;
+    }
+    const ratio = clientWidth / scrollWidth;
+    const thumbWidth = Math.max(32, Math.round(trackWidth * ratio));
+    const maxThumbLeft = Math.max(0, trackWidth - thumbWidth);
+    const maxScroll = Math.max(1, scrollWidth - clientWidth);
+    const left = Math.round((scrollLeft / maxScroll) * maxThumbLeft);
+    setTopScrollStyle({ width: thumbWidth, left });
+  };
+
+  useEffect(() => {
+    const tableEl = tableScrollRef.current;
+    if (!tableEl) return;
+
+    const onTableScroll = () => {
+      syncTopScroll();
+    };
+    const onResize = () => {
+      syncTopScroll();
+    };
+
+    tableEl.addEventListener("scroll", onTableScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    syncTopScroll();
+
+    return () => {
+      tableEl.removeEventListener("scroll", onTableScroll);
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!showTopScroll) return;
+    const id = window.requestAnimationFrame(() => {
+      syncTopScroll();
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [showTopScroll]);
+
   const sorted = useMemo(() => {
     const arr = [...enriched];
     const dir = sortDir === "asc" ? 1 : -1;
@@ -410,6 +470,13 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
     return filteredRows.slice(start, start + ROWS_PER_PAGE);
   }, [filteredRows, currentTablePage, ROWS_PER_PAGE]);
 
+  useEffect(() => {
+    const id = window.requestAnimationFrame(() => {
+      syncTopScroll();
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [columns, visibleRows.length]);
+
   const setSort = (key: SortKey) => {
     setSortDir((prev) => (sortKey === key ? (prev === "asc" ? "desc" : "asc") : "asc"));
     setSortKey(key);
@@ -435,7 +502,7 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
       <Button
         variant="outline"
         size="sm"
-        className="rounded-full border border-[#26ffd4]/40 bg-[#04131c] text-white/80 shadow-[0_6px_25px_-20px_#14f2c1] transition hover:border-[#26ffd4]/70 hover:text-white"
+        className="h-9 rounded-full border border-[#26ffd4]/40 bg-[#04131c] px-4 text-sm font-semibold uppercase tracking-[0.2em] text-white/80 shadow-[0_6px_25px_-20px_#14f2c1] transition hover:border-[#26ffd4]/70 hover:text-white"
         onClick={() => setShowColumnPicker((prev) => !prev)}
       >
         Columns
@@ -466,12 +533,57 @@ const COLUMN_LABELS: Record<keyof typeof DEFAULT_COLUMNS, string> = {
       ? createPortal(columnToggle, columnsPortalRef.current)
       : columnToggle;
 
+  const handleThumbPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!tableScrollRef.current || !topScrollTrackRef.current || !topScrollThumbRef.current) return;
+    event.preventDefault();
+    dragStateRef.current = { startX: event.clientX, startScrollLeft: tableScrollRef.current.scrollLeft };
+    const trackEl = topScrollTrackRef.current;
+    const thumbEl = topScrollThumbRef.current;
+    const tableEl = tableScrollRef.current;
+    const maxScroll = Math.max(1, tableEl.scrollWidth - tableEl.clientWidth);
+    const maxThumbLeft = Math.max(1, trackEl.clientWidth - thumbEl.clientWidth);
+
+    const onPointerMove = (moveEvent: PointerEvent) => {
+      if (!dragStateRef.current) return;
+      const delta = moveEvent.clientX - dragStateRef.current.startX;
+      const scrollDelta = (delta / maxThumbLeft) * maxScroll;
+      tableEl.scrollLeft = dragStateRef.current.startScrollLeft + scrollDelta;
+    };
+
+    const onPointerUp = () => {
+      dragStateRef.current = null;
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+    };
+
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+  };
+
   return (
     <>
       {columnsPortalRef?.current ? columnsControl : (
         <div className="relative z-10 mb-2 flex justify-end pr-4">{columnToggle}</div>
       )}
-      <div className="overflow-x-auto rounded-3xl border border-[#26ffd4]/15 bg-gradient-to-br from-[#020914] via-[#010409] to-[#000103] p-1 shadow-[0_45px_80px_-50px_#12ffd0]">
+      {showTopScroll ? (
+        <div className="mt-2 cursor-default">
+          <div
+            ref={topScrollTrackRef}
+            className="relative h-2 rounded-full border border-white/5 bg-[#0a1624] cursor-default"
+          >
+            <div
+              ref={topScrollThumbRef}
+              onPointerDown={handleThumbPointerDown}
+              className="absolute top-0 h-full rounded-full bg-gradient-to-r from-[#16f5ba] via-[#26ffd4] to-[#58ffe2] shadow-[0_0_12px_#26ffd480] cursor-default"
+              style={{ width: topScrollStyle.width, left: topScrollStyle.left }}
+            />
+          </div>
+        </div>
+      ) : null}
+      <div
+        ref={tableScrollRef}
+        className="overflow-x-auto rounded-3xl border border-[#26ffd4]/15 bg-gradient-to-br from-[#020914] via-[#010409] to-[#000103] p-1 shadow-[0_45px_80px_-50px_#12ffd0]"
+      >
         <table className="w-full text-sm text-white/80 backdrop-blur-sm">
           <thead className="sticky top-0 z-10 bg-[#040d19]/95 text-white shadow-[0_12px_30px_-20px_#000]">
           <tr className="text-center border-b border-[#26ffd4]/40 divide-x divide-white/10 [&_button]:w-full">
