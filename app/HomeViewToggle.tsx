@@ -97,17 +97,6 @@ export default function HomeViewToggle({
       {view === "table" ? (
         <>
           <button
-            onClick={onToggleTableFireDeals}
-            aria-pressed={tableFireDealsMode}
-            className={`rounded-full border px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] shadow transition ${
-              tableFireDealsMode
-                ? "border-orange-300/70 bg-gradient-to-r from-orange-500 via-amber-400 to-amber-300 text-black/90 shadow-[0_8px_20px_-10px_rgba(255,140,0,0.6)]"
-                : "border-orange-300/70 bg-transparent text-orange-200 hover:text-orange-100"
-            }`}
-          >
-            Fire Deals
-          </button>
-          <button
             onClick={onToggleFastPass}
             aria-pressed={fastPassActive}
             className={`rounded-full border px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] transition ${
@@ -246,8 +235,8 @@ export default function HomeViewToggle({
       <div className={containerClasses}>
         {hasToolbarText ? (
           <div className="flex flex-col gap-2">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-3">{controls}</div>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">{controls}</div>
               {view === "table" ? (
                 <div ref={columnsPortalRef} className="relative z-20 flex-shrink-0" />
               ) : null}
@@ -258,8 +247,8 @@ export default function HomeViewToggle({
             </div>
           </div>
         ) : (
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-3">{controls}</div>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">{controls}</div>
             {view === "table" ? (
               <div ref={columnsPortalRef} className="relative z-20 flex-shrink-0" />
             ) : null}
