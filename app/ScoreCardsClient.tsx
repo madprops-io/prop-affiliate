@@ -236,7 +236,7 @@ export default function ScoreCardsClient() {
         maxAccounts: typeof f.maxAccounts === "number" ? f.maxAccounts : null,
         accountSize: typeof f.accountSize === "number" ? f.accountSize : f.maxFunding ?? null,
         drawdownType: typeof f.drawdownType === "string" ? f.drawdownType : null,
-        drawdownTokens: Array.isArray(f.drawdownTokens) ? f.drawdownTokens : [],
+        drawdownTokens: [],
         daysToPayout: daysToPayoutRaw,
         payoutDaysValue: parseDaysToNumber(daysToPayoutRaw),
 
