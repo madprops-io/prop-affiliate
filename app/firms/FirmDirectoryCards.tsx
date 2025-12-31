@@ -36,7 +36,7 @@ type AccountRow = {
   newsTradingEval?: boolean | null;
   newsTradingFunded?: boolean | null;
   weekendHolding?: boolean | null;
-  pricing?: any;
+  pricing?: Firm["pricing"] | null;
 };
 
 const slugify = (value?: string | null) =>
@@ -45,10 +45,18 @@ const slugify = (value?: string | null) =>
 function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, string>): GroupedFirm[] {
   const map = new Map<string, GroupedFirm>();
   rows.forEach((row) => {
+    const rowAlt = row as FirmRow & {
+      accountLabel?: string | null;
+      notes?: string | null;
+      payoutSplit?: number | null;
+      payoutDisplay?: string | null;
+      days_to_payout?: number | string | null;
+      drawdown_type?: string | null;
+    };
     const baseName = row.name || "";
     const baseNameKey = baseName.toLowerCase().trim();
     const directoryKey = directoryMap?.get(baseNameKey) ?? null;
-    const rawModelField = (row as any).model;
+    const rawModelField = row.model;
     const rowModels = Array.isArray(rawModelField)
       ? rawModelField
           .map((value) => (typeof value === "string" ? value.trim() : ""))
@@ -56,7 +64,7 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
       : typeof rawModelField === "string" && rawModelField.trim()
       ? [rawModelField.trim()]
       : [];
-    const rawKey = (row as FirmRow).key ?? (row as Firm).key ?? "";
+    const rawKey = row.key ?? "";
     const normalizedKey = slugify(rawKey);
     const nameSlug = slugify(baseName);
     const canonicalKey = directoryKey || normalizedKey || nameSlug || baseName || "";
@@ -68,30 +76,30 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
       slugKey,
       key: canonicalKey,
       name: baseName || canonicalKey,
-      homepage: (row as any).homepage ?? null,
-      signup: (row as any).signup ?? null,
-      logo: (row as any).logo ?? (canonicalKey ? `/logos/${canonicalKey}.png` : null),
+      homepage: row.homepage ?? null,
+      signup: row.signup ?? null,
+      logo: row.logo ?? (canonicalKey ? `/logos/${canonicalKey}.png` : null),
       model: [],
-      platforms: Array.isArray((row as any).platforms) ? (row as any).platforms : [],
-      maxFunding: typeof (row as any).maxFunding === "number" ? (row as any).maxFunding : null,
-      maxAccounts: typeof (row as any).maxAccounts === "number" ? (row as any).maxAccounts : null,
-      payout: typeof (row as any).payoutSplit === "number" ? (row as any).payoutSplit / 100 : null,
-      payoutSplit: typeof (row as any).payoutSplit === "number" ? (row as any).payoutSplit : null,
-      payoutDisplay: (row as any).payoutDisplay ?? null,
-      accountSize: typeof (row as any).accountSize === "number" ? (row as any).accountSize : null,
-      minDays: typeof (row as any).minDays === "number" ? (row as any).minDays : null,
-      daysToPayout: (row as any).daysToPayout ?? null,
-      drawdownType: (row as any).drawdownType ?? null,
-      spreads: (row as any).spreads ?? null,
-      feeRefund: (row as any).feeRefund ?? null,
-      newsTrading: (row as any).newsTrading ?? null,
-      newsTradingEval: (row as any).newsTradingEval ?? null,
-      newsTradingFunded: (row as any).newsTradingFunded ?? null,
-      weekendHolding: (row as any).weekendHolding ?? null,
-      trustpilot: typeof (row as any).trustpilot === "number" ? (row as any).trustpilot : null,
-      pricing: (row as any).pricing ?? null,
-      discount: (row as any).pricing?.discount ?? (row as any).discount ?? null,
-      notes: (row as any).notes ?? null,
+      platforms: Array.isArray(row.platforms) ? row.platforms : [],
+      maxFunding: typeof row.maxFunding === "number" ? row.maxFunding : null,
+      maxAccounts: typeof row.maxAccounts === "number" ? row.maxAccounts : null,
+      payout: typeof rowAlt.payoutSplit === "number" ? rowAlt.payoutSplit / 100 : null,
+      payoutSplit: typeof rowAlt.payoutSplit === "number" ? rowAlt.payoutSplit : null,
+      payoutDisplay: rowAlt.payoutDisplay ?? null,
+      accountSize: typeof row.accountSize === "number" ? row.accountSize : null,
+      minDays: typeof row.minDays === "number" ? row.minDays : null,
+      daysToPayout: rowAlt.daysToPayout ?? rowAlt.days_to_payout ?? null,
+      drawdownType: rowAlt.drawdownType ?? rowAlt.drawdown_type ?? null,
+      spreads: row.spreads ?? null,
+      feeRefund: row.feeRefund ?? null,
+      newsTrading: row.newsTrading ?? null,
+      newsTradingEval: row.newsTradingEval ?? null,
+      newsTradingFunded: row.newsTradingFunded ?? null,
+      weekendHolding: row.weekendHolding ?? null,
+      trustpilot: typeof row.trustpilot === "number" ? row.trustpilot : null,
+      pricing: row.pricing ?? null,
+      discount: row.pricing?.discount ?? row.discount ?? null,
+      notes: rowAlt.notes ?? null,
       accounts: [],
     };
 
@@ -107,23 +115,23 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
 
     base.accounts.push({
       name:
-        (row as any).accountLabel ||
-        (row as any).notes ||
-        `${(row as any).accountSize ? `$${(row as any).accountSize.toLocaleString()}` : "Account"}`,
-      label: (row as any).accountLabel ?? null,
-      accountSize: typeof (row as any).accountSize === "number" ? (row as any).accountSize : null,
-      maxFunding: typeof (row as any).maxFunding === "number" ? (row as any).maxFunding : null,
-      payoutPct: typeof (row as any).payoutSplit === "number" ? (row as any).payoutSplit : null,
-      minDays: typeof (row as any).minDays === "number" ? (row as any).minDays : null,
-      daysToPayout: (row as any).daysToPayout ?? null,
-      drawdownType: (row as any).drawdownType ?? null,
-      spreads: (row as any).spreads ?? null,
-      feeRefund: (row as any).feeRefund ?? null,
-      newsTrading: (row as any).newsTrading ?? null,
-      newsTradingEval: (row as any).newsTradingEval ?? null,
-      newsTradingFunded: (row as any).newsTradingFunded ?? null,
-      weekendHolding: (row as any).weekendHolding ?? null,
-      pricing: (row as any).pricing ?? null,
+        rowAlt.accountLabel ||
+        rowAlt.notes ||
+        `${row.accountSize ? `$${row.accountSize.toLocaleString()}` : "Account"}`,
+      label: rowAlt.accountLabel ?? null,
+      accountSize: typeof row.accountSize === "number" ? row.accountSize : null,
+      maxFunding: typeof row.maxFunding === "number" ? row.maxFunding : null,
+      payoutPct: typeof rowAlt.payoutSplit === "number" ? rowAlt.payoutSplit : null,
+      minDays: typeof row.minDays === "number" ? row.minDays : null,
+      daysToPayout: rowAlt.daysToPayout ?? rowAlt.days_to_payout ?? null,
+      drawdownType: rowAlt.drawdownType ?? rowAlt.drawdown_type ?? null,
+      spreads: row.spreads ?? null,
+      feeRefund: row.feeRefund ?? null,
+      newsTrading: row.newsTrading ?? null,
+      newsTradingEval: row.newsTradingEval ?? null,
+      newsTradingFunded: row.newsTradingFunded ?? null,
+      weekendHolding: row.weekendHolding ?? null,
+      pricing: row.pricing ?? null,
     });
 
     map.set(mapKey, base);

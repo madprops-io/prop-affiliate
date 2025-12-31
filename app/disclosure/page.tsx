@@ -1,7 +1,7 @@
 export const metadata = {
-  title: "Disclosure | MadProps.io",
+  title: "Disclosure | MadProps.com",
   description:
-    "Affiliate disclosure and general terms for MadProps.io — transparency for users comparing proprietary trading firms.",
+    "Affiliate disclosure and general terms for MadProps.com — transparency for users comparing proprietary trading firms.",
 };
 
 export default function DisclosurePage() {
@@ -13,9 +13,9 @@ export default function DisclosurePage() {
         </h1>
 
         <p className="mb-4">
-          MadProps.io may receive affiliate commissions from certain proprietary
+          MadProps.com may receive affiliate commissions from certain proprietary
           trading firms featured on this site. These commissions support the
-          operation and ongoing development of MadProps.io but do{" "}
+          operation and ongoing development of MadProps.com but do{" "}
           <em>not</em> influence our scoring, reviews, or data presentation.
         </p>
 
@@ -28,7 +28,7 @@ export default function DisclosurePage() {
         </p>
 
         <p className="mb-4">
-          MadProps.io provides information strictly for educational and
+          MadProps.com provides information strictly for educational and
           informational purposes. No information on this site constitutes
           financial advice. Trading involves risk and may result in loss of
           capital.

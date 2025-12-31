@@ -220,7 +220,7 @@ export default function PropFirmsBestRules2026Page() {
         <p className="mt-4 max-w-3xl text-base leading-7 text-white/80">
           The firms below are listed in{" "}
           <span className="text-white">no particular order</span>. This is not a ranking, not a recommendation, and
-          not financial advice. Inclusion here does not mean a firm is "better" than others. The goal is to highlight
+          not financial advice. Inclusion here does not mean a firm is &quot;better&quot; than others. The goal is to highlight
           rule differences so you can compare what fits your strategy.
         </p>
 
@@ -305,8 +305,8 @@ export default function PropFirmsBestRules2026Page() {
       <footer className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8">
         <h2 className="text-xl font-semibold text-white">How to compare rules without bias</h2>
         <p className="mt-3 text-sm leading-6 text-white/80 md:text-base md:leading-7">
-          Instead of asking "Which firm is best?", ask: Do trailing drawdowns change how you size? Do you need overnight
-          holding? How important is payout timing versus payout flexibility? The "best rules" are the ones that match
+          Instead of asking &quot;Which firm is best?&quot;, ask: Do trailing drawdowns change how you size? Do you need overnight
+          holding? How important is payout timing versus payout flexibility? The &quot;best rules&quot; are the ones that match
           your strategy and risk tolerance.
         </p>
 

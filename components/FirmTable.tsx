@@ -60,15 +60,6 @@ const cmp = (a: number, b: number) => {
   return a > b ? 1 : -1;
 };
 
-const compareNumbers = (a: number | null | undefined, b: number | null | undefined, dir: number) => {
-  const av = numVal(a as number | null);
-  const bv = numVal(b as number | null);
-  return cmp(av, bv) * dir;
-};
-
-const compareStrings = (a: string | null | undefined, b: string | null | undefined, dir: number) =>
-  (a || "").localeCompare(b || "") * dir;
-
 const formatDiscountValue = (pct?: number | null, amt?: number | null) => {
   if (typeof amt === "number" && Number.isFinite(amt) && amt > 0) return fmtMoney(amt);
   if (typeof pct === "number" && Number.isFinite(pct) && pct > 0) return `${pct}%`;

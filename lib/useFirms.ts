@@ -51,9 +51,6 @@ export type FirmRow = {
   logo?: string | null;
 };
 
-function parseBool(v: string | undefined) {
-  return (v ?? "").toLowerCase().trim() === "true";
-}
 function parseBoolLoose(v: string | undefined) {
   const trimmed = (v ?? "").trim();
   if (!trimmed) return undefined;

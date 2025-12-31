@@ -1,17 +1,18 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Script from "next/script";
 import Link from "next/link";
 import Image from "next/image";
+import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 import HeroBanner from "@/components/HeroBanner";
 import HomeViewToggle from "@/app/HomeViewToggle";
 
-import { useFirms } from "@/lib/useFirms";
+import { useFirms, type FirmRow } from "@/lib/useFirms";
 import { useFavorites } from "@/lib/useFavorites";
-import { getCosts } from "@/lib/pricing";
+import { getCosts, type Pricing } from "@/lib/pricing";
 import { FIRMS } from "@/lib/firms";
 import { MODEL_TAGS } from "@/lib/modelTags";
 import { buildAffiliateUrl } from "@/lib/affiliates";
@@ -22,7 +23,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { ExternalLink, Heart, Info, LinkIcon, Search, Star } from "lucide-react";
+import { ExternalLink, Heart, Search } from "lucide-react";
 
 /**
  * MadProps — Prop Firm Affiliate Comparison (Home Page)
@@ -128,14 +129,14 @@ function useDebounced<T>(value: T, delay = 250) {
 function resetAll(
   setters: {
     setQ: (v: string) => void;
-    setModel: (v: any) => void;
+    setModel: (v: ModelType | "") => void;
     setPlatforms: (v: PlatformType[] | []) => void;
     setMaxMinFunding: (v: number) => void;
     setMinPayout: (v: number) => void;
     setSort: (v: SortKey) => void;
     setCompare: (v: string[]) => void;
   },
-  router: any,
+  router: AppRouterInstance,
   pathname: string,
   options?: { view?: string | null }
 ) {
@@ -153,47 +154,6 @@ function resetAll(
   const viewParam = options?.view;
   const nextUrl = viewParam ? `${pathname}?view=${viewParam}` : pathname;
   router.replace(nextUrl, { scroll: false });
-}
-
-function Toast({ show, children }: { show: boolean; children: React.ReactNode }) {
-  if (!show) return null;
-  return (
-    <div className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-lg border bg-white px-3 py-2 text-sm shadow">
-      {children}
-    </div>
-  );
-}
-
-function CopyLinkButton() {
-  const pathname = usePathname();
-  const sp = useSearchParams();
-  const [copied, setCopied] = useState(false);
-
-  async function copy() {
-    const url = `${window.location.origin}${pathname}${sp.toString() ? `?${sp.toString()}` : ""}`;
-    try {
-      await navigator.clipboard.writeText(url);
-    } catch {
-      const ta = document.createElement("textarea");
-      ta.value = url;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      ta.remove();
-    }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  }
-
-  return (
-    <>
-      <Button variant="outline" size="sm" onClick={copy} className="gap-2">
-        <LinkIcon size={16} />
-        Share this view
-      </Button>
-      <Toast show={copied}>Link copied to clipboard</Toast>
-    </>
-  );
 }
 
 type HomePageClientProps = {
@@ -223,7 +183,7 @@ export default function Page({ showIntro = true }: HomePageClientProps = {}) {
     homepage?: string | null;
     signup?: string | null;
     trustpilot?: number | null;
-    pricing?: any;
+    pricing?: Pricing | null;
     discount?: { label?: string; percent?: number; code?: string } | null;
     minDays?: number | null;
     spreads?: string | null;
@@ -255,8 +215,8 @@ export default function Page({ showIntro = true }: HomePageClientProps = {}) {
   };
 
   const nFirms: UIFirm[] = useMemo(() => {
-    const list = Array.isArray(firms) ? firms : [];
-    return list.map((f: any) => {
+    const list: FirmRow[] = Array.isArray(firms) ? firms : [];
+    return list.map((f) => {
       const payoutSplit = typeof f.payoutSplit === "number" ? f.payoutSplit : null;
       const payout = payoutSplit != null ? payoutSplit / 100 : null;
 
@@ -402,7 +362,7 @@ const [sort, setSort] = useState<SortKey>("score");
     scoreFocus: ScoreCriterion[];
   } | null>(null);
 
-  const activateFireDeals = () => {
+  const activateFireDeals = useCallback(() => {
     if (fireDealsMode) return;
     fireDealsPrevFilters.current = {
       discountOnly,
@@ -413,9 +373,9 @@ const [sort, setSort] = useState<SortKey>("score");
     setDiscountOnly(true);
     setMinTrust((current) => Math.max(current, FIRE_DEAL_TRUST_MIN));
     setScoreFocus([...FIRE_DEAL_SCORE_FOCUS]);
-  };
+  }, [fireDealsMode, discountOnly, minTrust, scoreFocus]);
 
-  const deactivateFireDeals = () => {
+  const deactivateFireDeals = useCallback(() => {
     if (!fireDealsMode) return;
     const previous = fireDealsPrevFilters.current;
     setFireDealsMode(false);
@@ -424,7 +384,7 @@ const [sort, setSort] = useState<SortKey>("score");
     if (previous?.scoreFocus?.length) setScoreFocus(previous.scoreFocus);
     else setScoreFocus([]);
     fireDealsPrevFilters.current = null;
-  };
+  }, [fireDealsMode]);
 
   const toggleFireDeals = () => {
     if (fireDealsMode) deactivateFireDeals();
@@ -473,7 +433,7 @@ const [sort, setSort] = useState<SortKey>("score");
       "Website",
     ];
     const rows = favoriteFirms.map((firm) => {
-      const cost = getCosts(firm as any);
+      const cost = getCosts(firm);
       const fundingValue = formatFundingOrAccounts(firm.maxFunding, firm.maxAccounts)?.value ?? "";
       const values = [
         firm.name ?? "",
@@ -534,7 +494,7 @@ const [sort, setSort] = useState<SortKey>("score");
     fireDealsPrevFilters.current = null;
   };
 
-  const resetCardsFilters = () => {
+  const resetCardsFilters = useCallback(() => {
     if (fireDealsMode) deactivateFireDeals();
     setQ("");
     setSearchDraft("");
@@ -557,15 +517,15 @@ const [sort, setSort] = useState<SortKey>("score");
     setShowAllPlatforms(false);
     setCardsPage(1);
     setFavoritesOnly(false);
-  };
+  }, [deactivateFireDeals, fireDealsMode]);
 
   useEffect(() => {
     const prev = prevViewRef.current;
     if (isCardsView && prev !== "cards") {
       resetCardsFilters();
     }
-    prevViewRef.current = viewParam;
-  }, [isCardsView, viewParam]);
+    prevViewRef.current = isCardsView ? "cards" : viewParam;
+  }, [isCardsView, viewParam, resetCardsFilters]);
 
   // ===== read from URL =====
   useEffect(() => {
@@ -596,7 +556,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
   ? (nextSort as SortKey)
   : "score";
     setQ((prev) => (prev === nextQ ? prev : nextQ));
-    setModel((prev) => (prev === safeModel ? prev : (safeModel as any)));
+    setModel((prev) => (prev === safeModel ? prev : safeModel));
     setSelectedPlatforms((prev) =>
       arraysEqual(prev, safePlatforms) ? prev : safePlatforms
     );
@@ -661,7 +621,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
       .map((p) => (p || "").trim().toLowerCase())
       .filter(Boolean);
     return (nFirms ?? []).filter((f) => {
-      const { trueCost } = getCosts(f as any);
+      const { trueCost } = getCosts(f);
       const nameOk = !q || (f.name || "").toLowerCase().includes(ql);
       const modelOk = !model || (f.model || []).includes(model);
       const platformsOk =
@@ -696,7 +656,12 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
           ? f.newsTrading
           : true);
       const discountValue =
-        f.discount?.percent ?? (f.discount as { amount?: number } | undefined)?.amount ?? f.pricing?.discountPct ?? 0;
+        f.discount?.percent ??
+        ("amount" in (f.discount ?? {}) ? (f.discount as { amount?: number }).amount : undefined) ??
+        f.pricing?.discount?.percent ??
+        f.pricing?.discount?.amount ??
+        f.pricing?.discountPct ??
+        0;
       const discountRequired = discountOnly || fireDealsMode;
       const discountOk = !discountRequired || Number(discountValue) > 0;
       const trustRequirement = Math.max(minTrust ?? 0, fireDealsMode ? FIRE_DEAL_TRUST_MIN : 0);
@@ -750,7 +715,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     const costCache = new Map<string, number>();
     const getTrueCost = (firm: UIFirm) => {
       if (costCache.has(firm.key)) return costCache.get(firm.key)!;
-      const value = getCosts(firm as any).trueCost;
+      const value = getCosts(firm).trueCost;
       costCache.set(firm.key, value);
       return value;
     };
@@ -777,6 +742,8 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
           const discountValue =
             f.discount?.percent ??
             ("amount" in (f.discount ?? {}) ? (f.discount as { amount?: number }).amount : undefined) ??
+            f.pricing?.discount?.percent ??
+            f.pricing?.discount?.amount ??
             f.pricing?.discountPct ??
             0;
           return Number(discountValue) > 0 ? 100 : 40;
@@ -861,41 +828,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         favoritesOnly ||
         !usingDefaultScoreFocus
     ) || compare.length > 0;
-type UIFirmWithConn = UIFirm & {
-  platformFeeds?: Record<string, string[]>;
-  dataFeeds?: string[];
-};
-
-// Build a single, human string for “Trading platform / connection”
-function platformConnectionsText(f: UIFirmWithConn): string {
-  const items: string[] = [];
-
-  const platforms = Array.isArray(f.platforms) ? f.platforms : [];
-  const feeds = Array.isArray(f.dataFeeds) ? f.dataFeeds : [];
-
-  // Platforms with “via …”
-  platforms.forEach((p) => {
-    const via = f.platformFeeds?.[p];
-    if (Array.isArray(via) && via.length > 0) {
-      items.push(`${p} (via ${via.join("/")})`);
-    } else {
-      items.push(p);
-    }
-  });
-
-  // Any feeds that weren’t already mentioned via a platform
-  const coveredFeeds = new Set(
-    Object.values(f.platformFeeds ?? {}).flatMap((arr) => arr ?? [])
-  );
-  feeds.forEach((df) => {
-    if (!coveredFeeds.has(df)) items.push(df);
-  });
-
-  // De-dupe while preserving order
-  return Array.from(new Set(items)).join(", ");
-}
-
-  // ===== JSON-LD =====
+// ===== JSON-LD =====
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -1150,7 +1083,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60">Score focus</p>
             <span className="text-xs text-white/50">
-              Used when sorting by score. "Trusted" treats 3+ Trustpilot ratings as favorable.
+              Used when sorting by score. &quot;Trusted&quot; treats 3+ Trustpilot ratings as favorable.
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -1210,7 +1143,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
             <FilterChips
               options={["score", "payout", "cap", "name", "truecost"]}
               value={sort}
-              onChange={(v) => setSort(v as any)}
+              onChange={(v) => setSort(v as SortKey)}
             />
           </div>
 
@@ -1273,28 +1206,24 @@ function platformConnectionsText(f: UIFirmWithConn): string {
       {/* Cards */}
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {paginatedScored.map((f, idx) => {
-          const cost = getCosts(f as any);
+          const cost = getCosts(f);
           const isFavoriteCard = isFavorite(f.key);
           const fallbackLogo = `/logos/${f.key}.png`;
           const resolvedLogo = f.logo?.trim().length ? f.logo.trim() : fallbackLogo;
-          const discountSource =
-            (f.pricing as any)?.discount ??
+          type DiscountSource = { percent?: number | null; amount?: number | null; label?: string | null };
+          const discountSource: DiscountSource | null =
+            f.pricing?.discount ??
             f.discount ??
-            (f.pricing?.discountPct
-              ? { percent: f.pricing.discountPct, label: f.pricing.discountLabel ?? null }
-              : null);
+            (typeof f.pricing?.discountPct === "number" ? { percent: f.pricing.discountPct } : null);
           const rawPercent =
-            typeof (discountSource as { percent?: number })?.percent === "number"
-              ? (discountSource as { percent?: number }).percent
+            typeof discountSource?.percent === "number"
+              ? discountSource.percent
               : typeof f.pricing?.discountPct === "number"
               ? f.pricing.discountPct
               : null;
-          const rawAmount =
-            typeof (discountSource as { amount?: number })?.amount === "number"
-              ? (discountSource as { amount?: number }).amount
-              : null;
+          const rawAmount = typeof discountSource?.amount === "number" ? discountSource.amount : null;
           const discountLabel =
-            (discountSource as { label?: string })?.label ??
+            discountSource?.label ??
             (rawAmount && rawAmount > 0
               ? `$${rawAmount.toLocaleString()} off`
               : rawPercent && rawPercent > 0
@@ -1733,7 +1662,7 @@ function platformConnectionsText(f: UIFirmWithConn): string {
               Compare prop firm deals, instant funding programs, payouts, discount codes, and rules - all in one place.
             </p>
             <p className="text-sm text-white/70">
-              Want a quick summary? See today's{" "}
+              Want a quick summary? See today&apos;s{" "}
               <Link href="/prop-firm-deals" className="text-[#f6c850] underline-offset-4 hover:text-white hover:underline">
                 prop firm deals
               </Link>{" "}
@@ -1885,19 +1814,6 @@ function ScoreCardLogo({ name, src }: { name?: string | null; src: string }) {
           <span className="text-xs font-semibold tracking-[0.2em] text-white/80">{initials}</span>
         )}
       </div>
-    </div>
-  );
-}
-
-function AffiliateNotice() {
-  return (
-    <div className="notice-fade w-full text-[11px] md:text-xs text-white/50 mt-[4px] mb-2 flex items-start gap-1.5 leading-snug px-4 whitespace-nowrap overflow-hidden text-ellipsis">
-      <Info size={12} className="mt-0.5 shrink-0 text-white/40" />
-      <p className="truncate">
-        <span className="font-medium text-white/60">Disclosure:</span>{" "}
-        Some links on this page are affiliate links. Signing up through them may earn us a small commission at no extra
-        cost to you.
-      </p>
     </div>
   );
 }

@@ -6,9 +6,10 @@ import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { buildAffiliateUrl } from "@/lib/affiliates";
-import { getCosts } from "@/lib/pricing";
-import { FIRMS } from "@/lib/firms";
-import { useFirms } from "@/lib/useFirms";
+import { getCosts, type Pricing } from "@/lib/pricing";
+import { FIRMS, type Firm as StaticFirm } from "@/lib/firms";
+import { useFirms, type FirmRow } from "@/lib/useFirms";
+import type { Discount } from "@/lib/types";
 import { useMemo } from "react";
 import { formatFundingOrAccounts } from "@/lib/funding";
 
@@ -40,8 +41,8 @@ type FirmProfile = {
   newsTradingEval?: boolean | null;
   newsTradingFunded?: boolean | null;
   weekendHolding?: boolean;
-  pricing?: any;
-  discount?: any;
+  pricing?: Pricing | null;
+  discount?: Discount | null;
 };
 
 function normalizeArray(input: unknown): string[] {
@@ -50,101 +51,116 @@ function normalizeArray(input: unknown): string[] {
   return [];
 }
 
-function normalizePricing(pricing: any | null | undefined) {
+type RawFirm = FirmRow | StaticFirm;
+
+function normalizePricing(pricing: Pricing | Record<string, unknown> | null | undefined) {
   if (!pricing) return null;
+  const record = pricing as Record<string, unknown>;
   const evalCost =
-    pricing.evalCost ??
-    pricing.evalFee ??
-    pricing.eval_fee ??
-    pricing.eval ??
-    pricing.cost ??
+    (pricing as Pricing).evalCost ??
+    (record.evalFee as number | undefined) ??
+    (record.eval_fee as number | undefined) ??
+    (record.eval as number | undefined) ??
+    (record.cost as number | undefined) ??
     null;
   const activationFee =
-    pricing.activationFee ?? pricing.activation_fee ?? pricing.activation ?? null;
+    (pricing as Pricing).activationFee ??
+    (record.activation_fee as number | undefined) ??
+    (record.activation as number | undefined) ??
+    null;
   return {
     evalCost: typeof evalCost === "number" ? evalCost : undefined,
     activationFee: typeof activationFee === "number" ? activationFee : undefined,
-    discount: pricing.discount ?? null,
-    discountPct: pricing.discountPct ?? pricing.discount_pct ?? undefined,
+    discount: ((pricing as Pricing).discount ?? (record.discount as Discount | null)) ?? null,
+    discountPct: (pricing as Pricing).discountPct ?? (record.discount_pct as number | undefined) ?? undefined,
   };
 }
 
-function normalizeFirmRow(row: any | null | undefined): FirmProfile | null {
+function normalizeFirmRow(row: RawFirm | null | undefined): FirmProfile | null {
   if (!row) return null;
-  const payoutSplit = typeof row.payoutSplit === "number" ? row.payoutSplit : null;
+  const rowAlt = row as FirmRow & {
+    url?: string | null;
+    days_to_payout?: number | string | null;
+    drawdown_type?: string | null;
+  };
+  const payoutSplit = typeof rowAlt.payoutSplit === "number" ? rowAlt.payoutSplit : null;
+  const payoutValue = (row as StaticFirm).payout;
   const payout =
-    typeof row.payout === "number"
-      ? row.payout * (row.payout <= 1 ? 100 : 1)
+    typeof payoutValue === "number"
+      ? payoutValue * (payoutValue <= 1 ? 100 : 1)
       : payoutSplit != null
       ? payoutSplit
       : null;
-  const normalizedPricing = normalizePricing(row.pricing);
+  const normalizedPricing = normalizePricing(rowAlt.pricing);
 
   return {
-    key: row.key,
-    name: row.name,
-    logo: row.logo ?? (row.key ? `/logos/${row.key}.png` : null),
-    homepage: row.homepage ?? row.url ?? null,
-    signup: row.signup ?? row.url ?? null,
-    notes: row.notes ?? null,
-    model: normalizeArray(row.model),
-    platforms: normalizeArray(row.platforms),
+    key: rowAlt.key,
+    name: rowAlt.name,
+    logo: rowAlt.logo ?? (rowAlt.key ? `/logos/${rowAlt.key}.png` : null),
+    homepage: rowAlt.homepage ?? rowAlt.url ?? null,
+    signup: rowAlt.signup ?? rowAlt.url ?? null,
+    notes: rowAlt.notes ?? null,
+    model: normalizeArray(rowAlt.model),
+    platforms: normalizeArray(rowAlt.platforms),
     payoutPct: typeof payout === "number" ? Math.round(payout) : null,
-    maxFunding: typeof row.maxFunding === "number" ? row.maxFunding : null,
-    maxAccounts: typeof row.maxAccounts === "number" && row.maxAccounts > 0 ? row.maxAccounts : null,
-    accountSize: typeof row.accountSize === "number" ? row.accountSize : row.maxFunding ?? null,
-    minDays: typeof row.minDays === "number" ? row.minDays : null,
-    daysToPayout: row.daysToPayout ?? row.days_to_payout ?? null,
-    drawdownType: row.drawdownType ?? row.drawdown_type ?? null,
-    spreads: row.spreads ?? null,
-    trustpilot: typeof row.trustpilot === "number" ? row.trustpilot : null,
-    feeRefund: Boolean(row.feeRefund),
+    maxFunding: typeof rowAlt.maxFunding === "number" ? rowAlt.maxFunding : null,
+    maxAccounts: typeof rowAlt.maxAccounts === "number" && rowAlt.maxAccounts > 0 ? rowAlt.maxAccounts : null,
+    accountSize: typeof rowAlt.accountSize === "number" ? rowAlt.accountSize : rowAlt.maxFunding ?? null,
+    minDays: typeof rowAlt.minDays === "number" ? rowAlt.minDays : null,
+    daysToPayout: rowAlt.daysToPayout ?? rowAlt.days_to_payout ?? null,
+    drawdownType: rowAlt.drawdownType ?? rowAlt.drawdown_type ?? null,
+    spreads: rowAlt.spreads ?? null,
+    trustpilot: typeof rowAlt.trustpilot === "number" ? rowAlt.trustpilot : null,
+    feeRefund: Boolean(rowAlt.feeRefund),
     newsTrading:
-      typeof row.newsTrading === "boolean"
-        ? row.newsTrading
-        : [row.newsTradingEval, row.newsTradingFunded].some((v) => v === true),
-    newsTradingEval: typeof row.newsTradingEval === "boolean" ? row.newsTradingEval : null,
-    newsTradingFunded: typeof row.newsTradingFunded === "boolean" ? row.newsTradingFunded : null,
-    weekendHolding: Boolean(row.weekendHolding),
+      typeof rowAlt.newsTrading === "boolean"
+        ? rowAlt.newsTrading
+        : [rowAlt.newsTradingEval, rowAlt.newsTradingFunded].some((v) => v === true),
+    newsTradingEval: typeof rowAlt.newsTradingEval === "boolean" ? rowAlt.newsTradingEval : null,
+    newsTradingFunded: typeof rowAlt.newsTradingFunded === "boolean" ? rowAlt.newsTradingFunded : null,
+    weekendHolding: Boolean(rowAlt.weekendHolding),
     pricing: normalizedPricing,
-    discount: normalizedPricing?.discount ?? row.discount ?? null,
+    discount: normalizedPricing?.discount ?? rowAlt.discount ?? null,
   };
 }
 
-function normalizeStaticFirm(row: any | null | undefined): FirmProfile | null {
+function normalizeStaticFirm(row: RawFirm | null | undefined): FirmProfile | null {
   if (!row) return null;
-  const normalizedPricing = normalizePricing(row.pricing);
+  const rowAlt = row as FirmRow & {
+    url?: string | null;
+  };
+  const normalizedPricing = normalizePricing(rowAlt.pricing);
   return {
-    key: row.key,
-    name: row.name,
-    logo: row.logo ?? (row.key ? `/logos/${row.key}.png` : null),
-    homepage: row.homepage ?? null,
-    signup: row.signup ?? null,
-    notes: row.notes ?? null,
-    model: normalizeArray(row.model),
-    platforms: normalizeArray(row.platforms),
+    key: rowAlt.key,
+    name: rowAlt.name,
+    logo: rowAlt.logo ?? (rowAlt.key ? `/logos/${rowAlt.key}.png` : null),
+    homepage: rowAlt.homepage ?? null,
+    signup: rowAlt.signup ?? null,
+    notes: rowAlt.notes ?? null,
+    model: normalizeArray(rowAlt.model),
+    platforms: normalizeArray(rowAlt.platforms),
     payoutPct:
-      typeof row.payout === "number"
-        ? Math.round(row.payout * (row.payout <= 1 ? 100 : 1))
+      typeof (row as StaticFirm).payout === "number"
+        ? Math.round((row as StaticFirm).payout * ((row as StaticFirm).payout <= 1 ? 100 : 1))
         : null,
-    maxFunding: typeof row.maxFunding === "number" ? row.maxFunding : null,
-    maxAccounts: typeof row.maxAccounts === "number" && row.maxAccounts > 0 ? row.maxAccounts : null,
-    accountSize: typeof row.accountSize === "number" ? row.accountSize : row.maxFunding ?? null,
-    minDays: typeof row.minDays === "number" ? row.minDays : null,
-    daysToPayout: row.daysToPayout ?? null,
-    drawdownType: row.drawdownType ?? null,
-    spreads: row.spreads ?? null,
-    trustpilot: typeof row.trustpilot === "number" ? row.trustpilot : null,
-    feeRefund: Boolean(row.feeRefund),
+    maxFunding: typeof rowAlt.maxFunding === "number" ? rowAlt.maxFunding : null,
+    maxAccounts: typeof rowAlt.maxAccounts === "number" && rowAlt.maxAccounts > 0 ? rowAlt.maxAccounts : null,
+    accountSize: typeof rowAlt.accountSize === "number" ? rowAlt.accountSize : rowAlt.maxFunding ?? null,
+    minDays: typeof rowAlt.minDays === "number" ? rowAlt.minDays : null,
+    daysToPayout: rowAlt.daysToPayout ?? null,
+    drawdownType: rowAlt.drawdownType ?? null,
+    spreads: rowAlt.spreads ?? null,
+    trustpilot: typeof rowAlt.trustpilot === "number" ? rowAlt.trustpilot : null,
+    feeRefund: Boolean(rowAlt.feeRefund),
     newsTrading:
-      typeof row.newsTrading === "boolean"
-        ? row.newsTrading
-        : [row.newsTradingEval, row.newsTradingFunded].some((v) => v === true),
-    newsTradingEval: typeof row.newsTradingEval === "boolean" ? row.newsTradingEval : null,
-    newsTradingFunded: typeof row.newsTradingFunded === "boolean" ? row.newsTradingFunded : null,
-    weekendHolding: Boolean(row.weekendHolding),
+      typeof rowAlt.newsTrading === "boolean"
+        ? rowAlt.newsTrading
+        : [rowAlt.newsTradingEval, rowAlt.newsTradingFunded].some((v) => v === true),
+    newsTradingEval: typeof rowAlt.newsTradingEval === "boolean" ? rowAlt.newsTradingEval : null,
+    newsTradingFunded: typeof rowAlt.newsTradingFunded === "boolean" ? rowAlt.newsTradingFunded : null,
+    weekendHolding: Boolean(rowAlt.weekendHolding),
     pricing: normalizedPricing,
-    discount: normalizedPricing?.discount ?? row.discount ?? null,
+    discount: normalizedPricing?.discount ?? rowAlt.discount ?? null,
   };
 }
 
@@ -165,7 +181,7 @@ export default function FirmDetailPage() {
 
   const matchingRows = useMemo(() => {
     if (!Array.isArray(firms)) return null;
-    const matches = firms.filter((row: any) => {
+    const matches = firms.filter((row) => {
       const rowKey = typeof row.key === "string" ? row.key : "";
       const rowSlug = slugify(rowKey);
       const nameSlug = slugify(row.name);

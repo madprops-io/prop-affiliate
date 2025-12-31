@@ -30,28 +30,26 @@ type Props = {
   containerClassName?: string;
 };
 
-export default function HomeViewToggle({
-  cards,
-  firms,
-  fireDealsMode,
-  tableFireDealsMode,
-  onToggleTableFireDeals,
-  onToggleFireDeals,
-  fastPassActive,
-  instantFundedActive,
-  onToggleFastPass,
-  onToggleInstantFunded,
-  searchQuery,
-  tableAccountSize,
-  tableAccountSizeOptions,
-  onTableAccountSizeChange,
-  tableFirmName,
-  tableFirmOptions,
-  onTableFirmChange,
-  leadText,
-  disclosureText,
-  containerClassName,
-}: Props) {
+export default function HomeViewToggle(props: Props) {
+  const {
+    cards,
+    firms,
+    tableFireDealsMode,
+    fastPassActive,
+    instantFundedActive,
+    onToggleFastPass,
+    onToggleInstantFunded,
+    searchQuery,
+    tableAccountSize,
+    tableAccountSizeOptions,
+    onTableAccountSizeChange,
+    tableFirmName,
+    tableFirmOptions,
+    onTableFirmChange,
+    leadText,
+    disclosureText,
+    containerClassName,
+  } = props;
   const sp = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();

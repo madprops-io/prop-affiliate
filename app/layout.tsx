@@ -2,6 +2,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import Script from "next/script";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import LayoutClient from "../components/LayoutClient";
 import { Analytics } from "@vercel/analytics/react";
@@ -75,6 +76,20 @@ const orgJsonLd = {
 
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-13KXWB6JX2"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-13KXWB6JX2');
+          `}
+        </Script>
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${outfit.className}`}>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
         {/* Suspense boundary required for pages that use useSearchParams/usePathname/etc */}

@@ -16,7 +16,21 @@ type FirmLink = {
   href: string;
 };
 
-const buildLinks = (firms: Array<Record<string, any>>): FirmLink[] => {
+type FirmLinkSource = {
+  key?: string | null;
+  name?: string | null;
+  logo?: string | null;
+  signup_link?: string | null;
+  signupLink?: string | null;
+  signup?: string | null;
+  signup_url?: string | null;
+  homepage?: string | null;
+  affiliateUrl?: string | null;
+  url?: string | null;
+  home_page?: string | null;
+};
+
+const buildLinks = (firms: FirmLinkSource[]): FirmLink[] => {
   const seen = new Set<string>();
   const links: FirmLink[] = [];
   firms.forEach((firm) => {
@@ -83,11 +97,8 @@ function FirmLogo({ name, src }: { name: string; src?: string | null }) {
 
 export default function LinksPage() {
   const { firms, loading } = useFirms();
-  const fallbackList = useMemo(() => buildLinks(FIRMS as any), []);
-  const liveList = useMemo(
-    () => (Array.isArray(firms) && firms.length > 0 ? buildLinks(firms as any) : []),
-    [firms]
-  );
+  const fallbackList = useMemo(() => buildLinks(FIRMS), []);
+  const liveList = useMemo(() => (Array.isArray(firms) && firms.length > 0 ? buildLinks(firms) : []), [firms]);
   const list = loading ? fallbackList : liveList.length ? liveList : fallbackList;
 
   return (
