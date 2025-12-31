@@ -223,7 +223,7 @@ export default function ScoreCardsClient() {
         ? [String(f.model)]
         : [];
 
-      const daysToPayoutRaw = f.daysToPayout ?? f.days_to_payout ?? null;
+      const daysToPayoutRaw = f.daysToPayout ?? null;
       return {
         key: f.key,
         name: f.name,
