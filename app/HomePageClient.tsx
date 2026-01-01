@@ -250,7 +250,7 @@ export default function Page({ showIntro = true }: HomePageClientProps = {}) {
 
         trustpilot: typeof f.trustpilot === "number" ? f.trustpilot : 0,
         pricing: f.pricing ?? null,
-        discount: f.discount ?? null,
+        discount: f.pricing?.discount ?? null,
         minDays: f.minDays ?? null,
         spreads: f.spreads ?? null,
         feeRefund: typeof f.feeRefund === "boolean" ? f.feeRefund : null,
