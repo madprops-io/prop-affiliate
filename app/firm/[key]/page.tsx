@@ -216,9 +216,7 @@ export default function FirmDetailPage() {
   }, [normalizedMatches]);
   const selected =
     normalizeFirmRow(csvFirm) ||
-    normalizeStaticFirm(
-      (FIRMS as FirmProfile[]).find((row) => row.key === firmKey || row.key === firmKey.replace(/-/g, ""))
-    );
+    normalizeStaticFirm(FIRMS.find((row) => row.key === firmKey || row.key === firmKey.replace(/-/g, "")));
 
   if (!firmKey || (!selected && !loading)) {
     return (
