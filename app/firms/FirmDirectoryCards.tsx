@@ -99,7 +99,7 @@ function groupFirmRows(rows: (FirmRow | Firm)[], directoryMap?: Map<string, stri
       trustpilot: typeof row.trustpilot === "number" ? row.trustpilot : null,
       pricing: row.pricing ?? null,
       discount: row.pricing?.discount ?? row.discount ?? null,
-      notes: rowAlt.notes ?? null,
+      notes: rowAlt.notes ?? undefined,
       accounts: [],
     };
 
