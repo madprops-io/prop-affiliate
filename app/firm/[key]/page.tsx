@@ -80,6 +80,7 @@ function normalizeFirmRow(row: RawFirm | null | undefined): FirmProfile | null {
   if (!row) return null;
   const rowAlt = row as FirmRow & {
     url?: string | null;
+    notes?: string | null;
     days_to_payout?: number | string | null;
     drawdown_type?: string | null;
   };
@@ -99,7 +100,7 @@ function normalizeFirmRow(row: RawFirm | null | undefined): FirmProfile | null {
     logo: rowAlt.logo ?? (rowAlt.key ? `/logos/${rowAlt.key}.png` : null),
     homepage: rowAlt.homepage ?? rowAlt.url ?? null,
     signup: rowAlt.signup ?? rowAlt.url ?? null,
-    notes: rowAlt.notes ?? null,
+    notes: rowAlt.notes ?? rowAlt.accountLabel ?? null,
     model: normalizeArray(rowAlt.model),
     platforms: normalizeArray(rowAlt.platforms),
     payoutPct: typeof payout === "number" ? Math.round(payout) : null,
