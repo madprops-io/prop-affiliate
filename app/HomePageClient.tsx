@@ -438,7 +438,7 @@ const [sort, setSort] = useState<SortKey>("score");
       "Website",
     ];
     const rows = favoriteFirms.map((firm) => {
-      const cost = getCosts(firm);
+      const cost = getCosts({ pricing: firm.pricing ?? undefined, feeRefund: firm.feeRefund });
       const fundingValue = formatFundingOrAccounts(firm.maxFunding, firm.maxAccounts)?.value ?? "";
       const values = [
         firm.name ?? "",
@@ -720,7 +720,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     const costCache = new Map<string, number>();
     const getTrueCost = (firm: UIFirm) => {
       if (costCache.has(firm.key)) return costCache.get(firm.key)!;
-      const value = getCosts(firm).trueCost;
+      const value = getCosts({ pricing: firm.pricing ?? undefined, feeRefund: firm.feeRefund }).trueCost;
       costCache.set(firm.key, value);
       return value;
     };
