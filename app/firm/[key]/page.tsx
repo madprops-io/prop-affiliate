@@ -129,6 +129,7 @@ function normalizeStaticFirm(row: RawFirm | null | undefined): FirmProfile | nul
   if (!row) return null;
   const rowAlt = row as FirmRow & {
     url?: string | null;
+    notes?: string | null;
   };
   const normalizedPricing = normalizePricing(rowAlt.pricing);
   return {
@@ -137,7 +138,7 @@ function normalizeStaticFirm(row: RawFirm | null | undefined): FirmProfile | nul
     logo: rowAlt.logo ?? (rowAlt.key ? `/logos/${rowAlt.key}.png` : null),
     homepage: rowAlt.homepage ?? null,
     signup: rowAlt.signup ?? null,
-    notes: rowAlt.notes ?? null,
+    notes: rowAlt.notes ?? rowAlt.accountLabel ?? null,
     model: normalizeArray(rowAlt.model),
     platforms: normalizeArray(rowAlt.platforms),
     payoutPct:
