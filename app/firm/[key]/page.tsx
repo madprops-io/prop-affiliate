@@ -388,7 +388,7 @@ export default function FirmDetailPage() {
             ) : null}
           </div>
           <div className="grid gap-4 md:grid-cols-2">
-            <Stat label="Evaluation fee" value={formatCurrency(selected.pricing?.evalCost ?? selected.pricing?.evalFee)} />
+            <Stat label="Evaluation fee" value={formatCurrency(selected.pricing?.evalCost)} />
             <Stat label="Activation fee" value={formatCurrency(selected.pricing?.activationFee)} />
             <Stat label="True cost" value={formatCurrency(costs.trueCost)} />
             <Stat label="After discount" value={formatCurrency(costs.evalAfterDiscount)} />
