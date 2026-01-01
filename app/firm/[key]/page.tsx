@@ -207,7 +207,7 @@ export default function FirmDetailPage() {
     const candidates = target50k.length > 0 ? target50k : pool;
     return candidates.reduce<{ size: number; cost: number } | null>((best, row) => {
       const size = row.accountSize ?? 0;
-      const cost = getCosts({ pricing: row.pricing, feeRefund: row.feeRefund }).trueCost;
+      const cost = getCosts({ pricing: row.pricing ?? undefined, feeRefund: row.feeRefund }).trueCost;
       if (!best) return { size, cost };
       if (cost < best.cost) return { size, cost };
       if (cost === best.cost && size < best.size) return { size, cost };
