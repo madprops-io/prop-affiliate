@@ -1211,7 +1211,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
       {/* Cards */}
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {paginatedScored.map((f, idx) => {
-          const cost = getCosts(f);
+          const cost = getCosts({ pricing: f.pricing ?? undefined, feeRefund: f.feeRefund });
           const isFavoriteCard = isFavorite(f.key);
           const fallbackLogo = `/logos/${f.key}.png`;
           const resolvedLogo = f.logo?.trim().length ? f.logo.trim() : fallbackLogo;
