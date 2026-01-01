@@ -626,7 +626,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
       .map((p) => (p || "").trim().toLowerCase())
       .filter(Boolean);
     return (nFirms ?? []).filter((f) => {
-      const { trueCost } = getCosts(f);
+      const { trueCost } = getCosts({ pricing: f.pricing ?? undefined, feeRefund: f.feeRefund });
       const nameOk = !q || (f.name || "").toLowerCase().includes(ql);
       const modelOk = !model || (f.model || []).includes(model);
       const platformsOk =
