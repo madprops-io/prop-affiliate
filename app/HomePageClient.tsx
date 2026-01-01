@@ -245,8 +245,8 @@ export default function Page({ showIntro = true }: HomePageClientProps = {}) {
 
         logo: f.logo ?? (f.key ? `/logos/${f.key}.png` : null),
 
-        homepage: f.homepage ?? f.url ?? null,
-        signup: f.signup ?? f.url ?? null,
+        homepage: f.homepage ?? null,
+        signup: f.signup ?? null,
 
         trustpilot: typeof f.trustpilot === "number" ? f.trustpilot : 0,
         pricing: f.pricing ?? null,
