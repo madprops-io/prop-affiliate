@@ -121,7 +121,7 @@ function normalizeFirmRow(row: RawFirm | null | undefined): FirmProfile | null {
     newsTradingFunded: typeof rowAlt.newsTradingFunded === "boolean" ? rowAlt.newsTradingFunded : null,
     weekendHolding: Boolean(rowAlt.weekendHolding),
     pricing: normalizedPricing,
-    discount: normalizedPricing?.discount ?? rowAlt.discount ?? null,
+    discount: normalizedPricing?.discount ?? null,
   };
 }
 
