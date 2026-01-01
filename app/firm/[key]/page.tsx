@@ -162,7 +162,7 @@ function normalizeStaticFirm(row: RawFirm | null | undefined): FirmProfile | nul
     newsTradingFunded: typeof rowAlt.newsTradingFunded === "boolean" ? rowAlt.newsTradingFunded : null,
     weekendHolding: Boolean(rowAlt.weekendHolding),
     pricing: normalizedPricing,
-    discount: normalizedPricing?.discount ?? rowAlt.discount ?? null,
+    discount: normalizedPricing?.discount ?? null,
   };
 }
 
