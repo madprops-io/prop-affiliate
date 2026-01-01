@@ -184,7 +184,12 @@ export default function Page({ showIntro = true }: HomePageClientProps = {}) {
     signup?: string | null;
     trustpilot?: number | null;
     pricing?: Pricing | null;
-    discount?: { label?: string; percent?: number; code?: string } | null;
+    discount?: {
+      label?: string | null;
+      percent?: number | null;
+      amount?: number | null;
+      code?: string | null;
+    } | null;
     minDays?: number | null;
     spreads?: string | null;
     feeRefund?: boolean | null;
