@@ -48,14 +48,14 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 icons: {
   icon: [
-    { url: "/favicon-16.png?v=2", sizes: "16x16", type: "image/png" },
-    { url: "/favicon-32.png?v=2", sizes: "32x32", type: "image/png" },
-    { url: "/favicon-48.png?v=2", sizes: "48x48", type: "image/png" },
-    { url: "/icon-192.png?v=2", sizes: "192x192", type: "image/png" },
-    { url: "/icon-256.png?v=2", sizes: "256x256", type: "image/png" },
-    { url: "/icon-384.png?v=2", sizes: "384x384", type: "image/png" },
-    { url: "/icon-512.png?v=2", sizes: "512x512", type: "image/png" },
-    { url: "/favicon.ico?v=2" }
+    { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+    { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    { url: "/icon-256.png", sizes: "256x256", type: "image/png" },
+    { url: "/icon-384.png", sizes: "384x384", type: "image/png" },
+    { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    { url: "/favicon.ico" }
   ],
       apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
