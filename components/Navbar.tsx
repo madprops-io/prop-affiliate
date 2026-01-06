@@ -40,13 +40,10 @@ export default function Navbar() {
     <>
       <div className="w-full bg-gradient-to-r from-[#2d1b00] via-[#3b2400] to-[#2d1b00] border-b border-amber-300/40 shadow-[0_8px_22px_-14px_rgba(255,196,86,0.7)]">
         <div className="container mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">
-          <div className="flex items-center gap-2 text-amber-100">
-            <span className="text-amber-300">Fire deal:</span>
-            <span className="text-white">Lucid Flex</span>
-            <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-bold text-amber-200">
-              40% off • Code MAD
-            </span>
-          </div>
+                                        <div className="flex flex-col items-start gap-1 text-amber-100 sm:flex-row sm:items-center sm:gap-2">
+                      <span className="text-amber-300">Fire deal:</span>
+            <span className="text-white">Lucid Flex &amp; Pro 35% off &middot; Code MAD</span>
+                    </div>
           <a
             href={lucidDealHref}
             target="_blank"
