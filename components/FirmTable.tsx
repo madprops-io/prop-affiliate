@@ -185,6 +185,10 @@ export default function FirmTable({
       const payoutDisplay: string | undefined = firm?.payoutDisplay ?? (typeof payoutPct === "number" ? `${payoutPct}%` : undefined);
 
       const trueCost = (() => {
+        const checkoutPrice = firm?.checkoutPrice;
+        if (typeof checkoutPrice === "number" && Number.isFinite(checkoutPrice) && checkoutPrice >= 0) {
+          return checkoutPrice;
+        }
         const p = firm?.pricing ?? {};
         const evalFee = Number(p?.evalCost ?? 0);
         const activation = Number(p?.activationFee ?? 0);
