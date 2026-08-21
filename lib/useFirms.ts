@@ -35,6 +35,7 @@ export type FirmRow = {
   homepage?: string | null;
   signup?: string | null;
   trustpilot?: number | null;
+  checkoutPrice?: number | null;
   pricing?: {
     evalCost?: number;
     activationFee?: number;
@@ -144,6 +145,7 @@ function mapRow(r: RawRow): FirmRow {
     "eval_cost"
   );
   const activationFee = pickNum("activation_fee_usd", "activation_fee", "activationfee", "activation");
+  const checkoutPrice = pickNum("checkout_price_usd", "checkout_price", "final_price_usd", "final_price");
   const discountPctRaw = r["discount_pct"];
   const discountValue = parseNum(discountPctRaw);
   const rawPayout = r["payout_pct"] ?? r["payout"] ?? r["payout_split"];
@@ -273,6 +275,7 @@ function mapRow(r: RawRow): FirmRow {
     homepage: r["homepage_url"] || r["url"] || null,
     signup: r["signup_link"] || r["signup_url"] || r["url"] || null,
     trustpilot,
+    checkoutPrice: typeof checkoutPrice === "number" ? checkoutPrice : null,
     pricing: {
       evalCost,
       activationFee,
@@ -316,6 +319,7 @@ function firmToRow(f: Firm): FirmRow {
     homepage: f.homepage ?? null,
     signup: f.signup ?? null,
     trustpilot: f.trustpilot ?? null,
+    checkoutPrice: null,
     pricing: f.pricing ?? null,
     logo: f.logo ?? (f.key ? `/logos/${f.key}.png` : null),
   };
