@@ -16,8 +16,8 @@ export type FirmRow = {
   key: string;
   name: string;
   accountLabel?: string | null;
-  payoutSplit?: number | null; // 0-100 (single value, use max if range)
-  payoutDisplay?: string | null; // e.g., "80/90%" or "80-90%"
+  payoutSplit?: number | null;
+  payoutDisplay?: string | null;
   maxFunding?: number | null;
   accountSize?: number | null;
   maxAccounts?: number | null;
@@ -75,14 +75,13 @@ const normalizePositiveNumber = (value: number | undefined) =>
 function parsePayout(raw: string | undefined): { pct?: number; display?: string } {
   const s = (raw ?? "").trim();
   if (!s) return {};
-  // Try to detect two-part ranges like "80/90", "80-90", "80 to 90"
   const m = s.match(/(\d{1,3})\s*(?:[\/\-]|\s+to\s+)\s*(\d{1,3})/i);
   if (m) {
     const a = Number(m[1]);
     const b = Number(m[2]);
     const lo = Number.isFinite(a) ? a : undefined;
     const hi = Number.isFinite(b) ? b : undefined;
-    const pct = hi ?? lo; // choose the higher end for filtering/sorting
+    const pct = hi ?? lo;
     const display = [lo, hi].filter((x) => typeof x === "number").join("/") + "%";
     return { pct, display };
   }
@@ -120,7 +119,6 @@ function splitList(v: string | undefined) {
     .filter(Boolean);
 }
 
-/** Map one CSV row -> FirmRow */
 function mapRow(r: RawRow): FirmRow {
   const pick = (...keys: string[]) => {
     for (const k of keys) {
@@ -145,7 +143,8 @@ function mapRow(r: RawRow): FirmRow {
     "eval_cost"
   );
   const activationFee = pickNum("activation_fee_usd", "activation_fee", "activationfee", "activation");
-  const checkoutPrice = pickNum("checkout_price_usd", "checkout_price", "final_price_usd", "final_price");
+  const checkoutPriceRaw = pick("checkout_price_usd", "checkout_price", "final_price_usd", "final_price");
+  const checkoutPrice = checkoutPriceRaw === undefined ? undefined : parseNum(checkoutPriceRaw);
   const discountPctRaw = r["discount_pct"];
   const discountValue = parseNum(discountPctRaw);
   const rawPayout = r["payout_pct"] ?? r["payout"] ?? r["payout_split"];
@@ -200,27 +199,17 @@ function mapRow(r: RawRow): FirmRow {
   const firmName = r["firm_name"] ?? r["name"] ?? "";
 
   const accountLabel = pick("account_label", "Account Label", "program_name", "Program Name", "account_name", "Account Name");
-  const platformsStr =
-    pick("platforms", "platform", "Platforms", "trading_platforms", "Trading Platforms", "Platform") ||
-    r["platforms"];
+  const platformsStr = pick("platforms", "platform", "Platforms", "trading_platforms", "Trading Platforms", "Platform") || r["platforms"];
   const modelStr = pick("model", "Model", "Program", "Program Type", "program") || r["model"];
-  const daysToPayoutStr =
-    pick(
-      "days_to_payout",
-      "Days to Payout",
-      "daysToPayout",
-      "days_to_first_payout",
-      "first_payout_days",
-      "payout_days"
-    ) || r["days_to_payout"];
-  const drawdownType =
-    pick(
-      "drawdown_type",
-      "Drawdown Type",
-      "ddt",
-      "DDT",
-      "drawdown"
-    ) || r["drawdown_type"];
+  const daysToPayoutStr = pick(
+    "days_to_payout",
+    "Days to Payout",
+    "daysToPayout",
+    "days_to_first_payout",
+    "first_payout_days",
+    "payout_days"
+  ) || r["days_to_payout"];
+  const drawdownType = pick("drawdown_type", "Drawdown Type", "ddt", "DDT", "drawdown") || r["drawdown_type"];
 
   const normalizedKey =
     (typeof firmKey === "string" && firmKey.trim().length > 0 ? slugifyKey(firmKey) : slugifyKey(firmName)) || "";
@@ -294,7 +283,6 @@ function mapRow(r: RawRow): FirmRow {
   };
 }
 
-/** Convert bundled Firm -> FirmRow (used for fallback) */
 function firmToRow(f: Firm): FirmRow {
   return {
     key: f.key,
@@ -331,7 +319,6 @@ async function fetchCsvText(csvUrl: string): Promise<string> {
   return await res.text();
 }
 
-/** Safe CSV parser with guards + quoted field support */
 function parseCsv(text: string): RawRow[] {
   const trimmed = (text ?? "").trim();
   if (!trimmed) return [];
@@ -339,11 +326,10 @@ function parseCsv(text: string): RawRow[] {
   const lines = trimmed.split(/\r?\n/).filter((l) => l.trim().length > 0);
   if (lines.length === 0) return [];
 
-  // Strip BOM on the header line if present
-const headerLine = (lines[0] ?? "").replace(/^\uFEFF/, "");
-if (!headerLine) return [];
+  const headerLine = (lines[0] ?? "").replace(/^\uFEFF/, "");
+  if (!headerLine) return [];
 
-const header = headerLine.split(",").map((h) => h.trim());
+  const header = headerLine.split(",").map((h) => h.trim());
   return lines.slice(1).map((line) => {
     const cols: string[] = [];
     let current = "";
@@ -392,7 +378,6 @@ export function useFirms() {
 
     (async () => {
       try {
-        // Prefer NEXT_PUBLIC_* so it's available client-side
         const csvUrl =
           (process.env.NEXT_PUBLIC_SHEET_CSV_URL as string | undefined) ||
           (process.env.SHEET_CSV_URL as string | undefined) ||
@@ -407,7 +392,6 @@ export function useFirms() {
           setState({ firms, loading: false, isLive: true });
         }
       } catch (err: unknown) {
-        // Fallback to bundled data (Firm[]) -> convert to FirmRow[]
         let firms: FirmRow[] = [];
         try {
           firms = (FALLBACK_FIRMS as Firm[])
