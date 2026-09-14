@@ -39,19 +39,21 @@ export default function Navbar() {
   return (
     <>
       <div className="w-full bg-gradient-to-r from-[#2d1b00] via-[#3b2400] to-[#2d1b00] border-b border-amber-300/40 shadow-[0_8px_22px_-14px_rgba(255,196,86,0.7)]">
-        <div className="container mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">
-                                        <div className="flex flex-col items-start gap-1 text-amber-100 sm:flex-row sm:items-center sm:gap-2">
-                      <span className="text-amber-300">Fire deal:</span>
-            <span className="text-white">Lucid Flex &amp; Pro 35% off &middot; Code MAD</span>
-                    </div>
+        <div className="container mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-amber-200 sm:tracking-[0.18em]">
+          <div className="flex items-center gap-2 text-amber-100">
+            <span aria-hidden="true">🔥</span>
+            <span className="text-white">
+              Lucid Flex: No consistency &middot; No payout buffer &middot; 90/10 split
+            </span>
+          </div>
           <a
             href={lucidDealHref}
             target="_blank"
             rel="nofollow sponsored noopener"
             className="inline-flex items-center gap-2 rounded-full border border-amber-300/50 bg-amber-400/10 px-3 py-1 text-[11px] font-semibold text-amber-100 transition hover:-translate-y-0.5 hover:border-amber-200 hover:text-amber-50"
           >
-            <span>Tap to claim</span>
-            <span className="text-[10px]">→</span>
+            <span>Tap to view</span>
+            <span className="text-[10px]">&rarr;</span>
           </a>
         </div>
       </div>
