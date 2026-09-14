@@ -69,6 +69,8 @@ export const AFFILIATE_CODES: Record<string, string> = {
   e8futures: "TJ",
   tradeday: "TJ",
   phidias: "TJ",
+  bluskytrading: "MAD",
+  "blusky-trading": "MAD",
 };
 
 // ----------------------------------------------------------------
@@ -99,6 +101,7 @@ export const AFFILIATE_LINKS: Record<string, string> = {
   e8futures: "",
   tradeday: "",
   phidias: "",
+  bluskytrading: "https://trader.blusky.pro/sign-up?referral_id=MAD",
 };
 
 // ----------------------------------------------------------------
@@ -266,6 +269,17 @@ const RAW_FIRMS: Firm[] = [
   { key: "tradeday", name: "Trade Day", homepage: "", logo: "/logos/tradeday.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
   { key: "purdia", name: "Purdia Capital", homepage: "https://purdia.com/", logo: "/logos/purdia.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "https://purdia.com?i=MAD" },
   { key: "phidias", name: "Phidias Propfirm", homepage: "", logo: "/logos/phidias.png", model: [], platforms: [], maxFunding: 0, payout: 0.8, signup: "" },
+  {
+    key: "bluskytrading",
+    name: "BluSky Trading Company",
+    homepage: "",
+    logo: "/logos/blusky.png",
+    model: ["Eval", "Instant"],
+    platforms: [],
+    maxFunding: 900000,
+    payout: 0.9,
+    signup: "https://trader.blusky.pro/sign-up?referral_id=MAD",
+  },
 ];
 
 export const FIRMS: Firm[] = RAW_FIRMS.map((firm) => ({

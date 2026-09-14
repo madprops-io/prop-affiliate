@@ -12,6 +12,30 @@ const slugifyKey = (value: string | undefined) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "");
 
+const bundledLogoByIdentity = new Map<string, string>();
+
+FALLBACK_FIRMS.forEach((firm) => {
+  const logo = firm.logo?.trim();
+  if (!logo) return;
+
+  bundledLogoByIdentity.set(slugifyKey(firm.key), logo);
+  bundledLogoByIdentity.set(slugifyKey(firm.name), logo);
+});
+
+function resolveFirmLogo(key: string, name: string, sheetLogo: string | undefined) {
+  const bundledLogo =
+    bundledLogoByIdentity.get(slugifyKey(key)) ??
+    bundledLogoByIdentity.get(slugifyKey(name));
+
+  if (bundledLogo) return bundledLogo;
+
+  const providedLogo = sheetLogo?.trim();
+  if (providedLogo) return providedLogo;
+
+  const fallbackLogoKey = slugifyKey(key || name);
+  return fallbackLogoKey ? `/logos/${fallbackLogoKey}.png` : null;
+}
+
 export type FirmRow = {
   key: string;
   name: string;
@@ -215,7 +239,6 @@ function mapRow(r: RawRow): FirmRow {
     (typeof firmKey === "string" && firmKey.trim().length > 0 ? slugifyKey(firmKey) : slugifyKey(firmName)) || "";
   const effectiveKey =
     (typeof firmKey === "string" && firmKey.trim().length > 0 ? firmKey.trim() : normalizedKey || firmName || "").trim();
-  const fallbackLogoKey = normalizedKey;
   const newsEval = parseBoolLoose(r["news_trading_eval"]);
   const newsFunded = parseBoolLoose(r["news_trading_funded"]);
   const newsSingle = parseBoolLoose(r["news_trading"]);
@@ -279,7 +302,7 @@ function mapRow(r: RawRow): FirmRow {
           : null,
       discountPct: typeof discountPercent === "number" ? discountPercent : undefined,
     },
-    logo: r["logo_url"] || (fallbackLogoKey ? `/logos/${fallbackLogoKey}.png` : null),
+    logo: resolveFirmLogo(effectiveKey, firmName, r["logo_url"]),
   };
 }
 
