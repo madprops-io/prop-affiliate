@@ -71,6 +71,7 @@ export const AFFILIATE_CODES: Record<string, string> = {
   phidias: "TJ",
   bluskytrading: "MAD",
   "blusky-trading": "MAD",
+  traderslaunch: "",
 };
 
 // ----------------------------------------------------------------
@@ -102,6 +103,7 @@ export const AFFILIATE_LINKS: Record<string, string> = {
   tradeday: "",
   phidias: "",
   bluskytrading: "https://trader.blusky.pro/sign-up?referral_id=MAD",
+  traderslaunch: "https://traderslaunch.com/",
 };
 
 // ----------------------------------------------------------------
@@ -279,6 +281,17 @@ const RAW_FIRMS: Firm[] = [
     maxFunding: 900000,
     payout: 0.9,
     signup: "https://trader.blusky.pro/sign-up?referral_id=MAD",
+  },
+  {
+    key: "traderslaunch",
+    name: "Traders Launch",
+    homepage: "https://traderslaunch.com/",
+    logo: "/logos/traderslaunch.png",
+    model: [],
+    platforms: [],
+    maxFunding: 0,
+    payout: 0,
+    signup: "https://traderslaunch.com/",
   },
 ];
 
