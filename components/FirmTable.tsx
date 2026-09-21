@@ -12,8 +12,6 @@ import { FIRMS } from "@/lib/firms";
 import { getCosts } from "@/lib/pricing";
 
 type TableFirm = FirmRow & {
-  true_cost?: number;
-  trueCost?: number;
   payout?: number | null;
   model?: FirmRow["model"] | string;
 };
@@ -145,11 +143,7 @@ export default function FirmTable({
 
   const filteredList = list.filter(shouldIncludeByMinDays);
 
-  const rowsBase = [...filteredList].sort(
-    (a, b) =>
-      (a.true_cost ?? a.trueCost ?? Number.POSITIVE_INFINITY) -
-      (b.true_cost ?? b.trueCost ?? Number.POSITIVE_INFINITY)
-  );
+  const rowsBase = [...filteredList];
 
   const seen = new Set<string>();
   const deduped = rowsBase.filter((firm) => {

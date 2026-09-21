@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { FIRMS as FALLBACK_FIRMS, type Firm } from "./firms";
 import { normalizeModelList } from "./modelTags";
 import type { Pricing } from "./pricing";
+import { parseOptionalNumber } from "./csvNumbers";
 
 type RawRow = Record<string, string>;
 
@@ -75,12 +76,10 @@ function parseBoolLoose(v: string | undefined) {
   return undefined;
 }
 function parseNum(v: string | undefined) {
-  const n = Number((v ?? "").replace(/[^0-9.\-]/g, ""));
-  return Number.isFinite(n) ? n : undefined;
+  return parseOptionalNumber(v);
 }
 function parseMoney(v: string | undefined) {
-  const n = Number((v ?? "").replace(/[^0-9.\-]/g, ""));
-  return Number.isFinite(n) ? n : undefined;
+  return parseOptionalNumber(v);
 }
 const normalizePositiveNumber = (value: number | undefined) =>
   typeof value === "number" && Number.isFinite(value) && value > 0 ? value : undefined;

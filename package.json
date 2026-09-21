@@ -10,10 +10,11 @@
     "build": "next build",
     "start": "next start",
     "preview": "npm run build && npm run start",
+    "test": "node --experimental-strip-types --test tests/pricing.test.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "ci": "npm run typecheck && npm run lint && npm run build"
+    "ci": "npm test && npm run typecheck && npm run lint && npm run build"
   },
   "dependencies": {
     "@radix-ui/react-slider": "^1.3.6",

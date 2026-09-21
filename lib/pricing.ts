@@ -17,8 +17,8 @@ export type Pricing = {
 
 export type CostResult = {
   evalAfterDiscount: number;
-  trueCost: number | null;            // actual out-of-pocket cost; null when activation is unknown
-  trueCostAfterRefund: number | null; // retained for compatibility; refund is included in trueCost
+  trueCost: number | null;            // discounted evaluation plus verified activation fee
+  trueCostAfterRefund: number | null; // true cost after a verified evaluation-fee refund
   discountPct: number;         // normalized percentage off (0-100)
 };
 
@@ -26,6 +26,8 @@ function toNum(n: unknown, d = 0) {
   const x = Number(n);
   return Number.isFinite(x) ? x : d;
 }
+
+const roundCurrency = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
 
 export function getCosts(input: { pricing?: Pricing; feeRefund?: boolean | null }): CostResult {
   const p = input.pricing ?? {};
@@ -49,16 +51,17 @@ export function getCosts(input: { pricing?: Pricing; feeRefund?: boolean | null 
   // Qualifiers (e.g. BOGO) are purely informational; they should not change the math.
 
   // If a flat amount is provided, prefer it over percentage
-  const evalAfterDiscount =
+  const evalAfterDiscount = roundCurrency(
     discountedEval ??
-    (discAmount > 0 ? Math.max(0, evalFee - discAmount) : Math.max(0, evalFee * (1 - discPercent / 100)));
+      (discAmount > 0 ? Math.max(0, evalFee - discAmount) : Math.max(0, evalFee * (1 - discPercent / 100)))
+  );
   const amountAsPct = discAmount > 0 && evalFee > 0 ? Math.min(100, (discAmount / evalFee) * 100) : 0;
   const discountPct = discAmount > 0 ? amountAsPct : discPercent;
 
   // optional “after refund” for firms that refund the evaluation fee
   const refund = input.feeRefund === true || p.feeRefund === true ? evalAfterDiscount : 0;
-  const trueCost = activation === null ? null : Math.max(0, evalAfterDiscount + activation - refund);
-  const trueCostAfterRefund = trueCost;
+  const trueCost = activation === null ? null : roundCurrency(evalAfterDiscount + activation);
+  const trueCostAfterRefund = trueCost === null ? null : roundCurrency(Math.max(0, trueCost - refund));
 
   return { evalAfterDiscount, trueCost, trueCostAfterRefund, discountPct };
 }
