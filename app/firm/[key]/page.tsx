@@ -208,6 +208,7 @@ export default function FirmDetailPage() {
     return candidates.reduce<{ size: number; cost: number } | null>((best, row) => {
       const size = row.accountSize ?? 0;
       const cost = getCosts({ pricing: row.pricing ?? undefined, feeRefund: row.feeRefund }).trueCost;
+      if (cost === null) return best;
       if (!best) return { size, cost };
       if (cost < best.cost) return { size, cost };
       if (cost === best.cost && size < best.size) return { size, cost };

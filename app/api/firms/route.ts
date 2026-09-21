@@ -118,6 +118,7 @@ function normalizeRow(r: FirmCsvRow, i: number) {
 
   // pricing fields from your sheet
   const evalCost = toNumber(first(r.eval_cost_usd, r.evalCostUsd, r["Eval Cost USD"]) ?? null);
+  const discountedEval = toNumber(first(r.discounted_eval_usd, r.discountedEvalUsd) ?? null);
   const activationFee =
     toNumber(first(r.activation_fee_usd, r.activationFeeUsd, r["Activation Fee USD"]) ?? null) ?? null;
   const discountPctRaw = first(r.discount_pct, r.discountPct, r["Discount %"]);
@@ -163,6 +164,7 @@ function normalizeRow(r: FirmCsvRow, i: number) {
     // NEW: provide pricing to the frontend
     pricing: {
       evalCost: evalCost ?? null,
+      discountedEval: discountedEval ?? null,
       activationFee,
       discount:
         discountPercent != null || discountAmount != null

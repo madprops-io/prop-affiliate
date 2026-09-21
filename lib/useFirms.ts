@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { FIRMS as FALLBACK_FIRMS, type Firm } from "./firms";
 import { normalizeModelList } from "./modelTags";
+import type { Pricing } from "./pricing";
 
 type RawRow = Record<string, string>;
 
@@ -59,20 +60,7 @@ export type FirmRow = {
   homepage?: string | null;
   signup?: string | null;
   trustpilot?: number | null;
-  checkoutPrice?: number | null;
-  pricing?: {
-    evalCost?: number;
-    activationFee?: number;
-    discount?:
-      | {
-          percent?: number;
-          amount?: number;
-          code?: string | null;
-          label?: string | null;
-        }
-      | null;
-    discountPct?: number | null;
-  } | null;
+  pricing?: Pricing | null;
   logo?: string | null;
 };
 
@@ -167,8 +155,7 @@ function mapRow(r: RawRow): FirmRow {
     "eval_cost"
   );
   const activationFee = pickNum("activation_fee_usd", "activation_fee", "activationfee", "activation");
-  const checkoutPriceRaw = pick("checkout_price_usd", "checkout_price", "final_price_usd", "final_price");
-  const checkoutPrice = checkoutPriceRaw === undefined ? undefined : parseNum(checkoutPriceRaw);
+  const discountedEval = pickNum("discounted_eval_usd");
   const discountPctRaw = r["discount_pct"];
   const discountValue = parseNum(discountPctRaw);
   const rawPayout = r["payout_pct"] ?? r["payout"] ?? r["payout_split"];
@@ -287,9 +274,9 @@ function mapRow(r: RawRow): FirmRow {
     homepage: r["homepage_url"] || r["url"] || null,
     signup: r["signup_link"] || r["signup_url"] || r["url"] || null,
     trustpilot,
-    checkoutPrice: typeof checkoutPrice === "number" ? checkoutPrice : null,
     pricing: {
       evalCost,
+      discountedEval,
       activationFee,
       discount:
         typeof discountPercent === "number" || typeof discountAmount === "number"
@@ -330,7 +317,6 @@ function firmToRow(f: Firm): FirmRow {
     homepage: f.homepage ?? null,
     signup: f.signup ?? null,
     trustpilot: f.trustpilot ?? null,
-    checkoutPrice: null,
     pricing: f.pricing ?? null,
     logo: f.logo ?? (f.key ? `/logos/${f.key}.png` : null),
   };

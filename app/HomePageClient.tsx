@@ -104,6 +104,10 @@ function formatMinDaysDisplay(value?: number | null) {
   return "-";
 }
 
+function formatMoney(value?: number | null) {
+  return typeof value === "number" && Number.isFinite(value) ? `$${value.toLocaleString()}` : "-";
+}
+
 function parseListParam(value?: string | null) {
   if (!value) return [];
   return value
@@ -448,7 +452,7 @@ const [sort, setSort] = useState<SortKey>("score");
         fundingValue,
         (firm.platforms ?? []).join(" / "),
         typeof firm.payoutPct === "number" ? `${firm.payoutPct}%` : "",
-        `$${cost.trueCost.toLocaleString()}`,
+        formatMoney(cost.trueCost),
         firm.discount?.code ?? "",
         firm.homepage ?? firm.signup ?? "",
       ];
@@ -671,7 +675,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
       const discountOk = !discountRequired || Number(discountValue) > 0;
       const trustRequirement = Math.max(minTrust ?? 0, fireDealsMode ? FIRE_DEAL_TRUST_MIN : 0);
       const trustOk = (f.trustpilot ?? 0) >= trustRequirement;
-      const lowCostOk = !fireDealsMode || trueCost <= FIRE_DEAL_TRUECOST_MAX;
+      const lowCostOk = !fireDealsMode || (trueCost !== null && trueCost <= FIRE_DEAL_TRUECOST_MAX);
       const favoritesOk = !favoritesOnly || isFavorite(f.key);
       return (
         nameOk &&
@@ -717,7 +721,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
     const appliedFocus: ScoreCriterion[] = scoreFocus.length
       ? scoreFocus
       : [...DEFAULT_SCORE_FOCUS];
-    const costCache = new Map<string, number>();
+    const costCache = new Map<string, number | null>();
     const getTrueCost = (firm: UIFirm) => {
       if (costCache.has(firm.key)) return costCache.get(firm.key)!;
       const value = getCosts({ pricing: firm.pricing ?? undefined, feeRefund: firm.feeRefund }).trueCost;
@@ -735,7 +739,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
           return Math.min((f.maxFunding ?? 0) / 50_000, 120);
         case "cost": {
           const cost = getTrueCost(f);
-          if (!Number.isFinite(cost) || cost <= 0) return 50;
+          if (cost === null || !Number.isFinite(cost) || cost <= 0) return 50;
           return Math.max(0, 100 - Math.min(cost / 50, 100));
         }
         case "payoutspeed": {
@@ -782,7 +786,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
         if (sort === "truecost") {
           const ca = getTrueCost(a);
           const cb = getTrueCost(b);
-          return ca - cb;
+          return (ca ?? Number.POSITIVE_INFINITY) - (cb ?? Number.POSITIVE_INFINITY);
         }
         return (b.score ?? 0) - (a.score ?? 0);
       });
@@ -1320,7 +1324,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
                 <div className="flex flex-1 flex-col gap-3">
                   <ul className="grid flex-1 grid-cols-2 gap-x-3 gap-y-1 text-sm">
                     <li className="text-[#5fffc2] font-semibold">
-                      <span className="text-[#5fffc2]/90">True cost:</span> ${cost.trueCost.toLocaleString()}
+                      <span className="text-[#5fffc2]/90">True cost:</span> {formatMoney(cost.trueCost)}
                     </li>
                     <li className="text-[#5fffc2] font-semibold">
                       <span className="text-[#5fffc2]/90">Account size:</span> $
@@ -1330,7 +1334,7 @@ const safeSort: SortKey = (allowedSorts as readonly string[]).includes(nextSort)
                       <strong>Up-front:</strong> ${cost.evalAfterDiscount.toLocaleString()}
                     </li>
                     <li>
-                      <strong>Activation:</strong> ${Number(f.pricing?.activationFee ?? 0).toLocaleString()}
+                      <strong>Activation:</strong> {formatMoney(f.pricing?.activationFee)}
                     </li>
                     {f.discount && Boolean(discountLabel) && (
                       <li className="col-span-2 text-xs font-medium text-amber-300">

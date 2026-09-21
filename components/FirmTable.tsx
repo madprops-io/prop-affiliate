@@ -9,6 +9,7 @@ import { formatStarIcons } from "@/lib/useStarRating";
 import { buildAffiliateUrl } from "@/lib/affiliates";
 import type { FirmRow } from "@/lib/useFirms";
 import { FIRMS } from "@/lib/firms";
+import { getCosts } from "@/lib/pricing";
 
 type TableFirm = FirmRow & {
   true_cost?: number;
@@ -40,16 +41,17 @@ type EnrichedRow = {
   ddt: string | null;
   payoutPct: number | null;
   payoutDisplay?: string;
-  trueCost: number;
+  trueCost: number | null;
   accountSize: number | null;
   daySort: number;
 };
 
 const fmtMoney = (n: number | string | null | undefined) => {
+  if (n === null || n === undefined || n === "") return "-";
   const num = Number(n);
   return Number.isFinite(num)
     ? num.toLocaleString(undefined, { style: "currency", currency: "USD" })
-    : "$0.00";
+    : "-";
 };
 
 const numVal = (v: number | null | undefined) =>
@@ -184,21 +186,7 @@ export default function FirmTable({
       const payoutPct = firm?.payoutSplit ?? (typeof firm?.payout === "number" ? Math.round(firm.payout * 100) : null);
       const payoutDisplay: string | undefined = firm?.payoutDisplay ?? (typeof payoutPct === "number" ? `${payoutPct}%` : undefined);
 
-      const trueCost = (() => {
-        const checkoutPrice = firm?.checkoutPrice;
-        if (typeof checkoutPrice === "number" && Number.isFinite(checkoutPrice) && checkoutPrice >= 0) {
-          return checkoutPrice;
-        }
-        const p = firm?.pricing ?? {};
-        const evalFee = Number(p?.evalCost ?? 0);
-        const activation = Number(p?.activationFee ?? 0);
-        const perc = Number(p?.discount?.percent ?? 0);
-        const amt = Number(p?.discount?.amount ?? 0);
-        const afterDisc = amt > 0 ? Math.max(0, evalFee - amt) : Math.max(0, evalFee * (1 - perc / 100));
-        const base = afterDisc + activation;
-        const refund = feeRefund ? afterDisc : 0;
-        return Math.max(0, base - refund);
-      })();
+      const { trueCost } = getCosts({ pricing: firm.pricing ?? undefined, feeRefund });
 
       const accountSize = firm.accountSize ?? null;
 
