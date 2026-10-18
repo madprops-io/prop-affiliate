@@ -26,8 +26,9 @@ outdated. Freshness must therefore be checked; fallback is not verification.
 ## Activation
 
 1. Merge this change into `main` to enable the workflow on the default branch.
-2. Open GitHub **Actions → Update firm data → Run workflow → main** for an
-   immediate run. Scheduled runs begin automatically after merge. GitHub may
+2. An initial collection runs automatically when the collector/workflow change
+   reaches main. To repeat it, open GitHub **Actions → Update firm data → Run
+   workflow → main**. Scheduled runs begin after merge. GitHub may
    delay scheduled runs and disables schedules in inactive public repositories.
 3. If the publish step reports a permissions failure, repository **Settings →
    Actions → General → Workflow permissions** must allow read/write contents.

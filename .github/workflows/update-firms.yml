@@ -1,6 +1,11 @@
 name: Update firm data
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/automation/**'
+      - '.github/workflows/update-firms.yml'
   schedule:
     - cron: '17 */6 * * *'
   workflow_dispatch:
