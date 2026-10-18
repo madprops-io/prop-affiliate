@@ -1,0 +1,1474 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-18T12:25:03.350249+00:00",
+  "patches": [
+    {
+      "key": "lucid-pro-25k",
+      "expected": {
+        "account_label": "Lucid Pro",
+        "account_size_usd": "25000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "70.6",
+        "firm_key": "lucid-pro-25k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid pro 25K, product 56539",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "lucid-pro-50k",
+      "expected": {
+        "account_label": "Lucid Pro",
+        "account_size_usd": "50000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "115.4",
+        "firm_key": "lucid-pro-50k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid pro 50K, product 1661",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "lucid-pro-100k",
+      "expected": {
+        "account_label": "Lucid Pro",
+        "account_size_usd": "100000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "180.4",
+        "firm_key": "lucid-pro-100k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid pro 100K, product 1663",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "lucid-pro-150k",
+      "expected": {
+        "account_label": "Lucid Pro",
+        "account_size_usd": "150000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "245.5",
+        "firm_key": "lucid-pro-150k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid pro 150K, product 1657",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "lucid-flex-25k",
+      "expected": {
+        "account_label": "Lucid Flex",
+        "account_size_usd": "25000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "50.3",
+        "firm_key": "lucid-flex-25k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid flex 25K, product 204751",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "lucid-flex-50k",
+      "expected": {
+        "account_label": "Lucid Flex",
+        "account_size_usd": "50000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "90.2",
+        "firm_key": "lucid-flex-50k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid flex 50K, product 204746",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "lucid-flex-100k",
+      "expected": {
+        "account_label": "Lucid Flex",
+        "account_size_usd": "100000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "170.6",
+        "firm_key": "lucid-flex-100k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid flex 100K, product 204747",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "lucid-flex-150k",
+      "expected": {
+        "account_label": "Lucid Flex",
+        "account_size_usd": "150000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "250.4",
+        "firm_key": "lucid-flex-150k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid flex 150K, product 204745",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "lucid-direct-25k",
+      "expected": {
+        "account_label": "Lucid Direct",
+        "account_size_usd": "25000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "230.3",
+        "firm_key": "lucid-direct-25k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid direct 25K, product 56555",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "lucid-direct-50k",
+      "expected": {
+        "account_label": "Lucid Direct",
+        "account_size_usd": "50000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "360.5",
+        "firm_key": "lucid-direct-50k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid direct 50K, product 6961",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "lucid-direct-100k",
+      "expected": {
+        "account_label": "Lucid Direct",
+        "account_size_usd": "100000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "490",
+        "firm_key": "lucid-direct-100k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid direct 100K, product 1501896",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "lucid-direct-150k",
+      "expected": {
+        "account_label": "Lucid Direct",
+        "account_size_usd": "150000",
+        "ddt": "EOD",
+        "discount_code": "MAD",
+        "discount_pct": "30",
+        "discounted_eval_usd": "585.2",
+        "firm_key": "lucid-direct-150k"
+      },
+      "values": {
+        "ddt": "EOD"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://lucidtrading.com/",
+      "evidence": "Lucid direct 150K, product 6959",
+      "sha256": "cfcb27abca124633e22940d80c61e4a524a75074764bb7c4169c8b7d62da28cc"
+    },
+    {
+      "key": "apex-intraday-standard-25k",
+      "expected": {
+        "account_label": "Intraday Standard",
+        "account_size_usd": "25000",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "167",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "167",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex RealTime, 25000, free_activation=False",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-intraday-standard-50k",
+      "expected": {
+        "account_label": "Intraday Standard",
+        "account_size_usd": "50000",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "249",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "249",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex RealTime, 50000, free_activation=False",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-intraday-standard-100k",
+      "expected": {
+        "account_label": "Intraday Standard",
+        "account_size_usd": "100000",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "399",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "790",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex RealTime, 100000, free_activation=False",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-intraday-standard-150k",
+      "expected": {
+        "account_label": "Intraday Standard",
+        "account_size_usd": "150000",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "599",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "1190",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex RealTime, 150000, free_activation=False",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-intraday-no-activation-25k",
+      "expected": {
+        "account_label": "Intraday No Activation Fee",
+        "account_size_usd": "25000",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "690",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "690",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex RealTime, 25000, free_activation=True",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-intraday-no-activation-50k",
+      "expected": {
+        "account_label": "Intraday No Activation Fee",
+        "account_size_usd": "50000",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "490",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "799",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex RealTime, 50000, free_activation=True",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-intraday-no-activation-100k",
+      "expected": {
+        "account_label": "Intraday No Activation Fee",
+        "account_size_usd": "100000",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "590",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "999",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex RealTime, 100000, free_activation=True",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-intraday-no-activation-150k",
+      "expected": {
+        "account_label": "Intraday No Activation Fee",
+        "account_size_usd": "150000",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "1690",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "1890",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex RealTime, 150000, free_activation=True",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-eod-standard-25k",
+      "expected": {
+        "account_label": "EOD Standard",
+        "account_size_usd": "25000",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "390",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "490",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex EndOfDay, 25000, free_activation=False",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-eod-standard-50k",
+      "expected": {
+        "account_label": "EOD Standard",
+        "account_size_usd": "50000",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "490",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "590",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex EndOfDay, 50000, free_activation=False",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-eod-standard-100k",
+      "expected": {
+        "account_label": "EOD Standard",
+        "account_size_usd": "100000",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "790",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "1190",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex EndOfDay, 100000, free_activation=False",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-eod-standard-150k",
+      "expected": {
+        "account_label": "EOD Standard",
+        "account_size_usd": "150000",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "1490",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "2190",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex EndOfDay, 150000, free_activation=False",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-eod-no-activation-25k",
+      "expected": {
+        "account_label": "EOD No Activation Fee",
+        "account_size_usd": "25000",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "990",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "1090",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex EndOfDay, 25000, free_activation=True",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-eod-no-activation-50k",
+      "expected": {
+        "account_label": "EOD No Activation Fee",
+        "account_size_usd": "50000",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "1190",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "1190",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex EndOfDay, 50000, free_activation=True",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-eod-no-activation-100k",
+      "expected": {
+        "account_label": "EOD No Activation Fee",
+        "account_size_usd": "100000",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "1590",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "1590",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex EndOfDay, 100000, free_activation=True",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "apex-eod-no-activation-150k",
+      "expected": {
+        "account_label": "EOD No Activation Fee",
+        "account_size_usd": "150000",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "2490",
+        "firm_key": "apex"
+      },
+      "values": {
+        "eval_cost_usd": "2490",
+        "activation_fee_usd": "0",
+        "discount_code": "SAVENOW",
+        "discount_pct": "90",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-18T23:59:00-04:00",
+      "source": "https://apextraderfunding.com/",
+      "evidence": "Apex EndOfDay, 150000, free_activation=True",
+      "sha256": "1583e7021483a56848d2af557cfd1a0654af67e0bdb4fefc9d6973d17f1065be"
+    },
+    {
+      "key": "tradeify-growth-25k",
+      "expected": {
+        "account_label": "Growth",
+        "account_size_usd": "25000",
+        "activation_fee_usd": "0",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "99",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "99",
+        "activation_fee_usd": "0",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": "69"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Growth, 25000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "tradeify-growth-50k",
+      "expected": {
+        "account_label": "Growth",
+        "account_size_usd": "50000",
+        "activation_fee_usd": "0",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "145",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "145",
+        "activation_fee_usd": "0",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": "102"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Growth, 50000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "tradeify-growth-100k",
+      "expected": {
+        "account_label": "Growth",
+        "account_size_usd": "100000",
+        "activation_fee_usd": "0",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "255",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "255",
+        "activation_fee_usd": "0",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": "179"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Growth, 100000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "tradeify-growth-150k",
+      "expected": {
+        "account_label": "Growth",
+        "account_size_usd": "150000",
+        "activation_fee_usd": "0",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "369",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "369",
+        "activation_fee_usd": "0",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": "258"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Growth, 150000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "tradeify-select-25k",
+      "expected": {
+        "account_label": "Select",
+        "account_size_usd": "25000",
+        "activation_fee_usd": "0",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "109",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "109",
+        "activation_fee_usd": "0",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": "76"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Select, 25000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "tradeify-select-50k",
+      "expected": {
+        "account_label": "Select",
+        "account_size_usd": "50000",
+        "activation_fee_usd": "0",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "165",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "165",
+        "activation_fee_usd": "0",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": "116"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Select, 50000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "tradeify-select-100k",
+      "expected": {
+        "account_label": "Select",
+        "account_size_usd": "100000",
+        "activation_fee_usd": "0",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "265",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "265",
+        "activation_fee_usd": "0",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": "186"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Select, 100000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "tradeify-select-150k",
+      "expected": {
+        "account_label": "Select",
+        "account_size_usd": "150000",
+        "activation_fee_usd": "0",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "369",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "369",
+        "activation_fee_usd": "0",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": "258"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Select, 150000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "tradeify-lightning-25k",
+      "expected": {
+        "account_label": "Lightning",
+        "account_size_usd": "25000",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "345",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "345",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": "242"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Lightning, 25000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "tradeify-lightning-50k",
+      "expected": {
+        "account_label": "Lightning",
+        "account_size_usd": "50000",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "492",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "492",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": "344"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Lightning, 50000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "tradeify-lightning-100k",
+      "expected": {
+        "account_label": "Lightning",
+        "account_size_usd": "100000",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "660",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "660",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Lightning, 100000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "tradeify-lightning-150k",
+      "expected": {
+        "account_label": "Lightning",
+        "account_size_usd": "150000",
+        "discount_code": "SEP",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "796",
+        "firm_key": "tradeify"
+      },
+      "values": {
+        "eval_cost_usd": "796",
+        "discount_code": "GEMS",
+        "discount_pct": "30",
+        "discounted_eval_usd": "557"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://tradeify.co/",
+      "evidence": "Tradeify Lightning, 150000, all visible brokers agree",
+      "sha256": "ac274908325493b0acaded585ea7d1c5658948bdfea4aba4804d4759a582dded"
+    },
+    {
+      "key": "daytraders-trail-25k",
+      "expected": {
+        "account_label": "Trail 25K",
+        "account_size_usd": "25000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "55",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "55",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders Trailing 25K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-trail-50k",
+      "expected": {
+        "account_label": "Trail 50K",
+        "account_size_usd": "50000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "70",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "70",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders Trailing 50K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-trail-150k",
+      "expected": {
+        "account_label": "Trail 150K",
+        "account_size_usd": "150000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "100",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "100",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders Trailing 150K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-trail-300k",
+      "expected": {
+        "account_label": "Trail 300K",
+        "account_size_usd": "300000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "140",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "140",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders Trailing 300K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-eod-25k",
+      "expected": {
+        "account_label": "EOD 25K",
+        "account_size_usd": "25000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "80",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "80",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders EOD 25K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-eod-50k",
+      "expected": {
+        "account_label": "EOD 50K",
+        "account_size_usd": "50000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "105",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "105",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders EOD 50K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-eod-150k",
+      "expected": {
+        "account_label": "EOD 150K",
+        "account_size_usd": "150000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "225",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "225",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders EOD 150K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-eod-300k",
+      "expected": {
+        "account_label": "EOD 300K",
+        "account_size_usd": "300000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "400",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "400",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders EOD 300K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-static-25k",
+      "expected": {
+        "account_label": "Static 25K",
+        "account_size_usd": "25000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "40",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "40",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders Static 25K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-static-50k",
+      "expected": {
+        "account_label": "Static 50K",
+        "account_size_usd": "50000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "50",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "50",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders Static 50K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-static-100k",
+      "expected": {
+        "account_label": "Static 100K",
+        "account_size_usd": "100000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "75",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "75",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders Static 100K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-static-150k",
+      "expected": {
+        "account_label": "Static 150K",
+        "account_size_usd": "150000",
+        "activation_fee_usd": "5",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "90",
+        "firm_key": "daytraders",
+        "min_days (Eval)": "2"
+      },
+      "values": {
+        "eval_cost_usd": "90",
+        "activation_fee_usd": "5",
+        "min_days (Eval)": "2"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders Static 150K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-s2f-25k",
+      "expected": {
+        "account_label": "S2F 25K",
+        "account_size_usd": "25000",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "222",
+        "firm_key": "daytraders"
+      },
+      "values": {
+        "eval_cost_usd": "222"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders S2F 25K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-s2f-50k",
+      "expected": {
+        "account_label": "S2F 50K",
+        "account_size_usd": "50000",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "342",
+        "firm_key": "daytraders"
+      },
+      "values": {
+        "eval_cost_usd": "342"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders S2F 50K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-s2f-150k",
+      "expected": {
+        "account_label": "S2F 150K",
+        "account_size_usd": "150000",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "495",
+        "firm_key": "daytraders"
+      },
+      "values": {
+        "eval_cost_usd": "495"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders S2F 150K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-s2l-core-50k",
+      "expected": {
+        "account_label": "S2L Core 50K",
+        "account_size_usd": "50000",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "179",
+        "firm_key": "daytraders"
+      },
+      "values": {
+        "eval_cost_usd": "179"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders S2L 50K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-s2l-edge-150k",
+      "expected": {
+        "account_label": "S2L Edge 150K",
+        "account_size_usd": "150000",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "319",
+        "firm_key": "daytraders"
+      },
+      "values": {
+        "eval_cost_usd": "319"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders S2L 150K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    },
+    {
+      "key": "daytraders-s2l-ultra-300k",
+      "expected": {
+        "account_label": "S2L Ultra 300K",
+        "account_size_usd": "300000",
+        "discount_code": "",
+        "discount_pct": "0",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "449",
+        "firm_key": "daytraders"
+      },
+      "values": {
+        "eval_cost_usd": "449"
+      },
+      "verifiedAt": "2026-10-18T12:25:03.350249+00:00",
+      "expiresAt": "2026-10-19T06:25:03.350249+00:00",
+      "source": "https://daytraders.com/go/madprops?i=1",
+      "evidence": "DayTraders S2L 300K, single-account price",
+      "sha256": "679dbc65900ecee15b9b8dfa2019edc43e5af49eae09420eb8e44b1dba91862d"
+    }
+  ],
+  "review": [
+    {
+      "key": "lucid-pro-25k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "108"
+      }
+    },
+    {
+      "key": "lucid-pro-50k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "172"
+      }
+    },
+    {
+      "key": "lucid-pro-100k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "272"
+      }
+    },
+    {
+      "key": "lucid-pro-150k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "365"
+      }
+    },
+    {
+      "key": "lucid-flex-25k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "79"
+      }
+    },
+    {
+      "key": "lucid-flex-50k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "136"
+      }
+    },
+    {
+      "key": "lucid-flex-100k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "258"
+      }
+    },
+    {
+      "key": "lucid-flex-150k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "372"
+      }
+    },
+    {
+      "key": "lucid-daily-25k",
+      "reason": "Lucid price has selectable variants; needs an explicit variant mapping"
+    },
+    {
+      "key": "lucid-daily-50k",
+      "reason": "Lucid price has selectable variants; needs an explicit variant mapping"
+    },
+    {
+      "key": "lucid-daily-100k",
+      "reason": "Lucid price has selectable variants; needs an explicit variant mapping"
+    },
+    {
+      "key": "lucid-daily-150k",
+      "reason": "Lucid price has selectable variants; needs an explicit variant mapping"
+    },
+    {
+      "key": "lucid-direct-25k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "329"
+      }
+    },
+    {
+      "key": "lucid-direct-50k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "515"
+      }
+    },
+    {
+      "key": "lucid-direct-100k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "700"
+      }
+    },
+    {
+      "key": "lucid-direct-150k",
+      "reason": "Coupon not verified for existing Sheet code; pricing held",
+      "proposed": {
+        "eval_cost_usd": "836"
+      }
+    }
+  ],
+  "unsupportedFirms": {
+    "fundednext": 15,
+    "fundedfutures": 10,
+    "blusky-trading": 15,
+    "alphafutures": 13,
+    "purdia": 7,
+    "takeprofittrader": 5,
+    "bulenox": 24,
+    "elite-trader-funding": 14,
+    "top-one-futures": 15,
+    "tradeday": 11,
+    "blue-guardian": 16,
+    "legendstrading": 7,
+    "my-funded-futures": 13,
+    "phidias": 10,
+    "aquafutures": 8,
+    "e8futures": 10,
+    "traderslaunch": 6
+  },
+  "coverage": {
+    "fundednext": 15,
+    "lucid": 16,
+    "fundedfutures": 10,
+    "blusky-trading": 15,
+    "alphafutures": 13,
+    "purdia": 7,
+    "apex": 16,
+    "takeprofittrader": 5,
+    "bulenox": 24,
+    "elite-trader-funding": 14,
+    "top-one-futures": 15,
+    "tradeday": 11,
+    "tradeify": 12,
+    "blue-guardian": 16,
+    "daytraders": 18,
+    "legendstrading": 7,
+    "my-funded-futures": 13,
+    "phidias": 10,
+    "aquafutures": 8,
+    "e8futures": 10,
+    "traderslaunch": 6
+  }
+}

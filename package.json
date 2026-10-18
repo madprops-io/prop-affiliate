@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "preview": "npm run build && npm run start",
-    "test": "node --experimental-strip-types --test tests/pricing.test.mjs",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

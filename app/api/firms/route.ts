@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import Papa from "papaparse";
 import type { Firm } from "@/lib/types";
 import { normalizeModelField } from "@/lib/modelTags";
+import { loadFirmCsv } from "@/lib/firmData";
 
 export const revalidate = 600;
 
@@ -200,17 +201,7 @@ export async function GET(req: NextRequest) {
     const raw = searchParams.get("raw") === "1";
     const nocache = searchParams.get("nocache") === "1";
 
-    const res = await fetch(CSV_URL, {
-      cache: nocache ? "no-store" : "force-cache",
-      next: { revalidate: nocache ? 0 : revalidate },
-    });
-    if (!res.ok) {
-      return NextResponse.json(
-        { error: `CSV fetch failed (${res.status})` },
-        { status: 502 }
-      );
-    }
-    const csv = await res.text();
+    const csv = await loadFirmCsv(nocache);
 
     const parsed = Papa.parse<FirmCsvRow>(csv, {
       header: true,
