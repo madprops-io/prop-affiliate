@@ -8,6 +8,7 @@ import concurrent.futures
 import csv
 from datetime import datetime, timedelta, timezone
 import hashlib
+import html
 import io
 import json
 import math
@@ -36,7 +37,11 @@ PUBLIC_SALE_CODES = {"apex": {"SAVENOW"}, "tradeify": {"SEP", "GEMS"}}
 
 
 def fetch(url):
-    request = urllib.request.Request(url, headers={"User-Agent": "MadPropsDataMonitor/1.0 (+https://madprops.com)"})
+    request = urllib.request.Request(url, headers={
+        "User-Agent": "Mozilla/5.0 (compatible; MadPropsDataMonitor/1.0; +https://madprops.com)",
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "en-US,en;q=0.9",
+    })
     with urllib.request.urlopen(request, timeout=40) as response:
         content = response.read(5_000_001)
         if len(content) > 5_000_000:
@@ -271,8 +276,16 @@ def build(rows, sources, now):
         except (ValueError, KeyError, TypeError, IndexError) as exc:
             review.append({"key": key, "reason": str(exc)})
     unsupported = {k: v for k, v in coverage.items() if k not in ADAPTERS}
+    diagnostics = {}
+    for firm, source in sources.items():
+        if isinstance(source, str):
+            title = re.search(r"<title[^>]*>(.*?)</title>", source, re.S | re.I)
+            diagnostics[firm] = {"bytes": len(source.encode()), "title": html.unescape(title[1]).strip()[:200] if title else ""}
+        else:
+            diagnostics[firm] = {"error": str(source)}
     return {"schemaVersion": 1, "generatedAt": now.isoformat(), "patches": patches,
-            "review": review, "unsupportedFirms": unsupported, "coverage": coverage}
+            "review": review, "unsupportedFirms": unsupported, "coverage": coverage,
+            "sourceDiagnostics": diagnostics}
 
 
 def main():
@@ -291,7 +304,7 @@ def main():
         try:
             return firm, (args.fixtures / (firm + ".html")).read_text() if args.fixtures else fetch(url)
         except Exception as exc:
-            return firm, str(type(exc).__name__) + ": " + str(exc)
+            return firm, {"error": str(type(exc).__name__) + ": " + str(exc)}
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         sources.update(executor.map(read, SOURCES.items()))
     result = build(rows, sources, now)
