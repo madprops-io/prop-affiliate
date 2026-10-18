@@ -6,6 +6,7 @@ import { FIRMS as FALLBACK_FIRMS, type Firm } from "./firms";
 import { normalizeModelList } from "./modelTags";
 import type { Pricing } from "./pricing";
 import { parseOptionalNumber } from "./csvNumbers";
+import Papa from "papaparse";
 
 type RawRow = Record<string, string>;
 
@@ -328,45 +329,11 @@ async function fetchCsvText(csvUrl: string): Promise<string> {
 }
 
 function parseCsv(text: string): RawRow[] {
-  const trimmed = (text ?? "").trim();
-  if (!trimmed) return [];
-
-  const lines = trimmed.split(/\r?\n/).filter((l) => l.trim().length > 0);
-  if (lines.length === 0) return [];
-
-  const headerLine = (lines[0] ?? "").replace(/^\uFEFF/, "");
-  if (!headerLine) return [];
-
-  const header = headerLine.split(",").map((h) => h.trim());
-  return lines.slice(1).map((line) => {
-    const cols: string[] = [];
-    let current = "";
-    let inQuote = false;
-
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
-      if (ch === '"') {
-        if (inQuote && line[i + 1] === '"') {
-          current += '"';
-          i++;
-        } else {
-          inQuote = !inQuote;
-        }
-      } else if (ch === "," && !inQuote) {
-        cols.push(current);
-        current = "";
-      } else {
-        current += ch;
-      }
-    }
-    cols.push(current);
-
-    const row: RawRow = {};
-    header.forEach((h, idx) => {
-      row[h] = (cols[idx] ?? "").trim();
-    });
-    return row;
+  const parsed = Papa.parse<RawRow>(text, {
+    header: true, skipEmptyLines: "greedy", transformHeader: (h) => h.trim(),
   });
+  if (parsed.errors.length) throw new Error("Invalid firm CSV");
+  return parsed.data;
 }
 
 export function useFirms() {
@@ -392,7 +359,9 @@ export function useFirms() {
           "";
         if (!csvUrl) throw new Error("Missing NEXT_PUBLIC_SHEET_CSV_URL");
 
-        const text = await fetchCsvText(csvUrl);
+        // The server merges fresh verified cells with the Sheet baseline.
+        // If the endpoint fails, retain the existing direct-Sheet behavior.
+        const text = await fetchCsvText("/api/firm-data").catch(() => fetchCsvText(csvUrl));
         const rows = parseCsv(text);
         const firms = rows.map(mapRow).filter((f) => f.key && f.name);
 
