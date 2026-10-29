@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T05:56:34.372823+00:00",
+  "generatedAt": "2026-10-29T13:13:01.886665+00:00",
   "patches": [
     {
       "key": "tradeify-growth-25k",
@@ -21,8 +21,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "69"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 25000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -46,8 +46,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "102"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 50000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -71,8 +71,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "179"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 100000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -96,8 +96,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "258"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 150000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -121,8 +121,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "76"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 25000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -146,8 +146,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "116"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 50000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -171,8 +171,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "186"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 100000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -196,8 +196,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "258"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 150000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -219,8 +219,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "242"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 25000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -242,8 +242,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "344"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 50000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -265,8 +265,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 100000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -288,8 +288,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "557"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 150000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -312,8 +312,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 25K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -336,8 +336,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 50K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -360,8 +360,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 150K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -384,8 +384,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 300K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -408,8 +408,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 25K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -432,8 +432,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 50K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -456,8 +456,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 150K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -480,8 +480,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 300K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -504,8 +504,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 25K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -528,8 +528,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 50K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -552,8 +552,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 100K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -576,8 +576,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 150K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -596,8 +596,8 @@
       "values": {
         "eval_cost_usd": "222"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2F 25K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -616,8 +616,8 @@
       "values": {
         "eval_cost_usd": "342"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2F 50K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -636,8 +636,8 @@
       "values": {
         "eval_cost_usd": "495"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2F 150K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -656,8 +656,8 @@
       "values": {
         "eval_cost_usd": "179"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2L 50K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -676,8 +676,8 @@
       "values": {
         "eval_cost_usd": "319"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2L 150K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -696,8 +696,8 @@
       "values": {
         "eval_cost_usd": "449"
       },
-      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
-      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
+      "verifiedAt": "2026-10-29T13:13:01.886665+00:00",
+      "expiresAt": "2026-10-30T07:13:01.886665+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2L 300K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
