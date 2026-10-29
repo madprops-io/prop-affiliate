@@ -1,247 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T22:40:33.269142+00:00",
+  "generatedAt": "2026-10-29T05:56:34.372823+00:00",
   "patches": [
-    {
-      "key": "lucid-pro-25k",
-      "expected": {
-        "account_label": "Lucid Pro",
-        "account_size_usd": "25000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "70.6",
-        "firm_key": "lucid-pro-25k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid pro 25K, product 56539",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
-    {
-      "key": "lucid-pro-50k",
-      "expected": {
-        "account_label": "Lucid Pro",
-        "account_size_usd": "50000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "115.4",
-        "firm_key": "lucid-pro-50k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid pro 50K, product 1661",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
-    {
-      "key": "lucid-pro-100k",
-      "expected": {
-        "account_label": "Lucid Pro",
-        "account_size_usd": "100000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "180.4",
-        "firm_key": "lucid-pro-100k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid pro 100K, product 1663",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
-    {
-      "key": "lucid-pro-150k",
-      "expected": {
-        "account_label": "Lucid Pro",
-        "account_size_usd": "150000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "245.5",
-        "firm_key": "lucid-pro-150k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid pro 150K, product 1657",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
-    {
-      "key": "lucid-flex-25k",
-      "expected": {
-        "account_label": "Lucid Flex",
-        "account_size_usd": "25000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "50.3",
-        "firm_key": "lucid-flex-25k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid flex 25K, product 204751",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
-    {
-      "key": "lucid-flex-50k",
-      "expected": {
-        "account_label": "Lucid Flex",
-        "account_size_usd": "50000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "90.2",
-        "firm_key": "lucid-flex-50k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid flex 50K, product 204746",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
-    {
-      "key": "lucid-flex-100k",
-      "expected": {
-        "account_label": "Lucid Flex",
-        "account_size_usd": "100000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "170.6",
-        "firm_key": "lucid-flex-100k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid flex 100K, product 204747",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
-    {
-      "key": "lucid-flex-150k",
-      "expected": {
-        "account_label": "Lucid Flex",
-        "account_size_usd": "150000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "250.4",
-        "firm_key": "lucid-flex-150k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid flex 150K, product 204745",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
-    {
-      "key": "lucid-direct-25k",
-      "expected": {
-        "account_label": "Lucid Direct",
-        "account_size_usd": "25000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "230.3",
-        "firm_key": "lucid-direct-25k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid direct 25K, product 56555",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
-    {
-      "key": "lucid-direct-50k",
-      "expected": {
-        "account_label": "Lucid Direct",
-        "account_size_usd": "50000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "360.5",
-        "firm_key": "lucid-direct-50k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid direct 50K, product 6961",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
-    {
-      "key": "lucid-direct-100k",
-      "expected": {
-        "account_label": "Lucid Direct",
-        "account_size_usd": "100000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "490",
-        "firm_key": "lucid-direct-100k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid direct 100K, product 1501896",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
-    {
-      "key": "lucid-direct-150k",
-      "expected": {
-        "account_label": "Lucid Direct",
-        "account_size_usd": "150000",
-        "ddt": "EOD",
-        "discount_code": "MAD",
-        "discount_pct": "30",
-        "discounted_eval_usd": "585.2",
-        "firm_key": "lucid-direct-150k"
-      },
-      "values": {
-        "ddt": "EOD"
-      },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
-      "source": "https://lucidtrading.com/",
-      "evidence": "Lucid direct 150K, product 6959",
-      "sha256": "551a9b1394526bafe73141d3142dc59b4a3918d28b644582af54ad36a30501aa"
-    },
     {
       "key": "tradeify-growth-25k",
       "expected": {
@@ -261,8 +21,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "69"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 25000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -286,8 +46,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "102"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 50000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -311,8 +71,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "179"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 100000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -336,8 +96,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "258"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 150000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -361,8 +121,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "76"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 25000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -386,8 +146,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "116"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 50000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -411,8 +171,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "186"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 100000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -436,8 +196,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "258"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 150000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -459,8 +219,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "242"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 25000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -482,8 +242,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "344"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 50000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -505,8 +265,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 100000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -528,8 +288,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "557"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 150000, all visible brokers agree",
       "sha256": "a96c7caabb62ad12c4399611d8bdf28b1168302ded065fae3fe9bb84ece31315"
@@ -552,8 +312,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 25K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -576,8 +336,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 50K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -600,8 +360,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 150K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -624,8 +384,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 300K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -648,8 +408,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 25K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -672,8 +432,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 50K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -696,8 +456,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 150K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -720,8 +480,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 300K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -744,8 +504,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 25K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -768,8 +528,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 50K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -792,8 +552,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 100K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -816,8 +576,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 150K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -836,8 +596,8 @@
       "values": {
         "eval_cost_usd": "222"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2F 25K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -856,8 +616,8 @@
       "values": {
         "eval_cost_usd": "342"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2F 50K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -876,8 +636,8 @@
       "values": {
         "eval_cost_usd": "495"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2F 150K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -896,8 +656,8 @@
       "values": {
         "eval_cost_usd": "179"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2L 50K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -916,8 +676,8 @@
       "values": {
         "eval_cost_usd": "319"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2L 150K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -936,8 +696,8 @@
       "values": {
         "eval_cost_usd": "449"
       },
-      "verifiedAt": "2026-10-28T22:40:33.269142+00:00",
-      "expiresAt": "2026-10-29T16:40:33.269142+00:00",
+      "verifiedAt": "2026-10-29T05:56:34.372823+00:00",
+      "expiresAt": "2026-10-29T23:56:34.372823+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2L 300K, single-account price",
       "sha256": "0220a28f7dff09f28d78d6fbc7aa5e9c76b0f7e8338ce86ca5c6f07e4e6d9068"
@@ -946,103 +706,67 @@
   "review": [
     {
       "key": "lucid-pro-25k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "108"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-pro-50k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "172"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-pro-100k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "272"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-pro-150k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "365"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-flex-25k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "65"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-flex-50k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "115"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-flex-100k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "215"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-flex-150k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "323"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-daily-25k",
-      "reason": "Lucid price has selectable variants; needs an explicit variant mapping"
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-daily-50k",
-      "reason": "Lucid price has selectable variants; needs an explicit variant mapping"
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-daily-100k",
-      "reason": "Lucid price has selectable variants; needs an explicit variant mapping"
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-daily-150k",
-      "reason": "Lucid price has selectable variants; needs an explicit variant mapping"
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-direct-25k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "329"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-direct-50k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "515"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-direct-100k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "700"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "lucid-direct-150k",
-      "reason": "Coupon not verified for existing Sheet code; pricing held",
-      "proposed": {
-        "eval_cost_usd": "836"
-      }
+      "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     },
     {
       "key": "apex-intraday-standard-25k",
@@ -1164,8 +888,7 @@
       "title": "DayTraders.com - Funded Futures Trading Accounts for Day Traders"
     },
     "lucid": {
-      "bytes": 281218,
-      "title": "Lucid Trading - The Best Prop Firm For Futures | Fast Payouts!"
+      "error": "{'error': 'HTTPError: HTTP Error 403: Forbidden'}"
     }
   }
 }
