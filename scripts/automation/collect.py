@@ -252,7 +252,41 @@ def lucid(text, row, now):
     return fields, False, now + timedelta(hours=18), f"Lucid {m[1]} {m[2]}K, product {product}"
 
 
-ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid": lucid}
+BLUE_GUARDIAN_PRODUCT = re.compile(
+    r'\{"market":"futures","plan":"(?:standard|reserve|express|direct)",[^{}]*\}')
+
+
+def blue_guardian(text, row, now):
+    """Futures prices from the storefront's embedded product list (Next.js payload).
+
+    The page repeats the same product objects many times; every copy and every
+    platform must agree. The storefront shows an automatic sale with no code, so
+    the Sheet's coupon (an affiliate/partner code) cannot be verified and prices
+    always go to review, as with Lucid.
+    """
+    m = re.fullmatch(r"(Standard|Reserve|Express|Direct) (25|50|100|150)K", row["account_label"])
+    size = int(row["account_size_usd"])
+    if not m or int(m[2]) * 1000 != size:
+        raise ValueError("Unknown Blue Guardian plan label")
+    plan = m[1].lower()
+    payload = text.replace('\\"', '"')
+    products = [json.loads(raw) for raw in BLUE_GUARDIAN_PRODUCT.findall(payload)]
+    matches = [p for p in products if p.get("plan") == plan and p.get("accountType") == "standard"
+               and p.get("amount") == size]
+    regular, current = unique([(p.get("originalPrice"), p.get("currentPrice")) for p in matches])
+    # A fractional "original" (e.g. 125.33) is a strike-through derived from the
+    # sale price, not a published list price; never treat it as one.
+    if not isinstance(regular, int) or isinstance(regular, bool):
+        raise ValueError("Blue Guardian regular price is derived, not published")
+    fields = {"eval_cost_usd": money(regular)}
+    platforms = sorted({p.get("platform") for p in matches})
+    return fields, False, now + timedelta(hours=18), (
+        f"Blue Guardian futures {m[1]} {m[2]}K, regular {money(regular)}, storefront sale "
+        f"{money(current)}, platforms {', '.join(platforms)}")
+
+
+ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid": lucid,
+            "blue-guardian": blue_guardian}
 
 
 def row_identity(row):

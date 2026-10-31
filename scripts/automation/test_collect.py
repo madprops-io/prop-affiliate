@@ -5,7 +5,7 @@ from unittest import mock
 from zoneinfo import ZoneInfo
 
 import collect
-from collect import apex, build, daytraders, literal, lucid, money, tradeify, unique
+from collect import apex, blue_guardian, build, daytraders, literal, lucid, money, tradeify, unique
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 NY = ZoneInfo("America/New_York")
@@ -65,7 +65,7 @@ class CollectorTests(unittest.TestCase):
 
 class FixtureSafetyTests(unittest.TestCase):
     def test_fixtures_are_marked_synthetic(self):
-        for name in ("tradeify", "daytraders", "apex", "lucid"):
+        for name in ("tradeify", "daytraders", "apex", "lucid", "blue-guardian"):
             with self.subTest(fixture=name):
                 self.assertIn("SYNTHETIC TEST FIXTURE", fixture(name))
 
@@ -232,6 +232,46 @@ class LucidAdapterTests(unittest.TestCase):
         [patch] = result["patches"]
         self.assertEqual(patch["values"], {"ddt": "EOD"})  # only the non-price field is published
         self.assertNotIn("promotionExpiresAt", patch)
+
+
+
+class BlueGuardianAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="blue-guardian-standard-25k", firm_key="blue-guardian", firm_name="Blue Guardian",
+                        account_label="Standard 25K", account_size_usd="25000", eval_cost_usd="1",
+                        discount_code="TESTCODE", discount_pct="25")
+        return sheet_row(**{**defaults, **values})
+
+    def test_regular_price_when_all_copies_and_platforms_agree(self):
+        fields, verified, expires, evidence = blue_guardian(fixture("blue-guardian"), self.row(), NOW)
+        self.assertEqual(fields, {"eval_cost_usd": "999"})
+        self.assertFalse(verified)
+        self.assertEqual(expires, NOW + timedelta(hours=18))
+        self.assertIn("sale 666", evidence)
+        self.assertIn("deepcharts, tradovate", evidence)
+
+    def test_cfd_products_are_ignored(self):
+        with self.assertRaises(ValueError):
+            blue_guardian(fixture("blue-guardian"), self.row(account_label="Direct 25K"), NOW)
+
+    def test_derived_fractional_regular_price_fails_closed(self):
+        with self.assertRaisesRegex(ValueError, "derived"):
+            blue_guardian(fixture("blue-guardian"), self.row(account_label="Reserve 50K", account_size_usd="50000"), NOW)
+
+    def test_platform_disagreement_fails_closed(self):
+        with self.assertRaisesRegex(ValueError, "disagree"):
+            blue_guardian(fixture("blue-guardian"), self.row(account_label="Express 100K", account_size_usd="100000"), NOW)
+
+    def test_label_and_size_must_agree(self):
+        for label, size in (("Standard 25K", "50000"), ("Instant 25K", "25000")):
+            with self.subTest(label=label), self.assertRaises(ValueError):
+                blue_guardian(fixture("blue-guardian"), self.row(account_label=label, account_size_usd=size), NOW)
+
+    def test_build_holds_price_for_review_and_never_publishes(self):
+        result = build([self.row()], {"blue-guardian": fixture("blue-guardian")}, NOW)
+        self.assertEqual(result["patches"], [])
+        self.assertEqual(result["review"][0]["proposed"], {"eval_cost_usd": "999"})
+        self.assertNotIn("blue-guardian", result["unsupportedFirms"])
 
 
 if __name__ == '__main__':
