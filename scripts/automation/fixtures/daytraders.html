@@ -1,0 +1,36 @@
+<!doctype html>
+<html><head><title>SYNTHETIC TEST FIXTURE - daytraders adapter</title></head>
+<body>
+<!-- SYNTHETIC TEST FIXTURE: not real DayTraders pricing. Fake prices only. -->
+<script>
+const PS_DATA = {
+  "S2F": {
+    "sizes": {
+      "25K": {
+        "capital": 25000, "price": 999, "activationFee": 888,
+        "list": [
+          {"label": "Min. Days to Pass", "value": "7 Qualifying Days"},
+          {"label": "Profit Target", "value": "$1"}
+        ]
+      },
+      "50K": {"capital": 50000, "price": 888}
+    }
+  },
+  "Trailing": {
+    "sizes": {
+      // Same capital as S2F 50K with a different price: group must disambiguate.
+      "50K": {
+        "capital": 50000, "price": 777, "activationFee": 0,
+        "list": [{"label": "Min. Days to Pass", "value": "No Minimum"}]
+      }
+    }
+  },
+  "Conflict": {
+    "sizes": {
+      "100K-a": {"capital": 100000, "price": 999},
+      "100K-b": {"capital": 100000, "price": 888}
+    }
+  }
+};
+</script>
+</body></html>

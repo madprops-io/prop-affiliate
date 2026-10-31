@@ -1,0 +1,32 @@
+<!doctype html>
+<html><head><title>SYNTHETIC TEST FIXTURE - apex adapter</title></head>
+<body>
+<!-- SYNTHETIC TEST FIXTURE: not real Apex pricing. Fake prices/codes only. -->
+<script>
+window.__APP__ = {
+  products: [
+    { category: "eval", enabled: true, is_visible: true, isBundle: false, pack_quantity: 1,
+      balance: 50000, trail_type: "RealTime", free_activation: false, price: 999,
+      pa_features: { activation_fee: 777 } },
+    { category: "eval", enabled: true, is_visible: true, isBundle: false, pack_quantity: 1,
+      balance: 50000, trail_type: "EndOfDay", free_activation: true, price: 888,
+      pa_features: {} },
+    // Distractors that must never match:
+    { category: "eval", enabled: true, is_visible: true, isBundle: true, pack_quantity: 1,
+      balance: 50000, trail_type: "RealTime", free_activation: false, price: 111 },
+    { category: "eval", enabled: true, is_visible: true, isBundle: false, pack_quantity: 3,
+      balance: 50000, trail_type: "RealTime", free_activation: false, price: 222 },
+    { category: "eval", enabled: true, is_visible: false, isBundle: false, pack_quantity: 1,
+      balance: 50000, trail_type: "RealTime", free_activation: false, price: 333 },
+    { category: "pa", enabled: true, is_visible: true, isBundle: false, pack_quantity: 1,
+      balance: 50000, trail_type: "RealTime", free_activation: false, price: 444 },
+  ],
+  promoData: {
+    RealTime: { active: true, expiration: "2026-06-30 23:59",
+                title_code: 'Use COUPON "TESTCODE" at checkout', first_month_code: 20 },
+    EndOfDay: { active: false, expiration: "2026-06-30 23:59",
+                title_code: 'Use COUPON "TESTCODE" at checkout', first_month_code: 20 },
+  },
+};
+</script>
+</body></html>
