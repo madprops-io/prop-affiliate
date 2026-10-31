@@ -27,6 +27,23 @@ SOURCES = {
     "tradeify": "https://tradeify.co/",
     "daytraders": "https://daytraders.com/go/madprops?i=1",
     "lucid": "https://lucidtrading.com/",
+    # Accessible official storefront candidates; no prices are published until
+    # an account-specific adapter is implemented and validated.
+    "alphafutures": "https://alphafutures.com/",
+    "aquafutures": "https://aquafutures.io/",
+    "blue-guardian": "https://blueguardian.com/",
+    "blusky-trading": "https://blusky.pro/",
+    "bulenox": "https://bulenox.com/",
+    "e8futures": "https://e8markets.com/",
+    "fundednext": "https://fundednext.com/",
+    "legendstrading": "https://legendstrading.com/",
+    "my-funded-futures": "https://myfundedfutures.com/",
+    "phidias": "https://phidiaspropfirm.com/",
+    "purdia": "https://purdia.com/",
+    "takeprofittrader": "https://takeprofittrader.com/",
+    "top-one-futures": "https://toponefutures.com/",
+    "tradeday": "https://tradeday.com/",
+    "traderslaunch": "https://traderslaunch.com/",
 }
 PRICE_FIELDS = {"eval_cost_usd", "discount_pct", "discounted_eval_usd", "discount_code"}
 ALLOWED = PRICE_FIELDS | {"activation_fee_usd", "min_days (Eval)", "ddt"}
