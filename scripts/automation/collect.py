@@ -271,6 +271,7 @@ def build(rows, sources, now):
                 patches.append({"key": key, "expected": {k: row.get(k, "") for k in sorted(guarded)},
                                 "values": fields, "verifiedAt": now.isoformat(),
                                 "expiresAt": min(expires, now + timedelta(hours=18)).isoformat(),
+                                **({"promotionExpiresAt": expires.isoformat()} if verified_coupon and "discount_code" in fields else {}),
                                 "source": SOURCES[firm], "evidence": evidence,
                                 "sha256": hashlib.sha256(source.encode()).hexdigest()})
         except (ValueError, KeyError, TypeError, IndexError) as exc:
