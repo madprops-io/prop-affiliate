@@ -1,0 +1,45 @@
+name: Test MadProps Resend email
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/test-resend-email.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  send-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Send one test email using configured Resend credentials
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM_EMAIL: ${{ vars.RESEND_FROM_EMAIL }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          key = os.environ.get("RESEND_API_KEY", "")
+          sender = os.environ.get("RESEND_FROM_EMAIL", "")
+          if not key or not sender:
+              raise SystemExit("Missing RESEND_API_KEY or RESEND_FROM_EMAIL")
+          body = {
+              "from": sender,
+              "to": ["caldwell.tj@gmail.com"],
+              "subject": "[MadProps] TEST — Pricing approval email delivery",
+              "text": "This is a test of MadProps pricing approval notifications. No pricing changes were approved. Future notifications will include a link to a GitHub pull request for review.\n",
+          }
+          req = urllib.request.Request("https://api.resend.com/emails",
+              data=json.dumps(body).encode(), headers={
+                  "Authorization": "Bearer " + key,
+                  "Content-Type": "application/json"
+              }, method="POST")
+          with urllib.request.urlopen(req, timeout=20) as response:
+              result = json.load(response)
+          if not result.get("id"):
+              raise SystemExit("Resend did not confirm acceptance")
+          print("Resend accepted test email.")
+          PY
