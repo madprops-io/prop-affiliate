@@ -53,7 +53,16 @@ jobs:
           git add data/firm-updates.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Refresh verified firm data'
-          git push origin HEAD:main
+          # A simultaneous commit can advance main after checkout.
+          # Retry by replaying this data-only commit onto the latest main.
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase -X theirs origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          echo 'Could not publish verified data after four attempts' >&2
+          exit 1
       - name: Prepare human approval proposal
         run: python scripts/automation/propose_approvals.py
       - name: Generate readable pricing review only for pending approvals
