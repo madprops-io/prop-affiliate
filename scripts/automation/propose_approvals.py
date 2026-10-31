@@ -33,6 +33,6 @@ for patch in live["patches"]:
         if not expiry:
             expiry = patch["expiresAt"]
         proposal["promotionExpiresAt"] = expiry
-    entries[key] = proposal
+    if prior.get("values") == values and prior.get("promotionExpiresAt") == proposal.get("promotionExpiresAt"):\n        continue\n    entries[key] = proposal
 approved["entries"] = [entries[key] for key in sorted(entries)]
 path.write_text(json.dumps(approved, indent=2) + "\n")
