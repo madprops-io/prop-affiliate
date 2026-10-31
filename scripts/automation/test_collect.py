@@ -1,7 +1,6 @@
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from unittest import mock
 from zoneinfo import ZoneInfo
 
 import collect
@@ -99,12 +98,21 @@ class TradeifyAdapterTests(unittest.TestCase):
         self.assertEqual(fields["eval_cost_usd"], "888")
         self.assertNotIn("activation_fee_usd", fields)
 
-    def test_unknown_sheet_code_is_preserved_and_pricing_unverified(self):
-        with mock.patch.object(collect, "prior_approved_tradeify_codes", return_value=set()):
-            fields, verified, expires, _ = tradeify(fixture("tradeify"), self.row(discount_code="FAKEAFFILIATE"), NOW)
-        self.assertIs(verified, False)
-        self.assertEqual(fields, {"eval_cost_usd": "999", "activation_fee_usd": "0"})
-        self.assertEqual(expires, NOW + timedelta(hours=18))
+    def test_non_affiliate_or_blank_code_takes_current_public_code(self):
+        for current in ("OLDSALE", ""):
+            with self.subTest(current=current):
+                fields, verified, _, _ = tradeify(fixture("tradeify"), self.row(discount_code=current), NOW)
+                self.assertIs(verified, True)
+                self.assertEqual(fields["discount_code"], "TESTCODE")
+                self.assertEqual(fields["discount_pct"], "10")
+
+    def test_affiliate_code_is_kept_and_takes_promotion_discount(self):
+        for code in ("MAD", "MADPROPS", "madprops"):
+            with self.subTest(code=code):
+                fields, verified, _, _ = tradeify(fixture("tradeify"), self.row(discount_code=code), NOW)
+                self.assertIs(verified, True)
+                self.assertEqual(fields["discount_code"], code)
+                self.assertEqual((fields["discount_pct"], fields["discounted_eval_usd"]), ("10", "899"))
 
     def test_expired_coupon_is_not_verified(self):
         fields, verified, expires, _ = tradeify(fixture("tradeify"), self.row(), AFTER_PROMO)
@@ -182,10 +190,12 @@ class ApexAdapterTests(unittest.TestCase):
         self.assertEqual(expires, NOW + timedelta(hours=18))
         self.assertEqual(evidence, "Apex EndOfDay, 50000, free_activation=True")
 
-    def test_promo_code_mismatch_or_expiry_is_not_verified(self):
-        fields, verified, _, _ = apex(fixture("apex"), self.row(discount_code="FAKEAFFILIATE"), NOW)
-        self.assertIs(verified, False)
-        self.assertNotIn("discount_code", fields)
+    def test_affiliate_code_kept_other_codes_replaced_and_expiry_not_verified(self):
+        fields, verified, _, _ = apex(fixture("apex"), self.row(discount_code="OLDSALE"), NOW)
+        self.assertIs(verified, True)
+        self.assertEqual(fields["discount_code"], "TESTCODE")
+        fields, verified, _, _ = apex(fixture("apex"), self.row(discount_code="MAD"), NOW)
+        self.assertEqual((verified, fields["discount_code"], fields["discount_pct"]), (True, "MAD", "20"))
         _, verified, expires, _ = apex(fixture("apex"), self.row(), AFTER_PROMO)
         self.assertIs(verified, False)
         self.assertEqual(expires, AFTER_PROMO + timedelta(hours=18))
@@ -239,40 +249,58 @@ class BlueGuardianAdapterTests(unittest.TestCase):
     def row(self, **values):
         defaults = dict(key="blue-guardian-standard-25k", firm_key="blue-guardian", firm_name="Blue Guardian",
                         account_label="Standard 25K", account_size_usd="25000", eval_cost_usd="1",
-                        discount_code="TESTCODE", discount_pct="25")
+                        discount_code="OLDSALE", discount_pct="25")
         return sheet_row(**{**defaults, **values})
 
-    def test_regular_price_when_all_copies_and_platforms_agree(self):
-        fields, verified, expires, evidence = blue_guardian(fixture("blue-guardian"), self.row(), NOW)
-        self.assertEqual(fields, {"eval_cost_usd": "999"})
-        self.assertFalse(verified)
-        self.assertEqual(expires, NOW + timedelta(hours=18))
-        self.assertIn("sale 666", evidence)
-        self.assertIn("deepcharts, tradovate", evidence)
+    def run_adapter(self, **values):
+        return blue_guardian(fixture("blue-guardian"), self.row(**values), NOW)
 
-    def test_cfd_products_are_ignored(self):
-        with self.assertRaises(ValueError):
-            blue_guardian(fixture("blue-guardian"), self.row(account_label="Direct 25K"), NOW)
+    def test_public_code_replaces_non_affiliate_code(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        # 999 * 0.7 = 699.3; the site shows 699, so the exact sale price is kept.
+        self.assertEqual(fields, {"eval_cost_usd": "999", "discount_code": "TESTCODE",
+                                  "discount_pct": "30", "discounted_eval_usd": "699"})
+        self.assertIsNone(expires)  # the site publishes no promotion end date
+        self.assertIn("code TESTCODE", evidence)
+
+    def test_affiliate_code_is_kept_with_promotion_discount(self):
+        fields, verified, _, _ = self.run_adapter(discount_code="MADPROPS")
+        self.assertIs(verified, True)
+        self.assertEqual((fields["discount_code"], fields["discount_pct"]), ("MADPROPS", "30"))
+
+    def test_disabled_plan_and_cfd_products_are_ignored(self):
+        with self.assertRaisesRegex(ValueError, "No matching product"):
+            self.run_adapter(account_label="Direct 25K")
 
     def test_derived_fractional_regular_price_fails_closed(self):
         with self.assertRaisesRegex(ValueError, "derived"):
-            blue_guardian(fixture("blue-guardian"), self.row(account_label="Reserve 50K", account_size_usd="50000"), NOW)
+            self.run_adapter(account_label="Reserve 50K", account_size_usd="50000")
 
     def test_platform_disagreement_fails_closed(self):
         with self.assertRaisesRegex(ValueError, "disagree"):
-            blue_guardian(fixture("blue-guardian"), self.row(account_label="Express 100K", account_size_usd="100000"), NOW)
+            self.run_adapter(account_label="Express 100K", account_size_usd="100000")
+
+    def test_plan_and_product_price_mismatch_fails_closed(self):
+        with self.assertRaisesRegex(ValueError, "plan and product prices disagree"):
+            self.run_adapter(account_label="Standard 150K", account_size_usd="150000")
+
+    def test_sale_price_must_match_coupon(self):
+        with self.assertRaisesRegex(ValueError, "does not match its coupon"):
+            self.run_adapter(account_label="Standard 50K", account_size_usd="50000")
 
     def test_label_and_size_must_agree(self):
         for label, size in (("Standard 25K", "50000"), ("Instant 25K", "25000")):
             with self.subTest(label=label), self.assertRaises(ValueError):
-                blue_guardian(fixture("blue-guardian"), self.row(account_label=label, account_size_usd=size), NOW)
+                self.run_adapter(account_label=label, account_size_usd=size)
 
-    def test_build_holds_price_for_review_and_never_publishes(self):
+    def test_build_publishes_without_persistent_promotion_expiry(self):
         result = build([self.row()], {"blue-guardian": fixture("blue-guardian")}, NOW)
-        self.assertEqual(result["patches"], [])
-        self.assertEqual(result["review"][0]["proposed"], {"eval_cost_usd": "999"})
-        self.assertNotIn("blue-guardian", result["unsupportedFirms"])
-
+        self.assertEqual(result["review"], [])
+        [patch] = result["patches"]
+        self.assertEqual(patch["values"]["discount_code"], "TESTCODE")
+        self.assertEqual(patch["expiresAt"], (NOW + timedelta(hours=18)).isoformat())
+        self.assertNotIn("promotionExpiresAt", patch)
 
 if __name__ == '__main__':
     unittest.main()

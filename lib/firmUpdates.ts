@@ -18,35 +18,14 @@ const allowed = new Set([
   "discounted_eval_usd", "discount_code", "min_days (Eval)", "ddt",
 ]);
 
-// Generic public sale codes (not MadProps affiliate identifiers). Mirrors
-// PUBLIC_SALE_CODES in scripts/automation/collect.py. Unknown/custom codes are
-// never replaced, because they may be affiliate-specific.
-export const PUBLIC_SALE_CODES: Readonly<Record<string, readonly string[]>> = {
-  apex: ["SAVENOW"],
-  tradeify: ["SEP", "GEMS"],
-};
+// MadProps affiliate codes; mirrors AFFILIATE_CODES in scripts/automation/collect.py.
+// Firms give these codes the same discount as their current public promotion,
+// so they are never replaced. Any other Sheet code (or a blank one) may be
+// replaced by the firm's verified current public code.
+export const AFFILIATE_CODES: readonly string[] = ["MAD", "MADPROPS"];
 
-type ApprovedCodeSource = { entries?: Array<{ key?: unknown; values?: Record<string, unknown> }> };
-
-/**
- * Previously human-approved official Tradeify codes may also roll to a new code.
- * Mirrors prior_approved_tradeify_codes() in scripts/automation/collect.py.
- */
-export function approvedTradeifyCodes(approved: ApprovedCodeSource | null | undefined): string[] {
-  const codes = new Set<string>();
-  for (const entry of Array.isArray(approved?.entries) ? approved.entries : []) {
-    const code = entry?.values?.discount_code;
-    if (typeof entry?.key === "string" && entry.key.startsWith("tradeify-") &&
-        typeof code === "string" && /^[A-Za-z0-9_-]{1,40}$/.test(code)) {
-      codes.add(code.toUpperCase());
-    }
-  }
-  return [...codes];
-}
-
-export function rotatableSaleCodes(firmKey: string | undefined, approvedTradeify: readonly string[] = []) {
-  const base = PUBLIC_SALE_CODES[firmKey ?? ""] ?? [];
-  return firmKey === "tradeify" ? [...base, ...approvedTradeify.map((c) => c.toUpperCase())] : [...base];
+export function isAffiliateCode(code: string | undefined) {
+  return AFFILIATE_CODES.includes((code ?? "").trim().toUpperCase());
 }
 
 export function firmRowIdentity(row: CsvRow) {
@@ -57,7 +36,6 @@ export function applyFirmUpdates(
   rows: CsvRow[],
   snapshot: UpdateSnapshot,
   now = Date.now(),
-  approvedTradeify: readonly string[] = [],
 ) {
   if (snapshot.schemaVersion !== 1) return rows;
   const counts = new Map<string, number>();
@@ -80,10 +58,8 @@ export function applyFirmUpdates(
     if (!Number.isFinite(verified) || !Number.isFinite(expires) || verified > now + 60_000 ||
         expires <= now || now - verified > 18 * 60 * 60 * 1000) return row;
     if (Object.entries(patch.expected).some(([field, value]) => (row[field] ?? "") !== value)) return row;
-    if (patch.values.discount_code !== undefined && patch.values.discount_code !== row.discount_code) {
-      const replaceable = rotatableSaleCodes(row.firm_key, approvedTradeify);
-      if (!replaceable.includes(row.discount_code?.toUpperCase() ?? "")) return row;
-    }
+    if (patch.values.discount_code !== undefined && patch.values.discount_code !== row.discount_code &&
+        isAffiliateCode(row.discount_code)) return row;
     if (Object.entries(patch.values).some(([field, value]) =>
       !allowed.has(field) || typeof value !== "string" ||
       (field === "discount_code" ? !/^[A-Za-z0-9_-]{1,40}$/.test(value) :
