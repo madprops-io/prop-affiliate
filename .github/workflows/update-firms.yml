@@ -33,12 +33,18 @@ jobs:
       - run: python -m unittest discover -s scripts/automation -p 'test_*.py'
       - name: Collect current official product data
         run: python scripts/automation/collect.py
+      - name: Summarize source coverage and blocked firms
+        if: always()
+        run: |
+          if test -f data/firm-updates.json; then python scripts/automation/source_health.py; fi
       - name: Preserve run report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: firm-update-report
-          path: data/firm-updates.json
+          path: |
+            data/firm-updates.json
+            data/source-health.md
           retention-days: 14
       - name: Publish verified updates
         run: |
