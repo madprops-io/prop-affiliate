@@ -50,8 +50,13 @@ jobs:
           git push origin HEAD:main
       - name: Prepare human approval proposal
         run: python scripts/automation/propose_approvals.py
-      - name: Generate readable pricing review
-        run: python scripts/automation/pricing_review.py
+      - name: Generate readable pricing review only for pending approvals
+        run: |
+          if git diff --quiet -- data/approved-firm-data.json; then
+            rm -f data/pricing-review.md
+          else
+            python scripts/automation/pricing_review.py
+          fi
       - name: Create reviewable approval pull request
         id: approval_pr
         uses: peter-evans/create-pull-request@v7
