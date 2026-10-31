@@ -1,0 +1,27 @@
+name: Audit prop firm website access
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/automation/probe_sources.py'
+      - '.github/workflows/audit-firm-access.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check public website access (no pricing changes)
+        run: python scripts/automation/probe_sources.py
+      - name: Preserve audit results
+        uses: actions/upload-artifact@v4
+        with:
+          name: prop-firm-access-audit
+          path: data/source-access-audit.json
+          retention-days: 30
