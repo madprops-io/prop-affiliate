@@ -1,0 +1,27 @@
+name: Review new firm pricing sources
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/automation/source_candidates.py'
+      - '.github/workflows/review-firm-sources.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r scripts/automation/requirements.txt
+      - name: Extract review-only evidence from official websites
+        run: python scripts/automation/source_candidates.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: firm-pricing-source-candidates
+          path: data/source-candidates.json
+          retention-days: 30
