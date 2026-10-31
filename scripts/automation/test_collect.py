@@ -4,8 +4,9 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import collect
-from collect import (apex, blue_guardian, build, daytraders, literal, lucid, money,
-                     my_funded_futures, tradeday, tradeify, unique)
+from collect import (apex, blue_guardian, build, daytraders, fundednext, literal,
+                     lucid, money, my_funded_futures, top_one_futures, tradeday,
+                     tradeify, unique)
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 NY = ZoneInfo("America/New_York")
@@ -415,6 +416,146 @@ class TradeDayAdapterTests(unittest.TestCase):
         self.assertEqual(result["review"], [])
         [patch] = result["patches"]
         self.assertEqual(patch["values"]["discount_code"], "TESTCODE")
+
+
+class FundedNextAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="fundednext-futures-rapid-daily-25k", firm_key="fundednext",
+                        firm_name="FundedNext", account_label="Rapid Daily",
+                        account_size_usd="25000", eval_cost_usd="1",
+                        discount_code="OLDSALE", discount_pct="10")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return fundednext(fixture("fundednext"), self.row(**values), NOW)
+
+    def test_rapid_daily_price_and_discount(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "150")
+        self.assertEqual(fields["discount_code"], "RAPID")
+        self.assertEqual(fields["discount_pct"], "50")
+        self.assertIsNone(expires)
+        self.assertIn("FundedNext", evidence)
+
+    def test_affiliate_code_is_kept(self):
+        fields, verified, _, _ = self.run_adapter(discount_code="MAD")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["discount_code"], "MAD")
+
+    def test_flex_package(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="fundednext-futures-flex-50k", account_label="Flex",
+            account_size_usd="50000")
+        self.assertEqual(fields["eval_cost_usd"], "200")
+        self.assertEqual(fields["discount_pct"], "40")
+
+    def test_rapid_pro_variant(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="fundednext-futures-rapid-pro-25k", account_label="Rapid Pro",
+            account_size_usd="25000")
+        self.assertEqual(fields["eval_cost_usd"], "150")
+
+    def test_dll_addon_not_on_storefront(self):
+        with self.assertRaisesRegex(ValueError, "not on the storefront"):
+            self.run_adapter(account_label="Rapid Pro DLL Add-On")
+
+    def test_legacy_not_on_storefront(self):
+        with self.assertRaisesRegex(ValueError, "not on the storefront"):
+            self.run_adapter(account_label="Legacy")
+
+    def test_unknown_label(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Quantum 25K")
+
+    def test_no_matching_size(self):
+        with self.assertRaisesRegex(ValueError, "found 0"):
+            self.run_adapter(account_label="Rapid Daily", account_size_usd="150000")
+
+    def test_sale_price_must_match_badge(self):
+        # Rapid Daily 50K: orig=300, badge=43% OFF → exact=171, disc=170 → |170-171|=1 ≤ 1 → OK
+        fields, verified, _, _ = self.run_adapter(
+            key="fundednext-futures-rapid-daily-50k", account_label="Rapid Daily",
+            account_size_usd="50000")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "300")
+
+    def test_build_publishes_patch_without_promo_expiry(self):
+        result = build([self.row()], {"fundednext": fixture("fundednext")}, NOW)
+        self.assertEqual(result["review"], [])
+        [patch] = result["patches"]
+        self.assertEqual(patch["values"]["discount_code"], "RAPID")
+        self.assertNotIn("promotionExpiresAt", patch)
+
+
+class TopOneFuturesAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="topone-elite-daily-25k", firm_key="top-one-futures",
+                        firm_name="Top One Futures", account_label="Elite Daily",
+                        account_size_usd="25000", eval_cost_usd="1",
+                        discount_code="OLDSALE", discount_pct="10")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return top_one_futures(fixture("top-one-futures"), self.row(**values), NOW)
+
+    def test_elite_daily_price_and_discount(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "200")
+        self.assertEqual(fields["discount_code"], "BOO")
+        self.assertEqual(fields["discount_pct"], "50")
+        self.assertIsNone(expires)
+        self.assertIn("Top One", evidence)
+
+    def test_affiliate_code_is_kept(self):
+        fields, verified, _, _ = self.run_adapter(discount_code="MADPROPS")
+        self.assertEqual(fields["discount_code"], "MADPROPS")
+
+    def test_elite_daily_50k(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="topone-elite-daily-50k", account_size_usd="50000")
+        self.assertEqual(fields["eval_cost_usd"], "300")
+        self.assertEqual(fields["discount_pct"], "50")
+
+    def test_elite_access_no_verified_discount(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="topone-elite-access-25k", account_label="Elite Access",
+            account_size_usd="25000")
+        self.assertIs(verified, False)
+        self.assertEqual(fields["eval_cost_usd"], "139")
+        self.assertNotIn("discount_code", fields)
+
+    def test_instant_sim_funded(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="topone-instant-2-25k", account_label="Instant Sim Funded 2.0",
+            account_size_usd="25000")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "500")
+        self.assertEqual(fields["discount_pct"], "45")
+
+    def test_ignite_instant_funding(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="topone-ignite-25k", account_label="Ignite Instant Funding",
+            account_size_usd="25000")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "400")
+        self.assertEqual(fields["discount_pct"], "50")
+
+    def test_unknown_label(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Premium 25K")
+
+    def test_no_matching_card(self):
+        with self.assertRaisesRegex(ValueError, "No Top One card"):
+            self.run_adapter(account_size_usd="200000")
+
+    def test_build_publishes_patch(self):
+        result = build([self.row()], {"top-one-futures": fixture("top-one-futures")}, NOW)
+        self.assertEqual(result["review"], [])
+        [patch] = result["patches"]
+        self.assertEqual(patch["values"]["discount_code"], "BOO")
+        self.assertNotIn("promotionExpiresAt", patch)
 
 
 if __name__ == '__main__':

@@ -424,9 +424,167 @@ def tradeday(text, row, now):
         f"regular {money(orig)}, sale {money(sale)}, code {code} {pct}%, platforms agree")
 
 
+def fundednext(text, row, now):
+    """FundedNext futures pricing from the Next.js flight payload.
+
+    The storefront embeds a market object ``{"id":"futures",...}`` with packages
+    (Flex, Rapid, Direct).  Each package lists challengesSubVariant entries,
+    each with challenge objects carrying ``originalPrice`` and ``discountedPrice``.
+    DLL Add-On and Legacy plans are not on the storefront.
+    """
+    label = row["account_label"].strip()
+    size = int(row["account_size_usd"])
+    LABEL_MAP = {
+        "Rapid Daily":  ("rapid", "daily"),
+        "Rapid Pro":    ("rapid", "pro"),
+        "Flex":         ("flex",  "default"),
+    }
+    mapped = LABEL_MAP.get(label)
+    if not mapped:
+        raise ValueError(f"FundedNext plan '{label}' is not on the storefront")
+    pkg_id, variant_type = mapped
+
+    payload = next_flight_payload(text)
+    m = re.search(r'\{"id":"futures"', payload)
+    if not m:
+        raise ValueError("FundedNext futures section not found in flight payload")
+    futures, _ = json.JSONDecoder().raw_decode(payload, m.start())
+
+    packages = {p["id"]: p for p in futures.get("packages", [])}
+    pkg = packages.get(pkg_id)
+    if not pkg:
+        raise ValueError(f"FundedNext package '{pkg_id}' not found")
+
+    sub_variants = {sv["variantType"]: sv for sv in pkg.get("challengesSubVariant", [])}
+    sv = sub_variants.get(variant_type)
+    if not sv:
+        raise ValueError(f"FundedNext variant '{variant_type}' not in package '{pkg_id}'")
+
+    challenges = [c for c in sv.get("challenges", [])
+                  if c.get("numericAccountSize") == size]
+    if len(challenges) != 1:
+        raise ValueError(f"Expected 1 FundedNext challenge for {label} {size}, found {len(challenges)}")
+    ch = challenges[0]
+
+    def parse_fn_price(val):
+        if not isinstance(val, str):
+            raise ValueError(f"FundedNext price is not a string: {val}")
+        return money(val.replace("$", "").replace(",", "").strip())
+
+    orig = parse_fn_price(ch.get("originalPrice", ""))
+    fields = {"eval_cost_usd": orig}
+
+    badge = ch.get("promoBadge", "")
+    badge_m = re.fullmatch(r"(\d{1,2})%\s*OFF", str(badge).strip(), re.I)
+    promo_code = pkg.get("promoCode")
+    verified = bool(badge_m and isinstance(promo_code, str) and COUPON.fullmatch(promo_code))
+    if verified:
+        pct = int(badge_m[1])
+        disc = parse_fn_price(ch.get("discountedPrice", ""))
+        exact = round(float(orig) * (1 - pct / 100), 2)
+        if abs(float(disc) - exact) > 1:
+            raise ValueError(f"FundedNext sale {disc} doesn't match {pct}% off {orig}")
+        fields["discount_code"] = coupon_code(row, promo_code)
+        fields["discount_pct"] = str(pct)
+        fields["discounted_eval_usd"] = disc if abs(float(disc) - exact) >= .005 else ""
+
+    return fields, verified, None, (
+        f"FundedNext {label} {size // 1000}K, regular {orig}, "
+        f"code {promo_code} {badge}, package '{pkg_id}' variant '{variant_type}'")
+
+
+TOP_ONE_TAB_MAP = {
+    "Elite Daily":             "Elite",
+    "Elite Access":            "Elite Access",
+    "Instant Sim Funded 2.0":  "Instant Sim Funded",
+    "Ignite Instant Funding":  "Ignite Instant Funding",
+}
+
+
+def top_one_futures(text, row, now):
+    """Top One Futures pricing from Webflow HTML pricing cards.
+
+    The page uses tabs (Elite, Elite Access, Instant Sim Funded, Ignite Instant
+    Funding) with v3-pricing-slide cards inside each pane.  Each card shows
+    a strikethrough ``v3-price-old`` and a sale ``v3-price-current``, plus a
+    ``% OFF`` discount badge.  Coupon codes are in ``v2-copy-text`` elements
+    near each card.
+    """
+    label = row["account_label"].strip()
+    size = int(row["account_size_usd"])
+    tab_name = TOP_ONE_TAB_MAP.get(label)
+    if not tab_name:
+        raise ValueError(f"Unknown Top One Futures plan label: {label}")
+    size_k = size // 1000
+
+    pane_pattern = (r'data-w-tab="' + re.escape(tab_name)
+                    + r'"[^>]*class="[^"]*w-tab-pane')
+    pane_matches = list(re.finditer(pane_pattern, text))
+    if not pane_matches:
+        raise ValueError(f"Top One tab pane '{tab_name}' not found")
+    pane_start = pane_matches[-1].start()
+
+    # Only main plan tabs mark a pane boundary; ignore nested Eval/Funded sub-tabs.
+    main_tabs = "|".join(re.escape(t) for t in TOP_ONE_TAB_MAP.values())
+    sibling = re.search(
+        r'data-w-tab="(?:' + main_tabs + r')"[^>]*class="[^"]*w-tab-pane',
+        text[pane_start + 1:])
+    pane_end = pane_start + 1 + sibling.start() if sibling else pane_start + 80000
+    section = text[pane_start:pane_end]
+
+    slide_parts = re.split(r'(?=v3-pricing-slide)', section)
+    matches = []
+    for part in slide_parts[1:]:
+        part = part[:8000]
+        title_m = re.search(r'v3-pricing-title">([^<]+)', part)
+        if not title_m:
+            continue
+        title = title_m.group(1).strip()
+        card_size_m = re.fullmatch(
+            r"\$(\d{1,3}(?:,\d{3})*)K\s*(?:Evaluation|Account)", title)
+        if not card_size_m:
+            continue
+        card_size = int(card_size_m[1].replace(",", ""))
+        if card_size != size_k:
+            continue
+        old_m = re.search(r'v3-price-old">\$(\d[\d,]*)', part)
+        cur_m = re.search(r'v3-price-current">\$(\d[\d,]*)', part)
+        disc_m = re.search(r'(\d{1,2})%\s*OFF', part)
+        if not old_m or not cur_m:
+            continue
+        old_price = money(old_m[1].replace(",", ""))
+        cur_price = money(cur_m[1].replace(",", ""))
+        disc_pct = int(disc_m[1]) if disc_m else None
+        code_m = re.search(r'v2-copy-text[^>]*>([A-Za-z0-9_-]+)', part)
+        code = code_m[1].strip() if code_m else None
+        matches.append((old_price, cur_price, disc_pct, code))
+
+    if not matches:
+        raise ValueError(f"No Top One card for {tab_name} {size_k}K")
+    old_price, cur_price, disc_pct, code = unique(matches)
+
+    fields = {"eval_cost_usd": old_price}
+    verified = bool(disc_pct and isinstance(code, str) and COUPON.fullmatch(code)
+                    and 0 < disc_pct <= 100)
+    if verified:
+        exact = round(float(old_price) * (1 - disc_pct / 100), 2)
+        if abs(float(cur_price) - exact) > 1:
+            raise ValueError(
+                f"Top One sale {cur_price} doesn't match {disc_pct}% off {old_price}")
+        fields["discount_code"] = coupon_code(row, code)
+        fields["discount_pct"] = str(disc_pct)
+        fields["discounted_eval_usd"] = (
+            cur_price if abs(float(cur_price) - exact) >= .005 else "")
+
+    return fields, verified, None, (
+        f"Top One {tab_name} {size_k}K, regular {old_price}, "
+        f"sale {cur_price}, code {code} {disc_pct}%")
+
+
 ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid": lucid,
             "blue-guardian": blue_guardian, "my-funded-futures": my_funded_futures,
-            "tradeday": tradeday}
+            "tradeday": tradeday, "fundednext": fundednext,
+            "top-one-futures": top_one_futures}
 
 
 def row_identity(row):
