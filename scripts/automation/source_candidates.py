@@ -4,13 +4,15 @@ This deliberately does not produce live pricing patches. It extracts potential
 structured offers and price-bearing text from official pages for human review.
 """
 import argparse
+import csv
+import io
 import html
 from html.parser import HTMLParser
 import json
 from pathlib import Path
 import re
 
-from collect import SOURCES, ADAPTERS, fetch, ROOT
+from collect import SOURCES, ADAPTERS, fetch, ROOT, SHEET
 
 MONEY = re.compile(r"(?<!\w)\$\s*(\d{1,5}(?:\.\d{1,2})?)(?!\d)")
 SIZE = re.compile(r"(?<!\d)(25|50|75|100|150|200|250|300)\s*[kK](?!\w)")
@@ -60,17 +62,41 @@ def extract(text):
         walk(obj)
     return {"candidateLines": candidates[:30], "structuredOffers": offers[:30]}
 
+def match_sheet_rows(firm, details, rows):
+    """Prioritize evidence against actual MadProps plans; never infer prices.
+
+    A candidate is only a lead, even if account size and a dollar sign match.
+    Account variants, fees, and promotions require a dedicated verified adapter.
+    """
+    matches = []
+    lines = details.get("candidateLines", [])
+    for row in rows:
+        if row.get("firm_key") != firm:
+            continue
+        raw_size = str(row.get("account_size_usd", "")).strip()
+        if not raw_size.isdigit() or int(raw_size) % 1000:
+            continue
+        size_k = int(raw_size) // 1000
+        token = re.compile(r"(?<!\\d)" + str(size_k) + r"\\s*[kK](?!\\w)")
+        relevant = [line for line in lines if token.search(line)]
+        matches.append({"key":row.get("key"), "accountLabel":row.get("account_label"),
+                        "sizeUsd":raw_size, "candidateLines":relevant[:5],
+                        "status":"REQUIRES_EXACT_PLAN_VERIFICATION"})
+    return matches
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--output", type=Path, default=ROOT / "data/source-candidates.json")
     args = ap.parse_args()
+    sheet_rows = list(csv.DictReader(io.StringIO(fetch(SHEET))))
     results = {}
     for firm, url in SOURCES.items():
         if firm in ADAPTERS:
             continue
         try:
             details = extract(fetch(url))
-            results[firm] = {"url":url, "status":"REVIEW_ONLY", **details}
+            results[firm] = {"url":url, "status":"REVIEW_ONLY", **details, "sheetPlanCandidates":match_sheet_rows(firm, details, sheet_rows)}
         except Exception as exc:
             results[firm] = {"url":url, "status":"FETCH_FAILED", "error":type(exc).__name__}
     args.output.parent.mkdir(parents=True,exist_ok=True)
