@@ -39,7 +39,8 @@ def main():
         request = Request(
             "https://api.resend.com/emails",
             data=json.dumps(payload).encode("utf-8"),
-            headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+            headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json",
+                     "User-Agent": "MadProps-Approval-Notifier/1.0", "Accept": "application/json"},
             method="POST",
         )
         with urlopen(request, timeout=20) as response:
