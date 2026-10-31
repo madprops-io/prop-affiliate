@@ -1,11 +1,18 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { firmUpdateStatus, loadFirmCsv } from "@/lib/firmData";
+import { stripUnverifiedProposals } from "@/lib/firmUpdateStatus";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   if (request.nextUrl.searchParams.get("status") === "1") {
-    return NextResponse.json(firmUpdateStatus(), { headers: { "Cache-Control": "no-store" } });
+    const status = firmUpdateStatus();
+    // Never publish unverified collector prices: drop review[].proposed (defense in depth;
+    // firmUpdateStatus already strips them). Patches, diagnostics and flags remain.
+    return NextResponse.json(
+      { ...status, review: stripUnverifiedProposals(status.review) },
+      { headers: { "Cache-Control": "no-store" } },
+    );
   }
   try {
     return new Response(await loadFirmCsv(), {
