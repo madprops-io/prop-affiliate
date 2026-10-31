@@ -77,7 +77,7 @@ def match_sheet_rows(firm, details, rows):
         if not raw_size.isdigit() or int(raw_size) % 1000:
             continue
         size_k = int(raw_size) // 1000
-        token = re.compile(r"(?<!\\d)" + str(size_k) + r"\\s*[kK](?!\\w)")
+        token = re.compile(r"(?<!\d)" + str(size_k) + r"\s*[kK](?!\w)")
         relevant = [line for line in lines if token.search(line)]
         matches.append({"key":row.get("key"), "accountLabel":row.get("account_label"),
                         "sizeUsd":raw_size, "candidateLines":relevant[:5],
