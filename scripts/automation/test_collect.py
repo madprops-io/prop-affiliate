@@ -4,7 +4,8 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import collect
-from collect import apex, blue_guardian, build, daytraders, literal, lucid, money, tradeify, unique
+from collect import (apex, blue_guardian, build, daytraders, literal, lucid, money,
+                     my_funded_futures, tradeday, tradeify, unique)
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 NY = ZoneInfo("America/New_York")
@@ -301,6 +302,120 @@ class BlueGuardianAdapterTests(unittest.TestCase):
         self.assertEqual(patch["values"]["discount_code"], "TESTCODE")
         self.assertEqual(patch["expiresAt"], (NOW + timedelta(hours=18)).isoformat())
         self.assertNotIn("promotionExpiresAt", patch)
+
+class MFFUAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="mffu-rapid-25k", firm_key="my-funded-futures", firm_name="My Funded Futures",
+                        account_label="Rapid 25K", account_size_usd="25000", eval_cost_usd="1",
+                        discount_code="OLDSALE", discount_pct="10")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return my_funded_futures(fixture("my-funded-futures"), self.row(**values), NOW)
+
+    def test_public_code_replaces_non_affiliate_code(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "999")
+        self.assertEqual(fields["discount_code"], "TESTCODE")
+        self.assertEqual(fields["discount_pct"], "50")
+        self.assertIsNone(expires)
+        self.assertIn("MFFU", evidence)
+
+    def test_affiliate_code_is_kept(self):
+        fields, verified, _, _ = self.run_adapter(discount_code="MAD")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["discount_code"], "MAD")
+        self.assertEqual(fields["discount_pct"], "50")
+
+    def test_different_category_and_size(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="mffu-rapid-50k", account_label="Rapid 50K", account_size_usd="50000")
+        self.assertEqual(fields["eval_cost_usd"], "888")
+
+    def test_inactive_product_not_found(self):
+        with self.assertRaisesRegex(ValueError, "found 0"):
+            self.run_adapter(key="mffu-builder-50k", account_label="Builder 50K",
+                             account_size_usd="50000")
+
+    def test_label_size_mismatch(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Rapid 25K", account_size_usd="50000")
+
+    def test_unknown_category(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Quantum 25K")
+
+    def test_build_publishes_patch_without_promo_expiry(self):
+        result = build([self.row()], {"my-funded-futures": fixture("my-funded-futures")}, NOW)
+        self.assertEqual(result["review"], [])
+        [patch] = result["patches"]
+        self.assertEqual(patch["values"]["discount_code"], "TESTCODE")
+        self.assertNotIn("promotionExpiresAt", patch)
+
+    def test_sale_price_computed_correctly(self):
+        fields, _, _, _ = self.run_adapter()
+        # 999 * 0.5 = 499.5
+        self.assertEqual(fields["discounted_eval_usd"], "499.5")
+
+
+class TradeDayAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="tradeday-quick-pay-intraday-25k", firm_key="tradeday", firm_name="TradeDay",
+                        account_label="Quick Pay Intraday", account_size_usd="25000", eval_cost_usd="1",
+                        discount_code="OLDSALE", discount_pct="10")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return tradeday(fixture("tradeday"), self.row(**values), NOW)
+
+    def test_public_code_replaces_non_affiliate_code(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "999")
+        self.assertEqual(fields["discount_code"], "TESTCODE")
+        self.assertEqual(fields["discount_pct"], "55")
+        self.assertEqual(fields["discounted_eval_usd"], "450")
+        self.assertIsNone(expires)
+        self.assertIn("TradeDay", evidence)
+
+    def test_affiliate_code_is_kept(self):
+        fields, verified, _, _ = self.run_adapter(discount_code="MADPROPS")
+        self.assertEqual(fields["discount_code"], "MADPROPS")
+
+    def test_eod_plan(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="tradeday-quick-pay-eod-50k", account_label="Quick Pay EOD",
+            account_size_usd="50000")
+        self.assertEqual(fields["eval_cost_usd"], "888")
+        self.assertEqual(fields["discount_pct"], "55")
+
+    def test_platform_disagreement_fails_closed(self):
+        # Fast Pass EOD 25k has two cards with different sale prices
+        with self.assertRaisesRegex(ValueError, "disagree"):
+            self.run_adapter(key="tradeday-fast-pass-eod-25k",
+                             account_label="Fast Pass EOD", account_size_usd="25000")
+
+    def test_sale_price_must_match_discount_badge(self):
+        # Quick Pay Intraday 50k: 666 with 55% badge → exact should be 300, but shows 200
+        with self.assertRaisesRegex(ValueError, "does not match"):
+            self.run_adapter(key="tradeday-quick-pay-intraday-50k",
+                             account_label="Quick Pay Intraday", account_size_usd="50000")
+
+    def test_unknown_label(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Express 25K")
+
+    def test_no_matching_card(self):
+        with self.assertRaisesRegex(ValueError, "No TradeDay card"):
+            self.run_adapter(account_label="Quick Pay Intraday", account_size_usd="150000")
+
+    def test_build_publishes_patch(self):
+        result = build([self.row()], {"tradeday": fixture("tradeday")}, NOW)
+        self.assertEqual(result["review"], [])
+        [patch] = result["patches"]
+        self.assertEqual(patch["values"]["discount_code"], "TESTCODE")
+
 
 if __name__ == '__main__':
     unittest.main()
