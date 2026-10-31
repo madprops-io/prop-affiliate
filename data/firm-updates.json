@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T21:41:41.095080+00:00",
+  "generatedAt": "2026-10-31T22:48:19.720426+00:00",
   "patches": [
     {
       "key": "tradeify-growth-25k",
@@ -21,7 +21,7 @@
         "discount_pct": "30",
         "discounted_eval_usd": "69"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
@@ -47,7 +47,7 @@
         "discount_pct": "30",
         "discounted_eval_usd": "102"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
@@ -73,7 +73,7 @@
         "discount_pct": "30",
         "discounted_eval_usd": "179"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
@@ -99,7 +99,7 @@
         "discount_pct": "30",
         "discounted_eval_usd": "258"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
@@ -125,7 +125,7 @@
         "discount_pct": "30",
         "discounted_eval_usd": "76"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
@@ -151,7 +151,7 @@
         "discount_pct": "30",
         "discounted_eval_usd": "116"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
@@ -177,7 +177,7 @@
         "discount_pct": "30",
         "discounted_eval_usd": "186"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
@@ -203,7 +203,7 @@
         "discount_pct": "30",
         "discounted_eval_usd": "258"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
@@ -227,7 +227,7 @@
         "discount_pct": "30",
         "discounted_eval_usd": "242"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
@@ -251,7 +251,7 @@
         "discount_pct": "30",
         "discounted_eval_usd": "344"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
@@ -275,7 +275,7 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
@@ -299,12 +299,311 @@
         "discount_pct": "30",
         "discounted_eval_usd": "557"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
       "expiresAt": "2026-10-31T23:59:00-04:00",
       "promotionExpiresAt": "2026-10-31T23:59:00-04:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 150000, all visible brokers agree",
       "sha256": "1db748d2c8fdf2acefbb62c6a064357405dfa954270baeb0665fadb285b438e2"
+    },
+    {
+      "key": "blue-guardian-standard-25k",
+      "expected": {
+        "account_label": "Standard 25K",
+        "account_size_usd": "25000",
+        "discount_code": "BG25",
+        "discount_pct": "25",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "154",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "154",
+        "discount_code": "HALLOWEEN",
+        "discount_pct": "35",
+        "discounted_eval_usd": "100"
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Standard 25K, regular 154, sale 100, code HALLOWEEN, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-standard-50k",
+      "expected": {
+        "account_label": "Standard 50K",
+        "account_size_usd": "50000",
+        "discount_code": "BG25",
+        "discount_pct": "25",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "209",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "209",
+        "discount_code": "HALLOWEEN",
+        "discount_pct": "35",
+        "discounted_eval_usd": "136"
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Standard 50K, regular 209, sale 136, code HALLOWEEN, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-standard-100k",
+      "expected": {
+        "account_label": "Standard 100K",
+        "account_size_usd": "100000",
+        "discount_code": "BG25",
+        "discount_pct": "25",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "330",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "330",
+        "discount_code": "HALLOWEEN",
+        "discount_pct": "35",
+        "discounted_eval_usd": "215"
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Standard 100K, regular 330, sale 215, code HALLOWEEN, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-standard-150k",
+      "expected": {
+        "account_label": "Standard 150K",
+        "account_size_usd": "150000",
+        "discount_code": "BG25",
+        "discount_pct": "25",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "424",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "424",
+        "discount_code": "HALLOWEEN",
+        "discount_pct": "35",
+        "discounted_eval_usd": "276"
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Standard 150K, regular 424, sale 276, code HALLOWEEN, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-reserve-25k",
+      "expected": {
+        "account_label": "Reserve 25K",
+        "account_size_usd": "25000",
+        "discount_code": "BG25",
+        "discount_pct": "25",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "64",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "72",
+        "discount_code": "SPOOKY",
+        "discount_pct": "25",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Reserve 25K, regular 72, sale 54, code SPOOKY, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-reserve-100k",
+      "expected": {
+        "account_label": "Reserve 100K",
+        "account_size_usd": "100000",
+        "discount_code": "BG25",
+        "discount_pct": "25",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "148",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "148",
+        "discount_code": "SPOOKY",
+        "discount_pct": "25",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Reserve 100K, regular 148, sale 111, code SPOOKY, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-reserve-150k",
+      "expected": {
+        "account_label": "Reserve 150K",
+        "account_size_usd": "150000",
+        "discount_code": "BG25",
+        "discount_pct": "25",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "296",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "296",
+        "discount_code": "SPOOKY",
+        "discount_pct": "25",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Reserve 150K, regular 296, sale 222, code SPOOKY, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-express-25k",
+      "expected": {
+        "account_label": "Express 25K",
+        "account_size_usd": "25000",
+        "discount_code": "EXPRESS",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "119",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "86",
+        "discount_code": "HALLOWEEN",
+        "discount_pct": "35",
+        "discounted_eval_usd": "56"
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Express 25K, regular 86, sale 56, code HALLOWEEN, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-express-50k",
+      "expected": {
+        "account_label": "Express 50K",
+        "account_size_usd": "50000",
+        "discount_code": "EXPRESS",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "179",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "130",
+        "discount_code": "HALLOWEEN",
+        "discount_pct": "35",
+        "discounted_eval_usd": "85"
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Express 50K, regular 130, sale 85, code HALLOWEEN, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-express-100k",
+      "expected": {
+        "account_label": "Express 100K",
+        "account_size_usd": "100000",
+        "discount_code": "EXPRESS",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "283",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "205",
+        "discount_code": "HALLOWEEN",
+        "discount_pct": "35",
+        "discounted_eval_usd": "133"
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Express 100K, regular 205, sale 133, code HALLOWEEN, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-express-150k",
+      "expected": {
+        "account_label": "Express 150K",
+        "account_size_usd": "150000",
+        "discount_code": "EXPRESS",
+        "discount_pct": "50",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "440",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "320",
+        "discount_code": "HALLOWEEN",
+        "discount_pct": "35",
+        "discounted_eval_usd": ""
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Express 150K, regular 320, sale 208, code HALLOWEEN, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-direct-25k",
+      "expected": {
+        "account_label": "Direct 25K",
+        "account_size_usd": "25000",
+        "discount_code": "BG25",
+        "discount_pct": "25",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "307",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "350",
+        "discount_code": "HALLOWEEN",
+        "discount_pct": "35",
+        "discounted_eval_usd": "228"
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Direct 25K, regular 350, sale 228, code HALLOWEEN, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
+    },
+    {
+      "key": "blue-guardian-direct-50k",
+      "expected": {
+        "account_label": "Direct 50K",
+        "account_size_usd": "50000",
+        "discount_code": "BG25",
+        "discount_pct": "25",
+        "discounted_eval_usd": "",
+        "eval_cost_usd": "494",
+        "firm_key": "blue-guardian"
+      },
+      "values": {
+        "eval_cost_usd": "452",
+        "discount_code": "HALLOWEEN",
+        "discount_pct": "35",
+        "discounted_eval_usd": "294"
+      },
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
+      "source": "https://blueguardian.com/",
+      "evidence": "Blue Guardian futures Direct 50K, regular 452, sale 294, code HALLOWEEN, all copies and platforms agree",
+      "sha256": "1ad786123c69860a37ab327b6392fd6a5da28dfa5c1e7b5caeba6e9e6eadf3a1"
     },
     {
       "key": "daytraders-trail-25k",
@@ -324,8 +623,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 25K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -348,8 +647,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 50K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -372,8 +671,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 150K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -396,8 +695,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 300K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -420,8 +719,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 25K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -444,8 +743,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 50K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -468,8 +767,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 150K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -492,8 +791,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 300K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -516,8 +815,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 25K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -540,8 +839,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 50K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -564,8 +863,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 100K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -588,8 +887,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 150K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -608,8 +907,8 @@
       "values": {
         "eval_cost_usd": "222"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2F 25K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -628,8 +927,8 @@
       "values": {
         "eval_cost_usd": "342"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2F 50K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -648,8 +947,8 @@
       "values": {
         "eval_cost_usd": "495"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2F 150K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -668,8 +967,8 @@
       "values": {
         "eval_cost_usd": "179"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2L 50K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -688,8 +987,8 @@
       "values": {
         "eval_cost_usd": "319"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2L 150K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -708,8 +1007,8 @@
       "values": {
         "eval_cost_usd": "449"
       },
-      "verifiedAt": "2026-10-31T21:41:41.095080+00:00",
-      "expiresAt": "2026-11-01T15:41:41.095080+00:00",
+      "verifiedAt": "2026-10-31T22:48:19.720426+00:00",
+      "expiresAt": "2026-11-01T16:48:19.720426+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders S2L 300K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -843,6 +1142,18 @@
     {
       "key": "apex-eod-no-activation-150k",
       "reason": "Official source unavailable: {'error': 'HTTPError: HTTP Error 403: Forbidden'}"
+    },
+    {
+      "key": "blue-guardian-reserve-50k",
+      "reason": "Blue Guardian regular price is derived, not published"
+    },
+    {
+      "key": "blue-guardian-direct-100k",
+      "reason": "Blue Guardian regular price is derived, not published"
+    },
+    {
+      "key": "blue-guardian-direct-150k",
+      "reason": "Blue Guardian regular price is derived, not published"
     }
   ],
   "unsupportedFirms": {
@@ -856,7 +1167,6 @@
     "elite-trader-funding": 14,
     "top-one-futures": 15,
     "tradeday": 11,
-    "blue-guardian": 16,
     "legendstrading": 7,
     "my-funded-futures": 13,
     "phidias": 10,
@@ -911,11 +1221,11 @@
       "title": "Futures"
     },
     "blue-guardian": {
-      "bytes": 849388,
+      "bytes": 849259,
       "title": "Blue Guardian | Best Instant Funding Prop Firm - Fast Funded Accounts"
     },
     "blusky-trading": {
-      "bytes": 321139,
+      "bytes": 321138,
       "title": "BluSky Trading - The Funded Futures Prop Firm For Serious Traders"
     },
     "bulenox": {
@@ -923,11 +1233,11 @@
       "title": "Bulenox \u2014 Invest in Yourself"
     },
     "e8futures": {
-      "bytes": 578273,
+      "bytes": 578261,
       "title": "SimFi\u2122 Trading Platform \u2014 150+ Markets, US-Based \u00b7 E8Markets"
     },
     "fundednext": {
-      "bytes": 1229417,
+      "bytes": 1229343,
       "title": "FundedNext - Prop Trading Firm for CFDs and Futures"
     },
     "legendstrading": {
@@ -935,7 +1245,7 @@
       "title": "Legends Trading"
     },
     "my-funded-futures": {
-      "bytes": 409024,
+      "bytes": 409008,
       "title": "The Premier Futures Prop Firm - My Funded Futures"
     },
     "phidias": {
