@@ -39,6 +39,7 @@ export function applyApprovedUpdates(
 
   return verifiedRows.map((verified, index) => {
     const sheet = sheetRows[index];
+    if (!sheet) return verified;
     const key = identity(sheet);
     const entry = entries.get(key);
     if (!entry || duplicates.has(key) || counts.get(key) !== 1 ||
