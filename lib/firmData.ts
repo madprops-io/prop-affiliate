@@ -1,5 +1,7 @@
 import Papa from "papaparse";
 import snapshot from "@/data/firm-updates.json";
+import approved from "@/data/approved-firm-data.json";
+import { applyApprovedUpdates, type ApprovedSnapshot } from "./approvedUpdates";
 import { applyFirmUpdates, type CsvRow, type UpdateSnapshot } from "./firmUpdates";
 
 export async function loadFirmCsv(nocache = false) {
@@ -17,7 +19,7 @@ export async function loadFirmCsv(nocache = false) {
     throw new Error("Invalid Sheet CSV; updates were not applied");
   }
   const rows = process.env.MADPROPS_AUTOMATION_DISABLED === "1"
-    ? parsed.data : applyFirmUpdates(parsed.data, snapshot as unknown as UpdateSnapshot);
+    ? parsed.data : applyApprovedUpdates(parsed.data, applyFirmUpdates(parsed.data, snapshot as unknown as UpdateSnapshot), approved as ApprovedSnapshot);
   return Papa.unparse(rows, { columns: parsed.meta.fields });
 }
 

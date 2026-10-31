@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: firm-data-update
@@ -47,3 +48,19 @@ jobs:
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Refresh verified firm data'
           git push origin HEAD:main
+      - name: Prepare human approval proposal
+        run: python scripts/automation/propose_approvals.py
+      - name: Email-reviewable approval pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          add-paths: data/approved-firm-data.json
+          branch: automation/approve-firm-prices
+          delete-branch: true
+          title: 'Review verified MadProps pricing changes'
+          commit-message: 'Propose approved pricing baseline'
+          body: |
+            Review each proposed price and discount against its official source.
+            **Merge this PR to approve and retain the new baseline.**
+            Promotions retain their source expiration date and do not become permanent discounts.
+            GitHub can email subscribers when this PR is opened or updated.
