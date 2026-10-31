@@ -295,8 +295,138 @@ def blue_guardian(text, row, now):
         f"code {code}, all copies and platforms agree")
 
 
+def my_funded_futures(text, row, now):
+    """MFFU product pricing from the Next.js flight payload.
+
+    The storefront embeds a categories dict (Rapid, Builder, Pro, …) in the
+    flight data.  Each product carries ``price_data`` (regular price) and
+    ``coupon_data`` (active coupon with amountOff / typeOff).  No promotion end
+    date is published, so promos live only as 18-hour patches.
+    """
+    label = row["account_label"].strip()
+    size = int(row["account_size_usd"])
+    # The Sheet label may be just the category ("Builder") or include the size
+    # ("Builder 25K").  Accept both forms.
+    m = re.fullmatch(r"(Builder|Rapid|Rapid EOD|Pro)(?: (\d+)K?)?", label, re.I)
+    if not m:
+        raise ValueError("Unknown MFFU plan label")
+    cat = m[1]
+    if m[2] and int(m[2]) * 1000 != size:
+        raise ValueError("MFFU label/size mismatch")
+
+    payload = next_flight_payload(text)
+    # Locate the categories dict: {"Rapid": [...], "Builder": [...], ...}
+    idx = payload.find('"Rapid":[')
+    if idx < 0:
+        raise ValueError("MFFU categories not found in flight payload")
+    start = idx - 1
+    depth = 0
+    while start > 0:
+        if payload[start] == '}':
+            depth += 1
+        if payload[start] == '{':
+            if depth == 0:
+                break
+            depth -= 1
+        start -= 1
+    categories, _ = json.JSONDecoder().raw_decode(payload, start)
+    items = categories.get(cat)
+    if not items:
+        raise ValueError(f"MFFU category '{cat}' not found")
+
+    matches = [p for p in items
+               if p.get("account_size") == size and p.get("active") is True]
+    if len(matches) != 1:
+        raise ValueError(f"Expected 1 active MFFU product for {cat} {size}, found {len(matches)}")
+    product = matches[0]
+    pd = product.get("price_data") or {}
+    cd = product.get("coupon_data") or {}
+    price = pd.get("price")
+    if not isinstance(price, (int, float)) or price <= 0:
+        raise ValueError("MFFU price missing or invalid")
+    fields = {"eval_cost_usd": money(price)}
+    code = cd.get("code")
+    pct = cd.get("amountOff")
+    verified = (cd.get("active") is True and isinstance(code, str) and COUPON.fullmatch(code)
+                and cd.get("typeOff") == "%" and isinstance(pct, (int, float)) and 0 < pct <= 100)
+    if verified:
+        fields["discount_code"] = coupon_code(row, code)
+        fields["discount_pct"] = str(int(pct))
+        sale = round(price * (1 - pct / 100), 2)
+        fields["discounted_eval_usd"] = money(sale) if sale != price else ""
+    return fields, verified, None, (
+        f"MFFU {cat} {m[2]}K, price {money(price)}, coupon {code} {pct}%")
+
+
+def tradeday(text, row, now):
+    """TradeDay pricing from the Webflow HTML.
+
+    Cards are duplicated per platform (Tradovate / Rithmic); both copies must
+    agree.  The coupon code (TDNEW) is shown in the navbar, and the discount
+    badge is on each card.  No promotion end date is published.
+    """
+    label = row["account_label"]
+    size = int(row["account_size_usd"])
+    m = re.fullmatch(r"(Quick Pay|Fast Pass) (Intraday|EOD)", label, re.I)
+    if not m:
+        raise ValueError("Unknown TradeDay plan label")
+    account = m[1]
+    dd_label = "End of Day" if m[2].upper() == "EOD" else m[2]
+    size_k = size // 1000
+
+    # Parse all pricing cards
+    cards = []
+    for cm in re.finditer(r'class="pricing-card_item"', text):
+        next_cm = re.search(r'class="pricing-card_item"', text[cm.end():])
+        end = cm.end() + next_cm.start() if next_cm else cm.end() + 5000
+        card = text[cm.start():end]
+
+        dd = re.search(r'fs-list-field="drawdown"[^>]*>([^<]+)', card)
+        sz = re.search(r'text-size-large[^>]*>(\d+)k', card, re.I)
+        acct = re.search(r'fs-list-field="account"[^>]*>([^<]+)', card)
+        if not dd or not sz or not acct:
+            continue
+        header = re.search(r'pricing-card_header(.*?)pricing-card_list', card, re.S)
+        if not header:
+            continue
+        vals = re.findall(r'display-inline">(.*?)</div>', header.group())
+        if len(vals) < 4:
+            continue
+        orig = int(vals[1].replace(',', ''))
+        sale = int(vals[3].replace(',', ''))
+        disc = re.search(r'pricing-card_discount[^>]*>(\d+)%', card)
+        cards.append((acct.group(1).strip(), dd.group(1).strip(),
+                       int(sz.group(1)), orig, sale,
+                       int(disc.group(1)) if disc else None))
+
+    matches = [(orig, sale, pct) for (a, d, s, orig, sale, pct) in cards
+               if a == account and d == dd_label and s == size_k]
+    if not matches:
+        raise ValueError(f"No TradeDay card for {account} {dd_label} {size_k}k")
+    orig, sale, pct = unique(matches)
+
+    # Coupon code from the navbar
+    code_m = re.search(r'fs-copyclip-text="([A-Za-z0-9_-]+)"', text)
+    code = code_m.group(1) if code_m else None
+
+    fields = {"eval_cost_usd": money(orig)}
+    verified = (pct is not None and isinstance(code, str) and COUPON.fullmatch(code)
+                and 0 < pct <= 100)
+    if verified:
+        exact = round(orig * (1 - pct / 100))
+        if abs(sale - exact) > 1:
+            raise ValueError("TradeDay sale price does not match its discount badge")
+        fields["discount_code"] = coupon_code(row, code)
+        fields["discount_pct"] = str(pct)
+        fields["discounted_eval_usd"] = money(sale)
+    return fields, verified, None, (
+        f"TradeDay {account} {dd_label} {size_k}k, "
+        f"regular {money(orig)}, sale {money(sale)}, code {code} {pct}%, platforms agree")
+
+
 ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid": lucid,
-            "blue-guardian": blue_guardian}
+            "blue-guardian": blue_guardian, "my-funded-futures": my_funded_futures,
+            "tradeday": tradeday}
 
 
 def row_identity(row):
