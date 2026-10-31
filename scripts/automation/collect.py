@@ -36,6 +36,25 @@ LITERALS = {}
 PUBLIC_SALE_CODES = {"apex": {"SAVENOW"}, "tradeify": {"SEP", "GEMS"}}
 
 
+def prior_approved_tradeify_codes():
+    """Only previously approved official Tradeify codes can roll to a new code.
+
+    Do not treat an unknown Sheet code as a public coupon: it may be an
+    affiliate-specific code that must be preserved.
+    """
+    try:
+        approved = json.loads((ROOT / "data/approved-firm-data.json").read_text())
+        return {
+            entry["values"]["discount_code"].upper()
+            for entry in approved.get("entries", [])
+            if entry.get("key", "").startswith("tradeify-")
+            and re.fullmatch(r"[A-Za-z0-9_-]{1,40}", entry.get("values", {}).get("discount_code", ""))
+        }
+    except (OSError, ValueError, KeyError, TypeError):
+        return set()
+
+
+
 def fetch(url):
     request = urllib.request.Request(url, headers={
         "User-Agent": "Mozilla/5.0 (compatible; MadPropsDataMonitor/1.0; +https://madprops.com)",
@@ -167,7 +186,7 @@ def tradeify(text, row, now):
     info = literal(text, r"const\s+couponInfo\s*=\s*")
     month = datetime.strptime(info["month"], "%B").month
     expires = datetime(now.year, month, int(info["lastDay"]), 23, 59, tzinfo=ZoneInfo("America/New_York"))
-    verified = (coupon[0].casefold() == row["discount_code"].casefold() or row["discount_code"].upper() in PUBLIC_SALE_CODES["tradeify"]) and expires > now
+    verified = (coupon[0].casefold() == row["discount_code"].casefold() or row["discount_code"].upper() in (PUBLIC_SALE_CODES["tradeify"] | prior_approved_tradeify_codes())) and expires > now
     if verified:
         fields["discount_code"] = coupon[0]
         fields["discount_pct"] = money(coupon[1])
