@@ -50,7 +50,8 @@ jobs:
           git push origin HEAD:main
       - name: Prepare human approval proposal
         run: python scripts/automation/propose_approvals.py
-      - name: Email-reviewable approval pull request
+      - name: Create reviewable approval pull request
+        id: approval_pr
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -64,3 +65,12 @@ jobs:
             **Merge this PR to approve and retain the new baseline.**
             Promotions retain their source expiration date and do not become permanent discounts.
             GitHub can email subscribers when this PR is opened or updated.
+      - name: Email pricing approval via Resend
+        if: ${{ steps.approval_pr.outputs.pull-request-operation == 'created' || steps.approval_pr.outputs.pull-request-operation == 'updated' }}
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM_EMAIL: ${{ vars.RESEND_FROM_EMAIL }}
+          APPROVAL_TO_EMAIL: caldwell.tj@gmail.com
+          APPROVAL_PR_URL: ${{ steps.approval_pr.outputs.pull-request-url }}
+          APPROVAL_PR_OPERATION: ${{ steps.approval_pr.outputs.pull-request-operation }}
+        run: python scripts/automation/send_approval_email.py
