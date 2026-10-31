@@ -48,28 +48,17 @@ SOURCES = {
 PRICE_FIELDS = {"eval_cost_usd", "discount_pct", "discounted_eval_usd", "discount_code"}
 ALLOWED = PRICE_FIELDS | {"activation_fee_usd", "min_days (Eval)", "ddt"}
 LITERALS = {}
-# These are generic public sale codes, not MadProps affiliate identifiers.
-# Unknown/custom codes are never replaced by the public storefront coupon.
-PUBLIC_SALE_CODES = {"apex": {"SAVENOW"}, "tradeify": {"SEP", "GEMS"}}
+# MadProps affiliate codes. Firms give these the same discount as their current
+# public promotion, so they are kept and take that promotion's discount. Every
+# other Sheet code (or a blank one) is replaced by the firm's current public code.
+# Mirrors AFFILIATE_CODES in lib/firmUpdates.ts.
+AFFILIATE_CODES = {"MAD", "MADPROPS"}
+COUPON = re.compile(r"[A-Za-z0-9_-]{1,40}")
 
 
-def prior_approved_tradeify_codes():
-    """Only previously approved official Tradeify codes can roll to a new code.
-
-    Do not treat an unknown Sheet code as a public coupon: it may be an
-    affiliate-specific code that must be preserved.
-    """
-    try:
-        approved = json.loads((ROOT / "data/approved-firm-data.json").read_text())
-        return {
-            entry["values"]["discount_code"].upper()
-            for entry in approved.get("entries", [])
-            if entry.get("key", "").startswith("tradeify-")
-            and re.fullmatch(r"[A-Za-z0-9_-]{1,40}", entry.get("values", {}).get("discount_code", ""))
-        }
-    except (OSError, ValueError, KeyError, TypeError):
-        return set()
-
+def coupon_code(row, public_code):
+    current = row.get("discount_code", "").strip()
+    return current if current.upper() in AFFILIATE_CODES else public_code
 
 
 def fetch(url):
@@ -177,9 +166,9 @@ def apex(text, row, now):
     promo = promo.get(trail, promo)
     expires = datetime.strptime(promo["expiration"], "%Y-%m-%d %H:%M").replace(tzinfo=ZoneInfo("America/New_York"))
     code = re.search(r'COUPON\s+"([A-Za-z0-9_-]+)"', promo.get("title_code", ""))
-    verified = promo.get("active") is True and expires > now and code and (code[1].casefold() == row["discount_code"].casefold() or row["discount_code"].upper() in PUBLIC_SALE_CODES["apex"])
+    verified = promo.get("active") is True and expires > now and code is not None
     if verified:
-        fields["discount_code"] = code[1]
+        fields["discount_code"] = coupon_code(row, code[1])
         fields["discount_pct"] = money(promo["first_month_code"])
         fields["discounted_eval_usd"] = ""
     return fields, bool(verified), expires if verified else now + timedelta(hours=18), f"Apex {trail}, {row['account_size_usd']}, free_activation={free}"
@@ -203,9 +192,9 @@ def tradeify(text, row, now):
     info = literal(text, r"const\s+couponInfo\s*=\s*")
     month = datetime.strptime(info["month"], "%B").month
     expires = datetime(now.year, month, int(info["lastDay"]), 23, 59, tzinfo=ZoneInfo("America/New_York"))
-    verified = (coupon[0].casefold() == row["discount_code"].casefold() or row["discount_code"].upper() in (PUBLIC_SALE_CODES["tradeify"] | prior_approved_tradeify_codes())) and expires > now
+    verified = isinstance(coupon[0], str) and bool(COUPON.fullmatch(coupon[0])) and expires > now
     if verified:
-        fields["discount_code"] = coupon[0]
+        fields["discount_code"] = coupon_code(row, coupon[0])
         fields["discount_pct"] = money(coupon[1])
         exact = round(float(base) * (1 - float(coupon[1]) / 100), 2)
         displayed = unique([str(math.floor(exact + .5)) if not p.get("showFraction") else money(exact) for p in matches])
@@ -252,7 +241,62 @@ def lucid(text, row, now):
     return fields, False, now + timedelta(hours=18), f"Lucid {m[1]} {m[2]}K, product {product}"
 
 
-ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid": lucid}
+BLUE_GUARDIAN_PRODUCT = re.compile(
+    r'\{"market":"futures","plan":"(?:standard|reserve|express|direct)",[^{}]*\}')
+
+
+def next_flight_payload(text):
+    """Join Next.js flight chunks, decoding each as a JSON string literal (never eval)."""
+    chunks = re.findall(r'self\.__next_f\.push\(\[1,"((?:[^"\\]|\\.)*)"\]\)', text)
+    return "".join(json.loads('"' + chunk + '"') for chunk in chunks)
+
+
+def blue_guardian(text, row, now):
+    """Futures plan sizes (regular, sale, coupon) from the storefront payload.
+
+    Every repeated plan copy and every platform product must agree, the sale
+    price must match the coupon's percentage, and fractional strike-through
+    prices (derived from the sale price) are refused. The site publishes no
+    promotion end date, so the promotion is never persisted beyond the patch.
+    """
+    m = re.fullmatch(r"(Standard|Reserve|Express|Direct) (25|50|100|150)K", row["account_label"])
+    size = int(row["account_size_usd"])
+    if not m or int(m[2]) * 1000 != size:
+        raise ValueError("Unknown Blue Guardian plan label")
+    plan = m[1].lower()
+    payload = next_flight_payload(text)
+    decoder = json.JSONDecoder()
+    sizes = []
+    for start in re.finditer(r'\{"id":\d+,"market":"futures","key":"' + plan + '"', payload):
+        obj, _ = decoder.raw_decode(payload, start.start())
+        if obj.get("disabled") is False:
+            sizes += [s for s in obj.get("sizes", []) if s.get("amount") == size]
+    regular, sale, code, label = unique([
+        (s.get("originalPrice"), s.get("currentPrice"), (s.get("coupon") or {}).get("code"),
+         (s.get("coupon") or {}).get("label")) for s in sizes])
+    products = [p for p in (json.loads(raw) for raw in BLUE_GUARDIAN_PRODUCT.findall(payload))
+                if p.get("plan") == plan and p.get("accountType") == "standard" and p.get("amount") == size]
+    if unique([(p.get("originalPrice"), p.get("currentPrice")) for p in products]) != (regular, sale):
+        raise ValueError("Blue Guardian plan and product prices disagree")
+    if not isinstance(regular, int) or isinstance(regular, bool):
+        raise ValueError("Blue Guardian regular price is derived, not published")
+    fields = {"eval_cost_usd": money(regular)}
+    pct = re.fullmatch(r"save (\d{1,2})% with code", str(label or "").strip(), re.I)
+    verified = bool(pct and isinstance(code, str) and COUPON.fullmatch(code))
+    if verified:
+        exact = round(regular * (1 - int(pct[1]) / 100), 2)
+        if abs(float(money(sale)) - exact) > 1:
+            raise ValueError("Blue Guardian sale price does not match its coupon")
+        fields["discount_code"] = coupon_code(row, code)
+        fields["discount_pct"] = pct[1]
+        fields["discounted_eval_usd"] = money(sale) if abs(float(money(sale)) - exact) >= .005 else ""
+    return fields, verified, None, (
+        f"Blue Guardian futures {m[1]} {m[2]}K, regular {money(regular)}, sale {money(sale)}, "
+        f"code {code}, all copies and platforms agree")
+
+
+ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid": lucid,
+            "blue-guardian": blue_guardian}
 
 
 def row_identity(row):
@@ -306,8 +350,10 @@ def build(rows, sources, now):
                 guarded = set(fields) | {"account_label", "account_size_usd", "firm_key", "discount_code", "discount_pct", "discounted_eval_usd"}
                 patches.append({"key": key, "expected": {k: row.get(k, "") for k in sorted(guarded)},
                                 "values": fields, "verifiedAt": now.isoformat(),
-                                "expiresAt": min(expires, now + timedelta(hours=18)).isoformat(),
-                                **({"promotionExpiresAt": expires.isoformat()} if verified_coupon and "discount_code" in fields else {}),
+                                # expires=None: the source publishes no end date, so the
+                                # promotion lives only as long as this 18h patch.
+                                "expiresAt": min(expires or now + timedelta(hours=18), now + timedelta(hours=18)).isoformat(),
+                                **({"promotionExpiresAt": expires.isoformat()} if verified_coupon and expires and "discount_code" in fields else {}),
                                 "source": SOURCES[firm], "evidence": evidence,
                                 "sha256": hashlib.sha256(source.encode()).hexdigest()})
         except (ValueError, KeyError, TypeError, IndexError) as exc:
