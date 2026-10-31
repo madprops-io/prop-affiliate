@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { applyFirmUpdates } from '../lib/firmUpdates.ts';
+import { readFileSync } from 'node:fs';
+import { applyFirmUpdates, approvedTradeifyCodes, rotatableSaleCodes } from '../lib/firmUpdates.ts';
 
 const now = Date.parse('2026-10-18T12:00:00Z');
 const row = {key:'apex-50k', firm_key:'apex', eval_cost_usd:'100', discount_code:'MAD', true_cost:'', signup_url:'https://example.com/?ref=MAD'};
@@ -42,4 +43,36 @@ test('Lucid plans sharing the legacy key stay distinct by firm_key', () => {
   const result = applyFirmUpdates(lucid, snapshot(update), now);
   assert.equal(result[0].eval_cost_usd, '100');
   assert.equal(result[1].eval_cost_usd, '120');
+});
+test('previously approved Tradeify codes are rotatable (synced with collect.py)', () => {
+  const approved = {schemaVersion:1, entries:[
+    {key:'tradeify-growth-50k', values:{discount_code:'nov'}, approvedAt:'2026-10-31T12:00:00Z'},
+    {key:'apex-50k', values:{discount_code:'APEXONLY'}, approvedAt:'2026-10-31T12:00:00Z'},
+    {key:'tradeify-growth-25k', values:{discount_code:'bad code!'}, approvedAt:'2026-10-31T12:00:00Z'},
+  ]};
+  const codes = approvedTradeifyCodes(approved);
+  assert.deepEqual(codes, ['NOV']);
+  assert.ok(rotatableSaleCodes('tradeify', codes).includes('NOV'));
+  assert.equal(rotatableSaleCodes('apex', codes).includes('NOV'), false);
+
+  const sale = {...row, firm_key:'tradeify', discount_code:'NOV'};
+  const update = {...patch, expected:{discount_code:'NOV'}, values:{discount_code:'DEC', discount_pct:'40'}};
+  assert.equal(applyFirmUpdates([sale], snapshot(update), now, codes)[0].discount_code, 'DEC');
+  // Without the approved list NOV is unknown and must be preserved (could be an affiliate code).
+  assert.equal(applyFirmUpdates([sale], snapshot(update), now)[0].discount_code, 'NOV');
+  // Approved Tradeify codes never make another firm's custom code rotatable.
+  const apex = {...row, discount_code:'NOV'};
+  assert.equal(applyFirmUpdates([apex], snapshot(update), now, codes)[0].discount_code, 'NOV');
+  // The MadProps affiliate code is still never rotated.
+  const mad = {...sale, discount_code:'MAD'};
+  assert.equal(applyFirmUpdates([mad], snapshot({...update, expected:{discount_code:'MAD'}}), now, codes)[0].discount_code, 'MAD');
+});
+test('approved Tradeify codes are read from the committed approved-firm-data.json', () => {
+  const approved = JSON.parse(readFileSync(new URL('../data/approved-firm-data.json', import.meta.url), 'utf8'));
+  const expected = new Set(approved.entries
+    .filter((e) => e.key.startsWith('tradeify-') && /^[A-Za-z0-9_-]{1,40}$/.test(e.values?.discount_code ?? ''))
+    .map((e) => e.values.discount_code.toUpperCase()));
+  assert.deepEqual(new Set(approvedTradeifyCodes(approved)), expected);
+  assert.deepEqual(approvedTradeifyCodes(null), []);
+  assert.deepEqual(approvedTradeifyCodes({}), []);
 });

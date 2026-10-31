@@ -1,0 +1,28 @@
+<!doctype html>
+<html><head><title>SYNTHETIC TEST FIXTURE - lucid adapter</title></head>
+<body>
+<!-- SYNTHETIC TEST FIXTURE: not real Lucid pricing. Fake prices only. -->
+<script>
+var LucidPricingConfig = {
+  plans: {
+    planTypes: [
+      { id: "pro", enabled: true, front: [
+        { id: "one_time_fee", kind: "headlinePrice",
+          composedCells: { s25k: "SYN-PRO-25", s50k: "SYN-PRO-50" } },
+        { id: "drawdown_type", cells: { s25k: "EOD", s50k: "Intraday" } },
+      ] },
+      // Daily plan exposes selectable variants: the adapter must fail closed.
+      { id: "daily", enabled: true, front: [
+        { id: "one_time_fee", kind: "variantSelector",
+          composedCells: { s25k: "SYN-DAILY-25" } },
+      ] },
+      // Disabled plan must never be priced.
+      { id: "flex", enabled: false, front: [
+        { id: "one_time_fee", kind: "headlinePrice", composedCells: { s25k: "SYN-FLEX-25" } },
+      ] },
+    ],
+  },
+  productPrices: { "SYN-PRO-25": 999, "SYN-PRO-50": 888, "SYN-DAILY-25": 777, "SYN-FLEX-25": 666 },
+};
+</script>
+</body></html>

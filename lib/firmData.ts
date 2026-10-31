@@ -2,7 +2,8 @@ import Papa from "papaparse";
 import snapshot from "@/data/firm-updates.json";
 import approved from "@/data/approved-firm-data.json";
 import { applyApprovedUpdates, type ApprovedSnapshot } from "./approvedUpdates";
-import { applyFirmUpdates, type CsvRow, type UpdateSnapshot } from "./firmUpdates";
+import { applyFirmUpdates, approvedTradeifyCodes, type CsvRow, type UpdateSnapshot } from "./firmUpdates";
+import { publicFirmUpdateStatus } from "./firmUpdateStatus";
 
 export async function loadFirmCsv(nocache = false) {
   const url = process.env.NEXT_PUBLIC_SHEET_CSV_URL || process.env.SHEET_CSV_URL;
@@ -19,14 +20,11 @@ export async function loadFirmCsv(nocache = false) {
     throw new Error("Invalid Sheet CSV; updates were not applied");
   }
   const rows = process.env.MADPROPS_AUTOMATION_DISABLED === "1"
-    ? parsed.data : applyApprovedUpdates(parsed.data, applyFirmUpdates(parsed.data, snapshot as unknown as UpdateSnapshot), approved as ApprovedSnapshot);
+    ? parsed.data : applyApprovedUpdates(parsed.data, applyFirmUpdates(parsed.data, snapshot as unknown as UpdateSnapshot, Date.now(), approvedTradeifyCodes(approved)), approved as ApprovedSnapshot);
   return Papa.unparse(rows, { columns: parsed.meta.fields });
 }
 
+/** Public monitoring status. Unverified `review[].proposed` prices are stripped. */
 export function firmUpdateStatus() {
-  return {
-    ...snapshot,
-    disabled: process.env.MADPROPS_AUTOMATION_DISABLED === "1",
-    stale: Date.now() - Date.parse(snapshot.generatedAt) > 18 * 60 * 60 * 1000,
-  };
+  return publicFirmUpdateStatus(snapshot, process.env.MADPROPS_AUTOMATION_DISABLED === "1");
 }

@@ -1,0 +1,68 @@
+<!doctype html>
+<html><head><title>SYNTHETIC TEST FIXTURE - tradeify adapter</title></head>
+<body>
+<!-- SYNTHETIC TEST FIXTURE: not real Tradeify pricing. Fake prices/codes only. -->
+<script>
+const isGrowthvisible = true;
+const isSelectvisible = true;
+const isLightningvisible = false;
+
+const GrowthData = [
+  {
+    name: "Growth", isVisible: isGrowthvisible,
+    broker: [
+      { name: "Broker A", isVisible: true, account_size: [
+        { name: "25K", isVisible: true, price: 999, showFraction: false,
+          evaluation: [["Activation Fee", "None"], ["Profit Target", "$1"]] },
+        { name: "50K", isVisible: true, price: 888, showFraction: false,
+          evaluation: [["Activation Fee", "$777"]] },
+      ] },
+      { name: "Broker B", isVisible: true, account_size: [
+        { name: "25K", isVisible: true, price: 999, showFraction: false,
+          evaluation: [["Activation Fee", "None"]] },
+        // Hidden account sizes must be ignored even when the price differs.
+        { name: "50K", isVisible: false, price: 666, showFraction: false,
+          evaluation: [["Activation Fee", "None"]] },
+      ] },
+      // Hidden broker must be ignored even when its price disagrees.
+      { name: "Broker C", isVisible: false, account_size: [
+        { name: "25K", isVisible: true, price: 777, showFraction: false,
+          evaluation: [["Activation Fee", "None"]] },
+      ] },
+    ],
+  },
+];
+
+const SelectData = [
+  {
+    name: "Select", isVisible: isSelectvisible,
+    broker: [
+      { name: "Broker A", isVisible: true, account_size: [
+        { name: "100K", isVisible: true, price: 888, showFraction: true,
+          evaluation: [["Activation Fee", "None"]] },
+      ] },
+    ],
+  },
+];
+
+const LightningData = [
+  {
+    name: "Lightning", isVisible: isLightningvisible,
+    broker: [
+      { name: "Broker A", isVisible: true, account_size: [
+        { name: "50K", isVisible: true, price: 999, showFraction: false,
+          evaluation: [["Activation Fee", "None"]] },
+      ] },
+    ],
+  },
+];
+
+const couponDetails = {
+  growth: ["TESTCODE", 10],
+  select: ["TESTCODE", 25],
+  lightning: ["TESTCODE", 10],
+};
+
+const couponInfo = { month: "June", lastDay: "30" };
+</script>
+</body></html>

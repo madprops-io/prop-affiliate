@@ -44,8 +44,7 @@ const toArray = (v: string | undefined | null) =>
     : [];
 
 // ----- map a CSV row -> Firm -----
-// ----- map a CSV row -> Firm -----
-function normalizeRow(r: FirmCsvRow, i: number) {
+function normalizeRow(r: FirmCsvRow, i: number): Firm {
   const name =
     first(
       r.name,
@@ -178,12 +177,7 @@ function normalizeRow(r: FirmCsvRow, i: number) {
     feeRefund: feeRefundRaw ? toBool(feeRefundRaw) : null,
   };
 
-  const issues: string[] = [];
-  if (!name) issues.push("missing name");
-  if (!model) issues.push("missing model");
-  if (payoutSplit == null) issues.push("missing payoutSplit");
-
-  return { firm, issues };
+  return firm;
 }
 
 // ---------- route ----------
@@ -196,10 +190,9 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const { searchParams } = new URL(req.url);
-    const debug = searchParams.get("debug") === "1";
-    const raw = searchParams.get("raw") === "1";
-    const nocache = searchParams.get("nocache") === "1";
+    // Debug modes (?raw=1 / ?debug=1) were removed: they exposed raw Sheet rows,
+    // column names and parse diagnostics publicly.
+    const nocache = new URL(req.url).searchParams.get("nocache") === "1";
 
     const csv = await loadFirmCsv(nocache);
 
@@ -209,39 +202,12 @@ export async function GET(req: NextRequest) {
       transformHeader: (h) => h.trim(),
     });
 
-    if (raw) {
-      return NextResponse.json(
-        {
-          columns: Object.keys((parsed.data[0] || {}) as FirmCsvRow),
-          rows: parsed.data,
-          errors: parsed.errors,
-        },
-        { status: 200 }
-      );
-    }
-
     const rows = parsed.data.filter((r) =>
       Object.values(r).some((v) => String(v ?? "").trim() !== "")
     );
 
-    const firms: Firm[] = [];
-    const issues: Array<{ row: number; key?: string; problems: string[] }> = [];
-
-    rows.forEach((r, i) => {
-      const { firm, issues: probs } = normalizeRow(r, i);
-      firms.push(firm);
-      if (probs.length) issues.push({ row: i + 2, key: firm.key, problems: probs });
-    });
-
-    const payload: { firms: Firm[]; meta?: unknown } = { firms };
-    if (debug) {
-      payload.meta = {
-        count: firms.length,
-        sheetColumns: Object.keys(rows[0] || {}),
-        parseErrors: parsed.errors,
-        issues,
-      };
-    }
+    const firms: Firm[] = rows.map((r, i) => normalizeRow(r, i));
+    const payload: { firms: Firm[] } = { firms };
 
     return NextResponse.json(payload, { status: 200 });
   } catch (err) {
