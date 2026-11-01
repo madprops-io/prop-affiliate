@@ -2,123 +2,417 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "key": "aqua-futures-flex-100k",
+      "values": {
+        "eval_cost_usd": "205"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "aqua-futures-flex-50k",
+      "values": {
+        "eval_cost_usd": "141"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "aqua-futures-instant-standard-100k",
+      "values": {
+        "eval_cost_usd": "646"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "aqua-futures-instant-standard-50k",
+      "values": {
+        "eval_cost_usd": "487"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "aqua-futures-standard-100k",
+      "values": {
+        "eval_cost_usd": "186"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "aqua-futures-standard-50k",
+      "values": {
+        "eval_cost_usd": "121"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "blue-guardian-direct-25k",
+      "values": {
+        "eval_cost_usd": "350"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "blue-guardian-direct-50k",
+      "values": {
+        "eval_cost_usd": "452"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "blue-guardian-express-100k",
+      "values": {
+        "eval_cost_usd": "205"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "blue-guardian-express-150k",
+      "values": {
+        "eval_cost_usd": "320"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "blue-guardian-express-25k",
+      "values": {
+        "eval_cost_usd": "86"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "blue-guardian-express-50k",
+      "values": {
+        "eval_cost_usd": "130"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "blue-guardian-reserve-25k",
+      "values": {
+        "eval_cost_usd": "72"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "e8-signature-100k",
+      "values": {
+        "eval_cost_usd": "280"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "e8-signature-150k",
+      "values": {
+        "eval_cost_usd": "450"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "e8-signature-25k",
+      "values": {
+        "eval_cost_usd": "120"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "e8-signature-50k",
+      "values": {
+        "eval_cost_usd": "170"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "e8-zero-starter-100k",
+      "values": {
+        "eval_cost_usd": "338"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "e8-zero-starter-50k",
+      "values": {
+        "eval_cost_usd": "218"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "ffn-max-standard-100k",
+      "values": {
+        "eval_cost_usd": "348"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "ffn-max-standard-150k",
+      "values": {
+        "eval_cost_usd": "408"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "ffn-max-standard-250k",
+      "values": {
+        "eval_cost_usd": "658"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "ffn-max-standard-25k",
+      "values": {
+        "eval_cost_usd": "148"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "ffn-max-standard-50k",
+      "values": {
+        "eval_cost_usd": "178"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "fundednext-futures-flex-100k",
+      "values": {
+        "eval_cost_usd": "273.99"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "fundednext-futures-flex-150k",
+      "values": {
+        "eval_cost_usd": "490.99"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "fundednext-futures-flex-50k",
+      "values": {
+        "eval_cost_usd": "141.99"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "fundednext-futures-rapid-daily-100k",
+      "values": {
+        "eval_cost_usd": "499.98"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "fundednext-futures-rapid-daily-25k",
+      "values": {
+        "eval_cost_usd": "159.98"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "fundednext-futures-rapid-daily-50k",
+      "values": {
+        "eval_cost_usd": "299.98"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "fundednext-futures-rapid-pro-100k",
+      "values": {
+        "eval_cost_usd": "499.98"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "fundednext-futures-rapid-pro-25k",
+      "values": {
+        "eval_cost_usd": "159.98"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "mffu-rapid-eod-50k",
+      "values": {
+        "eval_cost_usd": "225"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "purdia-instant-100k",
+      "values": {
+        "eval_cost_usd": "699"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "purdia-instant-25k",
+      "values": {
+        "eval_cost_usd": "249"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "purdia-instant-50k",
+      "values": {
+        "eval_cost_usd": "449"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "purdia-pioneer-100k",
+      "values": {
+        "eval_cost_usd": "849"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "topone-elite-daily-100k",
+      "values": {
+        "eval_cost_usd": "398"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "topone-elite-daily-150k",
+      "values": {
+        "eval_cost_usd": "549"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "topone-elite-daily-50k",
+      "values": {
+        "eval_cost_usd": "218"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "tradeday-fast-pass-eod-100k",
+      "values": {
+        "eval_cost_usd": "350"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
+      "key": "tradeday-fast-pass-eod-150k",
+      "values": {
+        "eval_cost_usd": "530"
+      },
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00"
+    },
+    {
       "key": "tradeify-growth-100k",
       "values": {
-        "discount_code": "GEMS",
-        "discount_pct": "30",
+        "discount_code": "NOV",
+        "discount_pct": "40",
         "discounted_eval_usd": "179"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     },
     {
       "key": "tradeify-growth-150k",
       "values": {
-        "discount_code": "GEMS",
-        "discount_pct": "30",
-        "discounted_eval_usd": "258"
+        "discount_code": "NOV",
+        "discount_pct": "40",
+        "discounted_eval_usd": "221"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     },
     {
       "key": "tradeify-growth-25k",
       "values": {
-        "discount_code": "GEMS",
-        "discount_pct": "30",
-        "discounted_eval_usd": "69"
+        "discount_code": "NOV",
+        "discount_pct": "40",
+        "discounted_eval_usd": "59"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     },
     {
       "key": "tradeify-growth-50k",
       "values": {
-        "discount_code": "GEMS",
-        "discount_pct": "30",
+        "discount_code": "NOV",
+        "discount_pct": "40",
         "discounted_eval_usd": "102"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     },
     {
       "key": "tradeify-lightning-100k",
       "values": {
-        "discount_code": "GEMS",
+        "discount_code": "NOV",
         "discount_pct": "30"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     },
     {
       "key": "tradeify-lightning-150k",
       "values": {
-        "discount_code": "GEMS",
+        "discount_code": "NOV",
         "discount_pct": "30",
         "discounted_eval_usd": "557"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     },
     {
       "key": "tradeify-lightning-25k",
       "values": {
-        "discount_code": "GEMS",
+        "discount_code": "NOV",
         "discount_pct": "30",
         "discounted_eval_usd": "242"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     },
     {
       "key": "tradeify-lightning-50k",
       "values": {
-        "discount_code": "GEMS",
+        "discount_code": "NOV",
         "discount_pct": "30",
         "discounted_eval_usd": "344"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     },
     {
       "key": "tradeify-select-100k",
       "values": {
-        "discount_code": "GEMS",
+        "discount_code": "NOV",
         "discount_pct": "30",
         "discounted_eval_usd": "186"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     },
     {
       "key": "tradeify-select-150k",
       "values": {
-        "discount_code": "GEMS",
+        "discount_code": "NOV",
         "discount_pct": "30",
         "discounted_eval_usd": "258"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     },
     {
       "key": "tradeify-select-25k",
       "values": {
-        "discount_code": "GEMS",
+        "discount_code": "NOV",
         "discount_pct": "30",
         "discounted_eval_usd": "76"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     },
     {
       "key": "tradeify-select-50k",
       "values": {
-        "discount_code": "GEMS",
+        "discount_code": "NOV",
         "discount_pct": "30",
         "discounted_eval_usd": "116"
       },
-      "approvedAt": "2026-10-31T16:47:26.696125+00:00",
-      "promotionExpiresAt": "2026-10-31T23:59:00-04:00"
+      "approvedAt": "2026-11-01T20:43:19.843332+00:00",
+      "promotionExpiresAt": "2026-11-13T23:59:00-05:00"
     }
   ]
 }
