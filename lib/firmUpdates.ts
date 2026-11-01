@@ -62,7 +62,8 @@ export function applyFirmUpdates(
         isAffiliateCode(row.discount_code)) return row;
     if (Object.entries(patch.values).some(([field, value]) =>
       !allowed.has(field) || typeof value !== "string" ||
-      (field === "discount_code" ? !/^[A-Za-z0-9_-]{1,40}$/.test(value) :
+      // An empty discount_code means a verified code-less discount.
+      (field === "discount_code" ? !/^(?:[A-Za-z0-9_-]{1,40})?$/.test(value) :
       (field !== "ddt" && !(field === "discounted_eval_usd" && value === "") &&
        (!/^\d+(?:\.\d{1,2})?$/.test(value) || Number(value) > (field === "discount_pct" ? 100 : 100_000)))
       )
