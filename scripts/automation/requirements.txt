@@ -1,2 +1,4 @@
 json5==0.12.1
 curl_cffi==0.17.0
+google-auth==2.62.0
+requests==2.34.2

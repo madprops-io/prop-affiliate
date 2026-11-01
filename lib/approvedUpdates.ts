@@ -26,6 +26,9 @@ export function applyApprovedUpdates(
   verifiedRows: CsvRow[],
   approved: ApprovedSnapshot,
   now = Date.now(),
+  // Fields a current verified patch backs, by row identity (see verifyFirmUpdates).
+  // These win even when the Sheet already holds the same value.
+  verifiedFields: Map<string, Set<string>> = new Map(),
 ): CsvRow[] {
   if (approved.schemaVersion !== 1 || sheetRows.length !== verifiedRows.length) return verifiedRows;
   const entries = new Map<string, ApprovedEntry>();
@@ -48,10 +51,13 @@ export function applyApprovedUpdates(
     const expires = entry.promotionExpiresAt ? Date.parse(entry.promotionExpiresAt) : NaN;
     const expired = Number.isFinite(expires) && now >= expires;
     const output = { ...verified };
+    const backed = verifiedFields.get(key) ?? new Set<string>();
+    const fromSheet = (field: string) =>
+      !backed.has(field) && (verified[field] ?? "") === (sheet[field] ?? "");
     for (const [field, value] of Object.entries(entry.values)) {
       if (!permitted.has(field) || typeof value !== "string") continue;
       // Fresh verified patches take priority over an older approval.
-      if ((verified[field] ?? "") !== (sheet[field] ?? "")) continue;
+      if (!fromSheet(field)) continue;
       if (promotionFields.has(field)) {
         if (!entry.promotionExpiresAt || !Number.isFinite(expires)) continue;
         output[field] = expired
@@ -64,7 +70,7 @@ export function applyApprovedUpdates(
     // Expired approved promotions must not resurrect the old Sheet discount.
     if (expired && [...promotionFields].some((field) => field in entry.values)) {
       for (const field of promotionFields) {
-        if ((verified[field] ?? "") === (sheet[field] ?? "")) {
+        if (fromSheet(field)) {
           output[field] = field === "discount_pct" ? "0" : "";
         }
       }

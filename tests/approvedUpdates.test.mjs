@@ -44,3 +44,15 @@ test('a promotion without a real expiration is never approved', () => {
   const [r] = applyApprovedUpdates([row], [row], data([{...entry,promotionExpiresAt:undefined}]), now);
   assert.equal(r.discount_code,'SEP');
 });
+test('verified fields already written to the Sheet are not cleared by an expired approval', () => {
+  const later = Date.parse('2026-11-02T00:00:00Z');
+  const sheet = {...row, discount_code: 'NOV', discount_pct: '40', discounted_eval_usd: '59'};
+  const backed = new Map([[row.key, new Set(['discount_code', 'discount_pct', 'discounted_eval_usd'])]]);
+  const [r] = applyApprovedUpdates([sheet], [sheet], data(), later, backed);
+  assert.equal(r.discount_code, 'NOV');
+  assert.equal(r.discount_pct, '40');
+  assert.equal(r.discounted_eval_usd, '59');
+  assert.equal(r.eval_cost_usd, '105', 'unbacked approved base still applies');
+  const [plain] = applyApprovedUpdates([sheet], [sheet], data(), later);
+  assert.equal(plain.discount_code, '', 'without verification the old rule still clears');
+});

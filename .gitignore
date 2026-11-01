@@ -43,3 +43,6 @@ next-env.d.ts
 # Python collector caches
 __pycache__/
 *.pyc
+
+# google-github-actions/auth credential files (keyless Sheet write-back)
+gha-creds-*.json
