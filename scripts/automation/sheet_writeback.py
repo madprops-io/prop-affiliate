@@ -148,11 +148,28 @@ def summary(report, updates, mode):
     return "\n".join(lines) + "\n"
 
 
+def keyless_credentials(path):
+    """Credentials from google-github-actions/auth (Workload Identity Federation).
+
+    Built straight from the external-account file so no project-ID lookup call is made;
+    any other credential file falls back to Application Default Credentials.
+    """
+    import google.auth
+    info = json.loads(Path(path).read_text()) if path else {}
+    if info.get("type") == "external_account":
+        from google.auth import identity_pool
+        return identity_pool.Credentials.from_info(info, scopes=SCOPES)
+    return google.auth.default(scopes=SCOPES)[0]
+
+
 class SheetClient:
     def __init__(self, credentials_json, sheet_id, tab=""):
         from google.auth.transport.requests import AuthorizedSession
-        from google.oauth2.service_account import Credentials
-        creds = Credentials.from_service_account_info(json.loads(credentials_json), scopes=SCOPES)
+        if credentials_json:
+            from google.oauth2.service_account import Credentials
+            creds = Credentials.from_service_account_info(json.loads(credentials_json), scopes=SCOPES)
+        else:
+            creds = keyless_credentials(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", ""))
         self.session = AuthorizedSession(creds)
         self.base = f"{API}/{sheet_id}"
         self.tab = tab or self._first_tab()
@@ -214,9 +231,11 @@ def main(argv=None):
         return 0
 
     credentials = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "").strip()
+    keyless = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "").strip()
     sheet_id = os.environ.get("MADPROPS_SHEET_ID", "").strip()
-    if not credentials or not sheet_id:
-        emit("## Sheet write-back\n\nNot configured (needs GOOGLE_SERVICE_ACCOUNT_JSON secret and "
+    if not (credentials or keyless) or not sheet_id:
+        emit("## Sheet write-back\n\nNot configured (needs Google sign-in — the keyless "
+             "\"Sign in to Google\" step or a GOOGLE_SERVICE_ACCOUNT_JSON secret — and the "
              "MADPROPS_SHEET_ID variable). Nothing written.\n")
         return 0
     write = os.environ.get("SHEET_WRITEBACK", "").strip().lower() == "write"

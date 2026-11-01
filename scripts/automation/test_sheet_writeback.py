@@ -125,11 +125,32 @@ class MainTests(unittest.TestCase):
         self.assertEqual(written[1][5:8], ["TRY60", "60", ""])
 
     def test_unconfigured_live_run_writes_nothing_and_succeeds(self):
-        env = {"GOOGLE_SERVICE_ACCOUNT_JSON": "", "MADPROPS_SHEET_ID": "", "GITHUB_STEP_SUMMARY": ""}
+        env = {"GOOGLE_SERVICE_ACCOUNT_JSON": "", "GOOGLE_APPLICATION_CREDENTIALS": "",
+               "MADPROPS_SHEET_ID": "", "GITHUB_STEP_SUMMARY": ""}
         with mock.patch.dict(os.environ, env), mock.patch.object(wb, "SheetClient") as client, \
                 mock.patch("builtins.print"):
             self.assertEqual(wb.main(["--updates", str(self.updates)]), 0)
         client.assert_not_called()
+
+    def test_keyless_sign_in_without_sheet_id_writes_nothing(self):
+        env = {"GOOGLE_SERVICE_ACCOUNT_JSON": "", "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/gha-creds.json",
+               "MADPROPS_SHEET_ID": "", "GITHUB_STEP_SUMMARY": ""}
+        with mock.patch.dict(os.environ, env), mock.patch.object(wb, "SheetClient") as client, \
+                mock.patch("builtins.print"):
+            self.assertEqual(wb.main(["--updates", str(self.updates)]), 0)
+        client.assert_not_called()
+
+    def test_keyless_sign_in_runs_without_json_secret(self):
+        fake = mock.Mock()
+        fake.read.return_value = (HEADER, sheet(row(), row(key="b"), row(key="c")))
+        env = {"GOOGLE_SERVICE_ACCOUNT_JSON": "", "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/gha-creds.json",
+               "MADPROPS_SHEET_ID": "id", "SHEET_WRITEBACK": "", "GITHUB_STEP_SUMMARY": ""}
+        with mock.patch.dict(os.environ, env), \
+                mock.patch.object(wb, "SheetClient", return_value=fake) as client, \
+                mock.patch("builtins.print"):
+            self.assertEqual(wb.main(["--updates", str(self.updates), "--now", NOW.isoformat()]), 0)
+        client.assert_called_once_with("", "id", "")
+        fake.write.assert_not_called()
 
     def test_dry_run_reads_but_never_writes(self):
         fake = mock.Mock()
@@ -166,6 +187,38 @@ class MainTests(unittest.TestCase):
 
 
 class ClientTests(unittest.TestCase):
+    def test_keyless_client_uses_workload_identity_file(self):
+        creds = mock.Mock()
+        env = {"GOOGLE_APPLICATION_CREDENTIALS": "/tmp/gha-creds.json"}
+        with mock.patch.dict(os.environ, env), \
+                mock.patch.object(wb, "keyless_credentials", return_value=creds) as keyless, \
+                mock.patch("google.auth.transport.requests.AuthorizedSession") as session:
+            client = wb.SheetClient("", "sheet123", "Tab")
+        keyless.assert_called_once_with("/tmp/gha-creds.json")
+        session.assert_called_once_with(creds)
+        self.assertEqual((client.base, client.tab), (f"{wb.API}/sheet123", "Tab"))
+
+    def test_external_account_file_builds_impersonated_credentials_offline(self):
+        info = {
+            "type": "external_account",
+            "audience": "//iam.googleapis.com/projects/123/locations/global/"
+                        "workloadIdentityPools/github/providers/prop-affiliate",
+            "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
+            "token_url": "https://sts.googleapis.com/v1/token",
+            "service_account_impersonation_url": "https://iamcredentials.googleapis.com/v1/projects/-/"
+                                                 "serviceAccounts/madprops-bot@p.iam.gserviceaccount.com:generateAccessToken",
+            "credential_source": {"url": "https://example.invalid/token", "headers": {"Authorization": "Bearer x"},
+                                  "format": {"type": "json", "subject_token_field_name": "value"}},
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "gha-creds.json"
+            path.write_text(json.dumps(info))
+            with mock.patch("google.auth.transport.requests.Request.__call__",
+                            side_effect=AssertionError("no network during sign-in setup")):
+                creds = wb.keyless_credentials(str(path))
+        self.assertEqual(creds.service_account_email, "madprops-bot@p.iam.gserviceaccount.com")
+        self.assertEqual(list(creds.scopes), wb.SCOPES)
+
     def test_text_fields_raw_numbers_user_entered(self):
         client = wb.SheetClient.__new__(wb.SheetClient)
         client.base, client.tab = "https://api/x", "Firm's data"
