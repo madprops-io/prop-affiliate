@@ -60,7 +60,8 @@ BUNDLE_FETCH = {"bulenox", "purdia"}
 # Firms whose prices come from a public same-origin JSON endpoint while the
 # coupon is shown on the page. The JSON is appended to the page as an inert
 # <script type="application/json" id="madprops-companion"> block.
-COMPANION_JSON = {"takeprofittrader": "https://takeprofittrader.com/accounts/api/subscriptions"}
+COMPANION_JSON = {"takeprofittrader": "https://takeprofittrader.com/accounts/api/subscriptions",
+                  "traderslaunch": "https://traderslaunch.com/api/trading-providers/offers"}
 PRICE_FIELDS = {"eval_cost_usd", "discount_pct", "discounted_eval_usd", "discount_code"}
 ALLOWED = PRICE_FIELDS | {"activation_fee_usd", "min_days (Eval)", "ddt"}
 LITERALS = {}
@@ -1105,28 +1106,22 @@ def take_profit_trader(text, row, now):
         f"banner: {' '.join(banner.split())[:160] or 'none'}")
 
 
-def traders_launch(text, row, now):
-    """Traders Launch prices from the server-rendered pricing cards on its homepage.
+def _tl_card(text, size, split, hours, subtitle_suffix=""):
+    """Extract price and rules from a server-rendered Traders Launch article card.
 
-    Each ``<article class="tl-plan tl-plan-futures ...">`` card links to
-    checkout with ``type=futures&size=<balance>&split=<pct>&hours=<n>``; the
-    standard (non-NYC) card has ``hours=2`` and a plain "starting capital"
-    subtitle. Only the default split is rendered (currently 80%); a split the
-    page does not render (e.g. the Sheet's 55%) fails closed. A card with
-    more than one dollar amount in its price block (a sale) also fails closed.
+    Returns a dict of fields or raises ValueError.  *hours* distinguishes
+    standard (``2``) from Legacy NYC (``1``) cards; *subtitle_suffix* is
+    appended after "$X starting capital" (e.g. " · Legacy NYC").
     """
-    m = re.fullmatch(r"Standard (\d{2})%", row["account_label"].strip())
-    if not m:
-        raise ValueError("Unknown Traders Launch plan label")
-    size, split = int(row["account_size_usd"]), m[1]
+    expected_subtitle = f"${size:,} starting capital{subtitle_suffix}"
     cards = []
     for part in re.split(r'(?=<article class="tl-plan tl-plan-futures\b)', text)[1:]:
         card = part[:part.find("</article>")] if "</article>" in part else ""
         link = re.search(r'href="[^"]*purchasing-signup\?type=futures&amp;size=(\d+)&amp;split=(\d+)&amp;hours=(\d+)"', card)
         subtitle = re.search(r'tl-plan-subtitle[^>]*>([^<]*)</p>', card)
-        if not link or link.groups() != (str(size), split, "2") or not subtitle:
+        if not link or link.groups() != (str(size), str(split), str(hours)) or not subtitle:
             continue
-        if subtitle[1].strip() != f"${size:,} starting capital":
+        if subtitle[1].strip() != expected_subtitle:
             continue
         block = re.search(r'class="tl-plan-price[^"]*">(.*?)One-Time Fee', card, re.S)
         amounts = re.findall(r"\$([\d,]+(?:\.\d{1,2})?)", block[1]) if block else []
@@ -1139,15 +1134,99 @@ def traders_launch(text, row, now):
         days = re.search(r"Days to Pass</dt><dd[^>]*>(\d+) minimum</dd>", card)
         if days:
             extra["min_days (Eval)"] = days[1]
-        if re.search(r"Max Drawdown</dt><dd[^>]*>\$[\d,]+ EOD<", card):
+        if re.search(r"Max Drawdown</dt><dd[^>]*>\$[\d,]+ EOD", card):
             extra["ddt"] = "EOD"
         cards.append({"eval_cost_usd": money(amounts[0]), **extra})
+    return cards
+
+
+def traders_launch(text, row, now):
+    """Traders Launch prices from three sources embedded in the fetched page.
+
+    * **Standard 80%** — server-rendered ``<article>`` cards with ``hours=2``
+      and a plain "starting capital" subtitle (same as before).
+    * **Legacy NYC 80%** — server-rendered ``<article>`` cards with
+      ``hours=1`` and "· Legacy NYC" in the subtitle.
+    * **Static 60/80/90%** — the companion JSON block
+      (``/api/trading-providers/offers``), which lists plans with
+      ``productProgram == "static"``.  Only non-sold-out plans with
+      ``tradingHourType == 2`` (futures session window) are accepted.
+
+    A plan label the adapter does not recognise fails closed.
+    """
+    label = row["account_label"].strip()
+    size = int(row["account_size_usd"])
+
+    # ── Static plans (companion JSON) ────────────────────────────
+    sm = re.fullmatch(r"Static (\d{2,3})%", label)
+    if sm:
+        split = int(sm[1])
+        companion = re.search(
+            r'<script type="application/json" id="madprops-companion">(.*?)</script>',
+            text, re.S)
+        if not companion:
+            raise ValueError("Traders Launch offers API data not found in page")
+        offers = json.loads(companion[1])
+        if not isinstance(offers, dict) or "providers" not in offers:
+            raise ValueError("Traders Launch offers API has unexpected structure")
+        match = None
+        for prov in offers["providers"]:
+            if not prov.get("enabled"):
+                continue
+            for plan in prov.get("plans", []):
+                if (plan.get("productProgram") == "static"
+                        and plan.get("startingBalance") == size
+                        and plan.get("profitSplit") == split
+                        and plan.get("tradingHourType") == 2):
+                    terms = plan.get("tlLimitedTerms") or {}
+                    if terms.get("soldOut"):
+                        raise ValueError(f"Static {split}% {size // 1000}K is sold out")
+                    if match is not None:
+                        raise ValueError(f"Duplicate Static {split}% {size // 1000}K plans")
+                    match = plan
+        if match is None:
+            raise ValueError(f"No Static {split}% {size // 1000}K plan in offers API")
+        fields = {"eval_cost_usd": money(match["price"]),
+                  "ddt": "Static"}
+        if match.get("maxDrawdown") is not None:
+            fields["activation_fee_usd"] = "0"
+        verified = (not row["discount_code"]
+                    and row["discount_pct"] in ("", "0")
+                    and not row["discounted_eval_usd"])
+        return fields, verified, None, (
+            f"Traders Launch Static {size // 1000}K {split}% from offers API, "
+            f"price {fields['eval_cost_usd']}")
+
+    # ── Legacy NYC plans (server-rendered cards, hours=1) ────────
+    nm = re.fullmatch(r"Legacy NYC (\d{2,3})%", label)
+    if nm:
+        split = int(nm[1])
+        cards = _tl_card(text, size, split, hours=1, subtitle_suffix=" · Legacy NYC")
+        if not cards:
+            raise ValueError(f"No Legacy NYC {split}% {size // 1000}K card on the page")
+        fields = unique(cards)
+        verified = (not row["discount_code"]
+                    and row["discount_pct"] in ("", "0")
+                    and not row["discounted_eval_usd"])
+        return dict(fields), verified, None, (
+            f"Traders Launch Legacy NYC {size // 1000}K {split}% card, "
+            f"one-time fee {fields['eval_cost_usd']}")
+
+    # ── Standard / Premium plans (server-rendered cards, hours=2) ─
+    pm = re.fullmatch(r"(?:Standard|Premium) (\d{2,3})%", label)
+    if not pm:
+        raise ValueError(f"Unknown Traders Launch plan label: {label}")
+    split = int(pm[1])
+    cards = _tl_card(text, size, split, hours=2)
     if not cards:
         raise ValueError(f"No Traders Launch {split}% {size // 1000}K standard card on the page")
     fields = unique(cards)
-    verified = not row["discount_code"] and row["discount_pct"] in ("", "0") and not row["discounted_eval_usd"]
+    verified = (not row["discount_code"]
+                and row["discount_pct"] in ("", "0")
+                and not row["discounted_eval_usd"])
     return dict(fields), verified, None, (
-        f"Traders Launch standard {size // 1000}K {split}% split card, one-time fee {fields['eval_cost_usd']}, no sale shown")
+        f"Traders Launch standard {size // 1000}K {split}% split card, "
+        f"one-time fee {fields['eval_cost_usd']}, no sale shown")
 
 
 ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid": lucid,
