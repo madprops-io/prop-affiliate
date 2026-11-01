@@ -35,7 +35,8 @@ SOURCES = {
     "blue-guardian": "https://blueguardian.com/",
     "blusky-trading": "https://blusky.pro/",
     "bulenox": "https://bulenox.com/",
-    "e8futures": "https://e8markets.com/",
+    # Futures products (prices, discount, code) ship in this page's Nuxt payload.
+    "e8futures": "https://e8markets.com/e8-markets-discount-code",
     "fundednext": "https://fundednext.com/",
     "fundedfutures": "https://www.fundedfuturesnetwork.com/",
     # Public JSON used by the official storefront (thelegendstrading.com/plans).
@@ -793,12 +794,99 @@ def funded_futures(text, row, now):
     return fields, verified, None, f"Funded Futures {tier}, regular {regular}, coupons by feed: {feeds}"
 
 
+NUXT_WRAPPERS = {"Reactive", "ShallowReactive", "Ref", "ShallowRef"}
+
+
+def nuxt_data(text, *path):
+    """Follow ``path`` through a Nuxt ``__NUXT_DATA__`` payload (devalue format).
+
+    The payload is a flat JSON array: objects map keys to indexes, arrays list
+    indexes, and ``["Reactive", i]``-style wrappers point at the real value.
+    Only the requested branch is decoded; nothing is evaluated.
+    """
+    blocks = re.findall(r'<script[^>]*\bid="__NUXT_DATA__"[^>]*>(.*?)</script>', text, re.S)
+    if len(blocks) != 1:
+        raise ValueError("Expected exactly one __NUXT_DATA__ block")
+    flat = json.loads(blocks[0])
+
+    def resolve(index, depth=0):
+        if depth > 40 or not isinstance(index, int) or isinstance(index, bool):
+            raise ValueError("Malformed __NUXT_DATA__ reference")
+        if index < 0:
+            return None  # devalue sentinels (undefined, hole, NaN, ...)
+        value = flat[index]
+        while isinstance(value, list) and value and isinstance(value[0], str):
+            if value[0] not in NUXT_WRAPPERS or len(value) != 2:
+                raise ValueError(f"Unsupported __NUXT_DATA__ type {value[0]}")
+            value = flat[value[1]]
+        if isinstance(value, dict):
+            return {k: (lambda i=i: resolve(i, depth + 1)) for k, i in value.items()}
+        if isinstance(value, list):
+            return [(lambda i=i: resolve(i, depth + 1)) for i in value]
+        return value
+
+    def materialize(value):
+        if callable(value):
+            value = value()
+        if isinstance(value, dict):
+            return {k: materialize(v) for k, v in value.items()}
+        if isinstance(value, list):
+            return [materialize(v) for v in value]
+        return value
+
+    node = resolve(0)
+    for key in path:
+        if not isinstance(node, dict) or key not in node:
+            raise KeyError(f"__NUXT_DATA__ path missing: {key}")
+        node = node[key]()
+    return materialize(node)
+
+
+E8_PRODUCTS = {"Signature": "e8signature_v_fu", "Zero MAX": "e8zero_max_fu", "Zero Starter": "e8zero_start_fu"}
+
+
+def e8_futures(text, row, now):
+    """E8 futures prices from the ``global-data`` products in the site's Nuxt payload.
+
+    Each futures product has ``balances[size].price`` (one-time USD) and a
+    ``discount``/``discountCode``. The tiered ``settings.pricing`` list, when
+    present, must agree with the balance price. The coupon is verified only
+    when the first-purchase and regular discounts are the same.
+    """
+    product_id = E8_PRODUCTS.get(row["account_label"].strip())
+    if not product_id:
+        raise ValueError("Unknown E8 futures plan label")
+    size = int(row["account_size_usd"])
+    product = nuxt_data(text, "data", "global-data", "data", "products")[product_id]
+    if product.get("id") != product_id or "TRADOVATE" not in product.get("settings", {}).get("platforms", []):
+        raise ValueError("E8 product is not the expected futures plan")
+    balance = product["balances"].get(str(size))
+    if not balance or balance.get("balance") != size:
+        raise ValueError(f"E8 {product_id} has no {size // 1000}K account")
+    regular = money(balance["price"])
+    tiers = [money(t["price"]) for t in product["settings"].get("pricing") or [] if t.get("depositFrom") == size]
+    if tiers and unique(tiers) != regular:
+        raise ValueError("E8 tier price disagrees with account price")
+    fields = {"eval_cost_usd": regular}
+    code, pct, first = product.get("discountCode"), product.get("discount"), product.get("firstDiscount")
+    verified = bool(isinstance(code, str) and COUPON.fullmatch(code) and pct == first
+                    and isinstance(pct, (int, float)) and not isinstance(pct, bool) and 0 < pct <= 100)
+    if verified:
+        fields["discount_code"] = coupon_code(row, code)
+        fields["discount_pct"] = money(pct)
+        fields["discounted_eval_usd"] = ""
+    return fields, verified, None, (
+        f"E8 {row['account_label'].strip()} {size // 1000}K ({product_id}), regular {regular}, "
+        f"code {code} {pct}% (first purchase {first}%)")
+
+
 ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid": lucid,
             "blue-guardian": blue_guardian, "my-funded-futures": my_funded_futures,
             "tradeday": tradeday, "fundednext": fundednext,
             "top-one-futures": top_one_futures, "bulenox": bulenox,
             "phidias": phidias, "alphafutures": alpha_futures,
-            "legendstrading": legends_trading, "fundedfutures": funded_futures}
+            "legendstrading": legends_trading, "fundedfutures": funded_futures,
+            "e8futures": e8_futures}
 
 
 def row_identity(row):

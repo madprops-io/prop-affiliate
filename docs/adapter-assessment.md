@@ -41,14 +41,14 @@ Three techniques, all free and in-house, no proxies or IP rotation:
 | **Alpha Futures** | 13 | Correct URL (`alpha-futures.com`) | Webflow cards plus `data-discount-offers` (per-plan code and %). ALPHA40 isn't an affiliate code, so it's replaced by the site's code for that plan. |
 | **Legends Trading** | 7 | Public JSON API | `api.thelegendstrading.com/shop/plans` (what the storefront loads): `price` = regular, `strikeThroughPrice` = sale, `activeCoupon` = code. The % is derived and must be a whole number, otherwise the coupon is held. |
 | **Funded Futures Network** | 10 | `curl_cffi` | `plans-data` JSON (`tier` "$50K STEADY Account", one-time `price`). Coupons come per data feed (`data-coupon-platforms`) and are only verified when every feed has the same code and %. As of Oct 31 2026, NEXUS is 70% on CQG and 50% on Rithmic, so all 10 rows go to review (prices are shown as proposals). |
+| **E8 Futures** | 10 | Nuxt payload (`__NUXT_DATA__`) | `e8markets.com/e8-markets-discount-code` (plain fetch) ships `global-data.products`. Futures plans are `e8signature_v_fu`, `e8zero_max_fu` and `e8zero_start_fu`, each with `balances[size].price`, `discount`/`firstDiscount` and `discountCode`. The payload is decoded by index only, never evaluated. The coupon is held if first-purchase and regular % differ, and a tier-price disagreement fails closed. Nov 1 2026 dry run: Zero MAX unchanged. Signature 120/170/280/450 (Sheet 110/150/260/390). Zero Starter 50K/100K 218/338 (Sheet 178/278). The site has no Zero Starter 200K, so that row goes to review. |
 
 ### Checked Oct 31 2026, not automated (fail closed)
 
 | Firm | Rows | Finding |
 |---|---|---|
 | **Purdia** | 7 | The app bundle has two conflicting catalogues. The homepage shows code OCT50 at 50% (e.g. 50K Instant $549), but the accounts page uses TRY60 at 60% with different prices (50K Instant $449, 100K Instant $699/$849 by payout rule). The site can't name one price and one code, so it stays manual. |
-| **Elite Trader Funding** | 14 | `elitetraderfunding.app` pages (`/evaluations`, `/1-step-evaluation`, `/direct-to-funded`, ...) carry no plan prices in the HTML or flight payload. Prices load in the browser after the page runs, so a rendering step or an API discovery pass is needed. |
-| **E8 Futures** | 10 | e8markets.com now leads with "SimFi". Futures prices aren't on public pages (`/futures` is 404). `/e8-markets-discount-code` lists the futures codes (25% Signature, 35% Zero MAX/Starter, matching the Sheet) but no prices. |
+| **Elite Trader Funding** | 14 | `elitetraderfunding.app` pages (`/evaluations`, `/1-step-evaluation`, `/direct-to-funded`, ...) carry no plan prices in the HTML, the flight payload, the static JS chunks, or even the fully rendered page (Playwright, Nov 1 2026). The only public API calls are feature flags and session. Prices appear only in checkout, which requires sign-in. Not automatable without an account, so it stays manual. |
 
 ### Reachable now, mapping still needed
 
