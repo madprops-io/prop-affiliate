@@ -63,6 +63,7 @@ BUNDLE_FETCH = {"bulenox", "purdia"}
 COMPANION_JSON = {"takeprofittrader": "https://takeprofittrader.com/accounts/api/subscriptions",
                   "traderslaunch": "https://traderslaunch.com/api/trading-providers/offers"}
 PRICE_FIELDS = {"eval_cost_usd", "discount_pct", "discounted_eval_usd", "discount_code"}
+PROMO_FIELDS = PRICE_FIELDS - {"eval_cost_usd"}
 ALLOWED = PRICE_FIELDS | {"activation_fee_usd", "min_days (Eval)", "ddt"}
 LITERALS = {}
 # MadProps affiliate codes. Firms give these the same discount as their current
@@ -1275,13 +1276,21 @@ def build(rows, sources, now):
             if not isinstance(source, str):
                 raise ValueError("Official source unavailable: " + str(source))
             fields, verified_coupon, expires, evidence = ADAPTERS[firm](source, row, now)
+            sheet_code = row.get("discount_code", "").strip()
+            if (not verified_coupon and firm in AFFILIATE_FIRMS - {"lucid"}
+                    and sheet_code.upper() in AFFILIATE_CODES):
+                # Affiliate discounts often apply only at checkout, so the site
+                # can't confirm them. The owner sets code and discount % in the
+                # Sheet; the bot keeps those and still updates the regular price.
+                # (Lucid stays held: its storefront price may already be discounted.)
+                fields = {k: v for k, v in fields.items() if k not in PROMO_FIELDS}
+                verified_coupon = True
             if not verified_coupon:
                 proposed = {k: v for k, v in fields.items() if k in PRICE_FIELDS}
                 review.append({"key": key, "reason": "Coupon not verified for existing Sheet code; pricing held", "proposed": proposed})
                 fields = {k: v for k, v in fields.items() if k not in PRICE_FIELDS}
             if firm in AFFILIATE_FIRMS:
                 fields.pop("discount_code", None)
-                sheet_code = row.get("discount_code", "").strip()
                 if sheet_code.upper() not in AFFILIATE_CODES:
                     review.append({"key": key, "reason": f"Affiliate firm row has code {sheet_code or '(blank)'!r} in the Sheet, "
                                    "not MAD/MADPROPS; the bot will not change it, fix it in the Sheet"})

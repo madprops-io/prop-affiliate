@@ -96,6 +96,23 @@ class AffiliateFirmLockTests(unittest.TestCase):
             [flag] = result["review"]
             self.assertIn("not MAD/MADPROPS", flag["reason"])
 
+    def test_unverifiable_affiliate_discount_keeps_sheet_promo_but_updates_price(self):
+        def held(text, row, now):
+            return {"eval_cost_usd": "159", "discount_pct": "0", "ddt": "EOD"}, False, None, "fake"
+        row = sheet_row(key="traderslaunch-standard-80-100k", firm_key="traderslaunch", firm_name="TL",
+                        account_label="Standard 80%", account_size_usd="100000", eval_cost_usd="149",
+                        discount_code="MAD", discount_pct="20")
+        with mock.patch.dict(collect.ADAPTERS, {"traderslaunch": held}):
+            result = build([row], {"traderslaunch": "<html></html>"}, NOW)
+        self.assertEqual(result["review"], [])
+        [patch] = result["patches"]
+        self.assertEqual(patch["values"], {"eval_cost_usd": "159", "ddt": "EOD"})
+        self.assertEqual((patch["expected"]["discount_code"], patch["expected"]["discount_pct"]), ("MAD", "20"))
+        # Non-affiliate code on the same firm: still held, nothing priced.
+        with mock.patch.dict(collect.ADAPTERS, {"traderslaunch": held}):
+            result = build([{**row, "discount_code": "OLDSALE"}], {"traderslaunch": "<html></html>"}, NOW)
+        self.assertNotIn("eval_cost_usd", result["patches"][0]["values"])
+
     def test_non_affiliate_firm_still_takes_public_code(self):
         result = self.run_build("tradeify", "SEP", key="tradeify-50k")
         self.assertEqual(result["patches"][0]["values"]["discount_code"], "E8")
