@@ -698,7 +698,7 @@ class AlphaFuturesAdapterTests(unittest.TestCase):
 
 class NewFixtureSafetyTests(unittest.TestCase):
     def test_new_fixtures_are_marked_synthetic(self):
-        for name in ("bulenox", "phidias", "alphafutures", "legendstrading", "fundedfutures"):
+        for name in ("bulenox", "phidias", "alphafutures", "legendstrading", "fundedfutures", "e8futures"):
             with self.subTest(fixture=name):
                 self.assertIn("SYNTHETIC TEST FIXTURE", fixture(name))
 
@@ -771,3 +771,41 @@ class FundedFuturesAdapterTests(unittest.TestCase):
         result = build([row], {"fundedfutures": source}, NOW)
         self.assertEqual(result["patches"], [])
         self.assertEqual(result["review"][0]["proposed"], {"eval_cost_usd": "999"})
+
+
+class E8FuturesAdapterTests(unittest.TestCase):
+    def run_adapter(self, source=None, **values):
+        defaults = dict(key="e8-signature-25k", firm_key="e8futures", firm_name="E8 Futures",
+                        account_label="Signature", account_size_usd="25000",
+                        eval_cost_usd="1", discount_code="E8", discount_pct="25")
+        return collect.e8_futures(source or fixture("e8futures"), sheet_row(**{**defaults, **values}), NOW)
+
+    def test_price_and_coupon_from_nuxt_payload(self):
+        fields, verified, expires, _ = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertIsNone(expires)
+        self.assertEqual(fields, {"eval_cost_usd": "999", "discount_code": "FAKEPROMO",
+                                  "discount_pct": "25", "discounted_eval_usd": ""})
+
+    def test_affiliate_code_is_kept_and_tier_agreement_checked(self):
+        fields, verified, _, _ = self.run_adapter(account_label="Zero MAX", account_size_usd="50000",
+                                                  discount_code="MADPROPS")
+        self.assertIs(verified, True)
+        self.assertEqual((fields["eval_cost_usd"], fields["discount_code"], fields["discount_pct"]),
+                         ("777", "MADPROPS", "35"))
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Zero MAX", account_size_usd="100000")
+
+    def test_first_purchase_discount_mismatch_holds_coupon(self):
+        fields, verified, _, _ = self.run_adapter(account_label="Zero Starter", account_size_usd="50000")
+        self.assertIs(verified, False)
+        self.assertEqual(fields, {"eval_cost_usd": "555"})
+
+    def test_missing_size_unknown_label_or_payload_fails_closed(self):
+        for label, size in (("Signature", "150000"), ("Zero Starter", "200000"), ("One", "50000")):
+            with self.subTest(label=label, size=size), self.assertRaises(ValueError):
+                self.run_adapter(account_label=label, account_size_usd=size)
+        with self.assertRaises(ValueError):
+            self.run_adapter("<html>no payload</html>")
+        with self.assertRaises(ValueError):
+            collect.nuxt_data('<script id="__NUXT_DATA__">[["Set", 1], 2]</script>', "x")
