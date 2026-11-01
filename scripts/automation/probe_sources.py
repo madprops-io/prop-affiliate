@@ -13,7 +13,7 @@ SITES = {
  "fundednext": "https://fundednext.com/",
  "fundedfutures": "https://fundedfutures.com/",
  "blusky-trading": "https://blusky.pro/",
- "alphafutures": "https://alphafutures.com/",
+ "alphafutures": "https://alpha-futures.com/",
  "purdia": "https://purdia.com/",
  "takeprofittrader": "https://takeprofittrader.com/",
  "bulenox": "https://bulenox.com/",

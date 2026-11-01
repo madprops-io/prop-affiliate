@@ -4,8 +4,9 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import collect
-from collect import (apex, blue_guardian, build, daytraders, literal, lucid, money,
-                     my_funded_futures, tradeday, tradeify, unique)
+from collect import (apex, blue_guardian, build, daytraders, fundednext, literal,
+                     lucid, money, my_funded_futures, top_one_futures, tradeday,
+                     tradeify, unique)
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 NY = ZoneInfo("America/New_York")
@@ -417,5 +418,286 @@ class TradeDayAdapterTests(unittest.TestCase):
         self.assertEqual(patch["values"]["discount_code"], "TESTCODE")
 
 
+class FundedNextAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="fundednext-futures-rapid-daily-25k", firm_key="fundednext",
+                        firm_name="FundedNext", account_label="Rapid Daily",
+                        account_size_usd="25000", eval_cost_usd="1",
+                        discount_code="OLDSALE", discount_pct="10")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return fundednext(fixture("fundednext"), self.row(**values), NOW)
+
+    def test_rapid_daily_price_and_discount(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "150")
+        self.assertEqual(fields["discount_code"], "RAPID")
+        self.assertEqual(fields["discount_pct"], "50")
+        self.assertIsNone(expires)
+        self.assertIn("FundedNext", evidence)
+
+    def test_affiliate_code_is_kept(self):
+        fields, verified, _, _ = self.run_adapter(discount_code="MAD")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["discount_code"], "MAD")
+
+    def test_flex_package(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="fundednext-futures-flex-50k", account_label="Flex",
+            account_size_usd="50000")
+        self.assertEqual(fields["eval_cost_usd"], "200")
+        self.assertEqual(fields["discount_pct"], "40")
+
+    def test_rapid_pro_variant(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="fundednext-futures-rapid-pro-25k", account_label="Rapid Pro",
+            account_size_usd="25000")
+        self.assertEqual(fields["eval_cost_usd"], "150")
+
+    def test_dll_addon_not_on_storefront(self):
+        with self.assertRaisesRegex(ValueError, "not on the storefront"):
+            self.run_adapter(account_label="Rapid Pro DLL Add-On")
+
+    def test_legacy_not_on_storefront(self):
+        with self.assertRaisesRegex(ValueError, "not on the storefront"):
+            self.run_adapter(account_label="Legacy")
+
+    def test_unknown_label(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Quantum 25K")
+
+    def test_no_matching_size(self):
+        with self.assertRaisesRegex(ValueError, "found 0"):
+            self.run_adapter(account_label="Rapid Daily", account_size_usd="150000")
+
+    def test_sale_price_must_match_badge(self):
+        # Rapid Daily 50K: orig=300, badge=43% OFF → exact=171, disc=170 → |170-171|=1 ≤ 1 → OK
+        fields, verified, _, _ = self.run_adapter(
+            key="fundednext-futures-rapid-daily-50k", account_label="Rapid Daily",
+            account_size_usd="50000")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "300")
+
+    def test_build_publishes_patch_without_promo_expiry(self):
+        result = build([self.row()], {"fundednext": fixture("fundednext")}, NOW)
+        self.assertEqual(result["review"], [])
+        [patch] = result["patches"]
+        self.assertEqual(patch["values"]["discount_code"], "RAPID")
+        self.assertNotIn("promotionExpiresAt", patch)
+
+
+class TopOneFuturesAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="topone-elite-daily-25k", firm_key="top-one-futures",
+                        firm_name="Top One Futures", account_label="Elite Daily",
+                        account_size_usd="25000", eval_cost_usd="1",
+                        discount_code="OLDSALE", discount_pct="10")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return top_one_futures(fixture("top-one-futures"), self.row(**values), NOW)
+
+    def test_elite_daily_price_and_discount(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "200")
+        self.assertEqual(fields["discount_code"], "BOO")
+        self.assertEqual(fields["discount_pct"], "50")
+        self.assertIsNone(expires)
+        self.assertIn("Top One", evidence)
+
+    def test_affiliate_code_is_kept(self):
+        fields, verified, _, _ = self.run_adapter(discount_code="MADPROPS")
+        self.assertEqual(fields["discount_code"], "MADPROPS")
+
+    def test_elite_daily_50k(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="topone-elite-daily-50k", account_size_usd="50000")
+        self.assertEqual(fields["eval_cost_usd"], "300")
+        self.assertEqual(fields["discount_pct"], "50")
+
+    def test_elite_access_no_verified_discount(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="topone-elite-access-25k", account_label="Elite Access",
+            account_size_usd="25000")
+        self.assertIs(verified, False)
+        self.assertEqual(fields["eval_cost_usd"], "139")
+        self.assertNotIn("discount_code", fields)
+
+    def test_instant_sim_funded(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="topone-instant-2-25k", account_label="Instant Sim Funded 2.0",
+            account_size_usd="25000")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "500")
+        self.assertEqual(fields["discount_pct"], "45")
+
+    def test_ignite_instant_funding(self):
+        fields, verified, _, _ = self.run_adapter(
+            key="topone-ignite-25k", account_label="Ignite Instant Funding",
+            account_size_usd="25000")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "400")
+        self.assertEqual(fields["discount_pct"], "50")
+
+    def test_unknown_label(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Premium 25K")
+
+    def test_no_matching_card(self):
+        with self.assertRaisesRegex(ValueError, "No Top One card"):
+            self.run_adapter(account_size_usd="200000")
+
+    def test_build_publishes_patch(self):
+        result = build([self.row()], {"top-one-futures": fixture("top-one-futures")}, NOW)
+        self.assertEqual(result["review"], [])
+        [patch] = result["patches"]
+        self.assertEqual(patch["values"]["discount_code"], "BOO")
+        self.assertNotIn("promotionExpiresAt", patch)
+
+
 if __name__ == '__main__':
     unittest.main()
+
+
+class BulenoxAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="bulenox-qualification-opt1-25k", firm_key="bulenox", firm_name="Bulenox",
+                        account_label="Qualification Option 1", account_size_usd="25000",
+                        eval_cost_usd="1", discount_code="MAD", discount_pct="89")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return collect.bulenox(fixture("bulenox"), self.row(**values), NOW)
+
+    def test_qualification_reads_separately_declared_tiers(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields, {"eval_cost_usd": "111"})
+        self.assertIsNone(expires)
+        self.assertIn("managed manually", evidence)
+
+    def test_options_share_price_and_inline_tiers(self):
+        self.assertEqual(self.run_adapter(account_label="Qualification Option 2", account_size_usd="150000")[0],
+                         {"eval_cost_usd": "444"})
+        self.assertEqual(self.run_adapter(account_label="Fast Track Option 2", account_size_usd="50000")[0],
+                         {"eval_cost_usd": "666"})
+        self.assertEqual(self.run_adapter(account_label="Momentum Option 1", account_size_usd="150000")[0],
+                         {"eval_cost_usd": "44.5"})
+
+    def test_discount_fields_are_never_touched(self):
+        for label in ("Qualification Option 1", "Fast Track Option 1", "Momentum Option 2"):
+            fields, _, _, _ = self.run_adapter(account_label=label)
+            self.assertEqual(set(fields), {"eval_cost_usd"})
+
+    def test_build_publishes_price_only_patch(self):
+        result = build([self.row()], {"bulenox": fixture("bulenox")}, NOW)
+        self.assertEqual(result["review"], [])
+        self.assertEqual(result["patches"][0]["values"], {"eval_cost_usd": "111"})
+        self.assertEqual(result["patches"][0]["expected"]["discount_code"], "MAD")
+        self.assertNotIn("promotionExpiresAt", result["patches"][0])
+
+    def test_fixed_discounted_price_blocks_price_change(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(discounted_eval_usd="50")
+        fields, _, _, _ = self.run_adapter(eval_cost_usd="111", discounted_eval_usd="50")
+        self.assertEqual(fields["eval_cost_usd"], "111")
+
+    def test_unknown_label_or_missing_program_fails_closed(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Qualification")
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_size_usd="75000")
+        with self.assertRaises(ValueError):
+            collect.bulenox("var Ai=[{id:`momentum`,tiers:[]}]", self.row(), NOW)
+
+    def test_bundle_is_located_from_the_page(self):
+        pages = {"https://bulenox.com/": '<script type="module" crossorigin src="/assets/index-AbC_1.js"></script>',
+                 "https://bulenox.com/assets/index-AbC_1.js": "BUNDLE"}
+        original = collect.fetch
+        collect.fetch = lambda url, browser=False: pages[url]
+        try:
+            self.assertEqual(collect.fetch_source("bulenox", "https://bulenox.com/"), "BUNDLE")
+            pages["https://bulenox.com/"] += '<script src="/assets/index-Other.js"></script>'
+            with self.assertRaises(ValueError):
+                collect.fetch_source("bulenox", "https://bulenox.com/")
+        finally:
+            collect.fetch = original
+
+
+class PhidiasAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="phidias-express-to-live-25k", firm_key="phidias", firm_name="Phidias",
+                        account_label="Express to Live", account_size_usd="25000",
+                        eval_cost_usd="1", discount_code="MADPROPS", discount_pct="80")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return collect.phidias(fixture("phidias"), self.row(**values), NOW)
+
+    def test_one_time_price_and_otp_discount(self):
+        fields, verified, expires, _ = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields, {"eval_cost_usd": "999", "discount_code": "MADPROPS",
+                                  "discount_pct": "15", "discounted_eval_usd": ""})
+        self.assertIsNone(expires)
+
+    def test_non_affiliate_code_takes_public_code(self):
+        fields, _, _, _ = self.run_adapter(account_label="Fundamental", account_size_usd="50000",
+                                           discount_code="OLD")
+        self.assertEqual((fields["eval_cost_usd"], fields["discount_code"], fields["discount_pct"]),
+                         ("777", "FAKEPROMO", "35"))
+
+    def test_zero_discount_is_held_for_review(self):
+        fields, verified, _, _ = self.run_adapter(account_label="Premium", account_size_usd="100000")
+        self.assertIs(verified, False)
+        self.assertEqual(fields, {"eval_cost_usd": "666"})
+
+    def test_unknown_plan_or_size_fails_closed(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Challenge")
+        with self.assertRaises(KeyError):
+            self.run_adapter(account_size_usd="150000")
+
+
+class AlphaFuturesAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="alpha-zero-50k", firm_key="alphafutures", firm_name="Alpha Futures",
+                        account_label="Zero", account_size_usd="50000",
+                        eval_cost_usd="1", discount_code="ALPHA40", discount_pct="40")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return collect.alpha_futures(fixture("alphafutures"), self.row(**values), NOW)
+
+    def test_zero_uses_its_own_offer(self):
+        fields, verified, _, _ = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields, {"eval_cost_usd": "999", "discount_code": "FAKEZERO",
+                                  "discount_pct": "15", "discounted_eval_usd": ""})
+
+    def test_direct_reads_qualified_card(self):
+        fields, _, _, _ = self.run_adapter(account_label="Direct", account_size_usd="25000",
+                                           discount_code="MAD")
+        self.assertEqual((fields["eval_cost_usd"], fields["discount_code"], fields["discount_pct"]),
+                         ("1777", "MAD", "25"))
+
+    def test_plan_without_offer_is_held(self):
+        fields, verified, _, _ = self.run_adapter(account_label="Advanced")
+        self.assertIs(verified, False)
+        self.assertEqual(fields, {"eval_cost_usd": "666"})
+
+    def test_conflicting_or_missing_cards_fail_closed(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Standard", account_size_usd="150000")
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_size_usd="25000")
+
+
+class NewFixtureSafetyTests(unittest.TestCase):
+    def test_new_fixtures_are_marked_synthetic(self):
+        for name in ("bulenox", "phidias", "alphafutures"):
+            with self.subTest(fixture=name):
+                self.assertIn("SYNTHETIC TEST FIXTURE", fixture(name))
