@@ -65,6 +65,42 @@ class CollectorTests(unittest.TestCase):
         self.assertNotIn('activation_fee_usd', fields)
 
 
+class AffiliateFirmLockTests(unittest.TestCase):
+    """The bot never writes discount_code on firms where MadProps has an affiliate code."""
+
+    @staticmethod
+    def fake_adapter(text, row, now):
+        return {"eval_cost_usd": "120", "discount_code": "E8", "discount_pct": "25"}, True, None, "fake"
+
+    def run_build(self, firm_key, code, key="e8-signature-25k"):
+        row = sheet_row(key=key, firm_key=firm_key, firm_name="Firm", account_label="Signature",
+                        account_size_usd="25000", eval_cost_usd="110", discount_code=code, discount_pct="25")
+        adapter_firm = "lucid" if firm_key.startswith("lucid-") else firm_key
+        with mock.patch.dict(collect.ADAPTERS, {adapter_firm: self.fake_adapter}):
+            return build([row], {adapter_firm: "<html></html>"}, NOW)
+
+    def test_affiliate_firm_code_never_written_but_price_updates(self):
+        for firm in sorted(collect.AFFILIATE_FIRMS - {"lucid"}) + ["lucid-flex-25k"]:
+            result = self.run_build(firm, "MADPROPS")
+            [patch] = result["patches"]
+            self.assertNotIn("discount_code", patch["values"], firm)
+            self.assertEqual(patch["values"]["eval_cost_usd"], "120")
+            self.assertEqual(patch["expected"]["discount_code"], "MADPROPS")
+            self.assertEqual(result["review"], [])
+
+    def test_wrong_code_on_affiliate_firm_is_kept_and_flagged(self):
+        for code in ("E8", ""):
+            result = self.run_build("e8futures", code)
+            [patch] = result["patches"]
+            self.assertNotIn("discount_code", patch["values"])
+            [flag] = result["review"]
+            self.assertIn("not MAD/MADPROPS", flag["reason"])
+
+    def test_non_affiliate_firm_still_takes_public_code(self):
+        result = self.run_build("tradeify", "SEP", key="tradeify-50k")
+        self.assertEqual(result["patches"][0]["values"]["discount_code"], "E8")
+
+
 class FixtureSafetyTests(unittest.TestCase):
     def test_fixtures_are_marked_synthetic(self):
         for name in ("tradeify", "daytraders", "apex", "lucid", "blue-guardian"):
@@ -238,7 +274,7 @@ class LucidAdapterTests(unittest.TestCase):
             lucid(fixture("lucid"), self.row(firm_key="lucid-pro-75k"), NOW)
 
     def test_build_holds_lucid_pricing_for_review(self):
-        result = build([self.row(eval_cost_usd="1")], {"lucid": fixture("lucid")}, NOW)
+        result = build([self.row(eval_cost_usd="1", discount_code="MAD")], {"lucid": fixture("lucid")}, NOW)
         [review] = result["review"]
         self.assertEqual(review["key"], "lucid-pro-25k")
         self.assertEqual(review["proposed"], {"eval_cost_usd": "999"})
@@ -482,10 +518,12 @@ class FundedNextAdapterTests(unittest.TestCase):
         self.assertEqual(fields["eval_cost_usd"], "300")
 
     def test_build_publishes_patch_without_promo_expiry(self):
-        result = build([self.row()], {"fundednext": fixture("fundednext")}, NOW)
+        # FundedNext is an affiliate firm: price and discount % update, the code is never written.
+        result = build([self.row(discount_code="MAD")], {"fundednext": fixture("fundednext")}, NOW)
         self.assertEqual(result["review"], [])
         [patch] = result["patches"]
-        self.assertEqual(patch["values"]["discount_code"], "RAPID")
+        self.assertNotIn("discount_code", patch["values"])
+        self.assertEqual(patch["expected"]["discount_code"], "MAD")
         self.assertNotIn("promotionExpiresAt", patch)
 
 

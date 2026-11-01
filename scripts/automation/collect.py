@@ -70,6 +70,11 @@ LITERALS = {}
 # other Sheet code (or a blank one) is replaced by the firm's current public code.
 # Mirrors AFFILIATE_CODES in lib/firmUpdates.ts.
 AFFILIATE_CODES = {"MAD", "MADPROPS"}
+# Firms where MadProps has an affiliate code (mirrors AFFILIATE_FIRMS in
+# lib/firmUpdates.ts). The collector never writes discount_code for these
+# firms, whatever the Sheet says: prices and discount % still update, the
+# Sheet's code is left alone, and a non-affiliate code is flagged for review.
+AFFILIATE_FIRMS = {"bulenox", "e8futures", "fundednext", "lucid", "phidias", "traderslaunch"}
 COUPON = re.compile(r"[A-Za-z0-9_-]{1,40}")
 
 
@@ -1274,6 +1279,12 @@ def build(rows, sources, now):
                 proposed = {k: v for k, v in fields.items() if k in PRICE_FIELDS}
                 review.append({"key": key, "reason": "Coupon not verified for existing Sheet code; pricing held", "proposed": proposed})
                 fields = {k: v for k, v in fields.items() if k not in PRICE_FIELDS}
+            if firm in AFFILIATE_FIRMS:
+                fields.pop("discount_code", None)
+                sheet_code = row.get("discount_code", "").strip()
+                if sheet_code.upper() not in AFFILIATE_CODES:
+                    review.append({"key": key, "reason": f"Affiliate firm row has code {sheet_code or '(blank)'!r} in the Sheet, "
+                                   "not MAD/MADPROPS; the bot will not change it, fix it in the Sheet"})
             for field, value in fields.items():
                 if field not in ALLOWED:
                     raise ValueError("Unexpected output field")

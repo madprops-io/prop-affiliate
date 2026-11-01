@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { applyFirmUpdates, isAffiliateCode } from '../lib/firmUpdates.ts';
+import { applyFirmUpdates, isAffiliateCode, isAffiliateFirm } from '../lib/firmUpdates.ts';
 
 const now = Date.parse('2026-10-18T12:00:00Z');
 const row = {key:'apex-50k', firm_key:'apex', eval_cost_usd:'100', discount_code:'MAD', true_cost:'', signup_url:'https://example.com/?ref=MAD'};
@@ -64,6 +64,17 @@ test('MAD and MADPROPS affiliate codes are never replaced but take the promotion
   assert.equal(isAffiliateCode(' mad '), true);
   assert.equal(isAffiliateCode('MADNESS'), false);
   assert.equal(isAffiliateCode(undefined), false);
+});
+test('affiliate firms never have their code changed, even when the Sheet code is wrong', () => {
+  for (const firm_key of ['e8futures', 'bulenox', 'fundednext', 'phidias', 'traderslaunch', 'lucid-flex-25k']) {
+    const sheetRow = {...row, key:firm_key, firm_key, discount_code:'E8'};
+    const swap = {...patch, key:firm_key, expected:{discount_code:'E8'}, values:{discount_code:'NOV', eval_cost_usd:'120'}};
+    assert.deepEqual(applyFirmUpdates([sheetRow], snapshot(swap), now)[0], sheetRow, `${firm_key} code kept`);
+    const priceOnly = {...swap, values:{eval_cost_usd:'120'}};
+    assert.equal(applyFirmUpdates([sheetRow], snapshot(priceOnly), now)[0].eval_cost_usd, '120');
+  }
+  assert.equal(isAffiliateFirm('Lucid-Pro-50k'), true);
+  assert.equal(isAffiliateFirm('tradeify'), false);
 });
 test('Lucid plans sharing the legacy key stay distinct by firm_key', () => {
   const lucid = [{...row, key:'lucidtrading', firm_key:'lucid-pro-25k'}, {...row, key:'lucidtrading', firm_key:'lucid-pro-50k'}];
