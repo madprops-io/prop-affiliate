@@ -282,6 +282,19 @@ class LucidAdapterTests(unittest.TestCase):
         self.assertEqual(patch["values"], {"ddt": "EOD"})  # only the non-price field is published
         self.assertNotIn("promotionExpiresAt", patch)
 
+    def test_corrected_sheet_layout_is_supported(self):
+        # Corrected layout: firm_key=lucidtrading (or lucid), key=lucid-pro-25k.
+        for firm_key in ("lucidtrading", "lucid"):
+            row = self.row(key="lucid-pro-25k", firm_key=firm_key)
+            fields, _, _, _ = lucid(fixture("lucid"), row, NOW)
+            self.assertEqual(fields["eval_cost_usd"], "999")
+            result = build([dict(row, eval_cost_usd="1", discount_code="MAD")], {"lucid": fixture("lucid")}, NOW)
+            self.assertEqual(result["coverage"], {"lucid": 1})
+            self.assertEqual([r["key"] for r in result["review"]], ["lucid-pro-25k"])
+            [patch] = result["patches"]
+            self.assertEqual(patch["key"], "lucid-pro-25k")
+            self.assertNotIn("discount_code", patch["values"])
+
 
 
 class BlueGuardianAdapterTests(unittest.TestCase):

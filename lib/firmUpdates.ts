@@ -36,7 +36,8 @@ export function isAffiliateCode(code: string | undefined) {
 
 export function isAffiliateFirm(firmKey: string | undefined) {
   const firm = (firmKey ?? "").trim().toLowerCase();
-  return AFFILIATE_FIRMS.includes(firm.startsWith("lucid-") ? "lucid" : firm);
+  const lucid = firm.startsWith("lucid-") || firm === "lucidtrading";
+  return AFFILIATE_FIRMS.includes(lucid ? "lucid" : firm);
 }
 
 export function firmRowIdentity(row: CsvRow) {
@@ -48,7 +49,22 @@ export function applyFirmUpdates(
   snapshot: UpdateSnapshot,
   now = Date.now(),
 ) {
-  if (snapshot.schemaVersion !== 1) return rows;
+  return verifyFirmUpdates(rows, snapshot, now).rows;
+}
+
+/**
+ * Applies verified patches and also reports, per row identity, which fields are
+ * currently backed by a verified patch. A patch also counts when its `expected`
+ * guard no longer matches only because the Sheet already holds the verified
+ * values (the bot wrote them back to the Sheet).
+ */
+export function verifyFirmUpdates(
+  rows: CsvRow[],
+  snapshot: UpdateSnapshot,
+  now = Date.now(),
+): { rows: CsvRow[]; verifiedFields: Map<string, Set<string>> } {
+  const verifiedFields = new Map<string, Set<string>>();
+  if (snapshot.schemaVersion !== 1) return { rows, verifiedFields };
   const counts = new Map<string, number>();
   for (const row of rows) {
     const key = firmRowIdentity(row);
@@ -58,7 +74,7 @@ export function applyFirmUpdates(
   for (const patch of snapshot.patches) {
     patches.set(patch.key, [...(patches.get(patch.key) ?? []), patch]);
   }
-  return rows.map((row) => {
+  const output = rows.map((row) => {
     const key = firmRowIdentity(row);
     const candidates = patches.get(key);
     if (counts.get(key) !== 1 || candidates?.length !== 1) return row;
@@ -68,7 +84,9 @@ export function applyFirmUpdates(
     const expires = Date.parse(patch.expiresAt);
     if (!Number.isFinite(verified) || !Number.isFinite(expires) || verified > now + 60_000 ||
         expires <= now || now - verified > 18 * 60 * 60 * 1000) return row;
-    if (Object.entries(patch.expected).some(([field, value]) => (row[field] ?? "") !== value)) return row;
+    const alreadyInSheet = Object.entries(patch.values).every(([field, value]) => (row[field] ?? "") === value);
+    if (!alreadyInSheet &&
+        Object.entries(patch.expected).some(([field, value]) => (row[field] ?? "") !== value)) return row;
     if (patch.values.discount_code !== undefined && patch.values.discount_code !== row.discount_code &&
         (isAffiliateCode(row.discount_code) || isAffiliateFirm(row.firm_key))) return row;
     if (Object.entries(patch.values).some(([field, value]) =>
@@ -79,6 +97,8 @@ export function applyFirmUpdates(
        (!/^\d+(?:\.\d{1,2})?$/.test(value) || Number(value) > (field === "discount_pct" ? 100 : 100_000)))
       )
     )) return row;
+    verifiedFields.set(key, new Set(Object.keys(patch.values)));
     return { ...row, ...patch.values };
   });
+  return { rows: output, verifiedFields };
 }

@@ -74,6 +74,7 @@ test('affiliate firms never have their code changed, even when the Sheet code is
     assert.equal(applyFirmUpdates([sheetRow], snapshot(priceOnly), now)[0].eval_cost_usd, '120');
   }
   assert.equal(isAffiliateFirm('Lucid-Pro-50k'), true);
+  assert.equal(isAffiliateFirm('lucidtrading'), true);
   assert.equal(isAffiliateFirm('tradeify'), false);
 });
 test('Lucid plans sharing the legacy key stay distinct by firm_key', () => {
@@ -82,4 +83,21 @@ test('Lucid plans sharing the legacy key stay distinct by firm_key', () => {
   const result = applyFirmUpdates(lucid, snapshot(update), now);
   assert.equal(result[0].eval_cost_usd, '100');
   assert.equal(result[1].eval_cost_usd, '120');
+});
+test('Lucid rows in the corrected layout (firm_key=lucidtrading) match by key', () => {
+  const lucid = [{...row, key:'lucid-pro-25k', firm_key:'lucidtrading'}, {...row, key:'lucid-pro-50k', firm_key:'lucidtrading'}];
+  const result = applyFirmUpdates(lucid, snapshot({...patch, key:'lucid-pro-50k'}), now);
+  assert.equal(result[0].eval_cost_usd, '100');
+  assert.equal(result[1].eval_cost_usd, '120');
+});
+test('a patch whose values are already in the Sheet still counts as verified', async () => {
+  const { verifyFirmUpdates } = await import('../lib/firmUpdates.ts');
+  const written = {...row, eval_cost_usd:'120'};
+  const result = verifyFirmUpdates([written], snapshot(), now);
+  assert.deepEqual(result.rows, [written]);
+  assert.deepEqual([...result.verifiedFields.get(row.key)], ['eval_cost_usd']);
+  const edited = {...row, eval_cost_usd:'80'};
+  const rejected = verifyFirmUpdates([edited], snapshot(), now);
+  assert.deepEqual(rejected.rows, [edited]);
+  assert.equal(rejected.verifiedFields.size, 0);
 });

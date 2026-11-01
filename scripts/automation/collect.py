@@ -279,8 +279,7 @@ def daytraders(text, row, now):
 
 def lucid(text, row, now):
     data = literal(text, r"var\s+LucidPricingConfig\s*=\s*")
-    identity = row["firm_key"]
-    m = re.fullmatch(r"lucid-(pro|flex|daily|direct)-(25|50|100|150)k", identity)
+    m = re.fullmatch(r"lucid-(pro|flex|daily|direct)-(25|50|100|150)k", row_identity(row))
     if not m:
         raise ValueError("Unknown Lucid plan identity")
     plan = unique([p for p in data["plans"]["planTypes"] if p["id"] == m[1] and p["enabled"]])
@@ -1245,10 +1244,19 @@ ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid
             "traderslaunch": traders_launch}
 
 
+LUCID_FIRM_KEYS = {"lucid", "lucidtrading"}
+
+
 def row_identity(row):
-    # The existing Sheet reverses key and firm_key for Lucid rows.
+    # Older Sheets reverse key and firm_key for Lucid rows (firm_key=lucid-pro-25k,
+    # key=lucidtrading); the corrected layout is firm_key=lucidtrading, key=lucid-pro-25k.
     firm_key = row.get("firm_key", "")
     return firm_key if firm_key.startswith("lucid-") else row.get("key") or firm_key
+
+
+def row_firm(row):
+    firm_key = row.get("firm_key", "").strip()
+    return "lucid" if firm_key.startswith("lucid-") or firm_key.lower() in LUCID_FIRM_KEYS else firm_key
 
 
 def build(rows, sources, now):
@@ -1262,7 +1270,7 @@ def build(rows, sources, now):
         key = row_identity(row)
         if not key or not row.get("firm_name"):
             continue
-        firm = "lucid" if row["firm_key"].startswith("lucid-") else row["firm_key"]
+        firm = row_firm(row)
         coverage[firm] = coverage.get(firm, 0) + 1
         if firm not in ADAPTERS:
             continue

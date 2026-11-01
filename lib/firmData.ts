@@ -2,7 +2,7 @@ import Papa from "papaparse";
 import snapshot from "@/data/firm-updates.json";
 import approved from "@/data/approved-firm-data.json";
 import { applyApprovedUpdates, type ApprovedSnapshot } from "./approvedUpdates";
-import { applyFirmUpdates, type CsvRow, type UpdateSnapshot } from "./firmUpdates";
+import { verifyFirmUpdates, type CsvRow, type UpdateSnapshot } from "./firmUpdates";
 import { publicFirmUpdateStatus } from "./firmUpdateStatus";
 
 export async function loadFirmCsv(nocache = false) {
@@ -19,8 +19,12 @@ export async function loadFirmCsv(nocache = false) {
   if (parsed.errors.length || !parsed.meta.fields?.includes("firm_key")) {
     throw new Error("Invalid Sheet CSV; updates were not applied");
   }
-  const rows = process.env.MADPROPS_AUTOMATION_DISABLED === "1"
-    ? parsed.data : applyApprovedUpdates(parsed.data, applyFirmUpdates(parsed.data, snapshot as unknown as UpdateSnapshot, Date.now()), approved as ApprovedSnapshot);
+  let rows = parsed.data;
+  if (process.env.MADPROPS_AUTOMATION_DISABLED !== "1") {
+    const now = Date.now();
+    const verified = verifyFirmUpdates(parsed.data, snapshot as unknown as UpdateSnapshot, now);
+    rows = applyApprovedUpdates(parsed.data, verified.rows, approved as ApprovedSnapshot, now, verified.verifiedFields);
+  }
   return Papa.unparse(rows, { columns: parsed.meta.fields });
 }
 
