@@ -15,6 +15,7 @@ import math
 import os
 from pathlib import Path
 import re
+import urllib.parse
 import urllib.request
 from zoneinfo import ZoneInfo
 
@@ -29,7 +30,7 @@ SOURCES = {
     "lucid": "https://lucidtrading.com/",
     # Accessible official storefront candidates; no prices are published until
     # an account-specific adapter is implemented and validated.
-    "alphafutures": "https://alphafutures.com/",
+    "alphafutures": "https://alpha-futures.com/",
     "aquafutures": "https://aquafutures.io/",
     "blue-guardian": "https://blueguardian.com/",
     "blusky-trading": "https://blusky.pro/",
@@ -45,6 +46,10 @@ SOURCES = {
     "tradeday": "https://tradeday.com/",
     "traderslaunch": "https://traderslaunch.com/",
 }
+# Storefronts that only answer browser-like clients (Cloudflare-fronted).
+BROWSER_FETCH = {"phidias"}
+# Single-page apps whose plan data lives in a hashed same-origin script.
+BUNDLE_FETCH = {"bulenox"}
 PRICE_FIELDS = {"eval_cost_usd", "discount_pct", "discounted_eval_usd", "discount_code"}
 ALLOWED = PRICE_FIELDS | {"activation_fee_usd", "min_days (Eval)", "ddt"}
 LITERALS = {}
@@ -61,7 +66,16 @@ def coupon_code(row, public_code):
     return current if current.upper() in AFFILIATE_CODES else public_code
 
 
-def fetch(url):
+def fetch(url, browser=False):
+    if browser:
+        # Browser-like TLS fingerprint for storefronts that refuse plain
+        # clients. Still a single GET of the public page; no JavaScript runs.
+        from curl_cffi import requests as cffi_requests
+        response = cffi_requests.get(url, impersonate="chrome", timeout=40)
+        response.raise_for_status()
+        if len(response.content) > 5_000_000:
+            raise ValueError("Source exceeds 5 MB limit")
+        return response.content.decode("utf-8-sig")
     request = urllib.request.Request(url, headers={
         "User-Agent": "Mozilla/5.0 (compatible; MadPropsDataMonitor/1.0; +https://madprops.com)",
         "Accept": "text/html,application/xhtml+xml",
@@ -72,6 +86,23 @@ def fetch(url):
         if len(content) > 5_000_000:
             raise ValueError("Source exceeds 5 MB limit")
         return content.decode("utf-8-sig")
+
+
+def fetch_source(firm, url):
+    """Fetch a firm's official source as text.
+
+    BROWSER_FETCH firms are read with a browser fingerprint. BUNDLE_FETCH firms
+    are single-page apps whose plan data ships in one hashed same-origin
+    script (``/assets/index-<hash>.js``); the page is read only to find that
+    file name, and the script is returned as text (never executed).
+    """
+    page = fetch(url, browser=firm in BROWSER_FETCH)
+    if firm not in BUNDLE_FETCH:
+        return page
+    scripts = set(re.findall(r'<script[^>]+src="(/assets/index-[A-Za-z0-9_-]+\.js)"', page))
+    if len(scripts) != 1:
+        raise ValueError("Expected exactly one app bundle on the official page")
+    return fetch(urllib.parse.urljoin(url, scripts.pop()), browser=firm in BROWSER_FETCH)
 
 
 def literal(text, marker, replacements=None):
@@ -581,10 +612,112 @@ def top_one_futures(text, row, now):
         f"sale {cur_price}, code {code} {disc_pct}%")
 
 
+BULENOX_PROGRAMS = {"Qualification": "qualification", "Fast Track": "fastTrack", "Momentum": "momentum"}
+
+
+def bulenox(text, row, now):
+    """Bulenox regular prices from the storefront's app bundle (never executed).
+
+    The bundle defines ``[{id:`qualification`,tiers:X},{id:`fastTrack`,tiers:[...]},
+    {id:`momentum`,tiers:[...]}]`` where X may be a separately declared array.
+    Options 1 and 2 share one price per size. Affiliates assemble their own
+    Bulenox codes, so discount fields stay manual: only ``eval_cost_usd`` is
+    published, and only when the row has no fixed discounted-price override
+    that a new regular price would make stale.
+    """
+    m = re.fullmatch(r"(Qualification|Fast Track|Momentum) Option ([12])", row["account_label"].strip())
+    size = int(row["account_size_usd"])
+    if not m or size not in (25000, 50000, 100000, 150000):
+        raise ValueError("Unknown Bulenox plan label")
+    program = BULENOX_PROGRAMS[m[1]]
+    blocks = re.findall(r"\{id:`" + program + r"`,tiers:(\[[^\[\]]*\]|[A-Za-z_$][\w$]*)\}", text)
+    if len(blocks) != 1:
+        raise ValueError(f"Expected exactly one Bulenox '{program}' program")
+    tiers = blocks[0]
+    if not tiers.startswith("["):
+        declared = re.findall(r"(?<![\w$.])" + re.escape(tiers) + r"=(\[\{size:[^\[\]]*\])", text)
+        if len(declared) != 1:
+            raise ValueError(f"Bulenox tiers variable for '{program}' not found exactly once")
+        tiers = declared[0]
+    prices = []
+    for tier in re.findall(r"\{[^{}]*\}", tiers):
+        tier_size = re.search(r"\bsize:`\$([\d,]+)`", tier)
+        price = re.search(r"\bprice:`\$([\d,]+(?:\.\d{1,2})?)`", tier)
+        if tier_size and price and int(tier_size[1].replace(",", "")) == size:
+            prices.append(money(price[1]))
+    regular = unique(prices)
+    if row.get("discounted_eval_usd", "").strip() and regular != money(row.get("eval_cost_usd") or "0"):
+        raise ValueError("Bulenox price changed but the row has a fixed discounted price; update it by hand")
+    # True = regular price verified; discount fields are deliberately absent.
+    return {"eval_cost_usd": regular}, True, None, (
+        f"Bulenox {m[1]} {size // 1000}K (Option {m[2]}), regular {regular}; codes are managed manually")
+
+
+PHIDIAS_PLANS = {"Express to Live": "e2l", "Fundamental": "fundamental", "Premium": "premium"}
+
+
+def phidias(text, row, now):
+    """Phidias one-time (OTP) prices and OTP discounts from ``window.phidiasPromo``.
+
+    The Sheet lists the one-time-payment price, so ``prices[k].otp`` is the
+    regular price and ``discounts.otp[k]`` its current percentage off.
+    """
+    plan = PHIDIAS_PLANS.get(row["account_label"].strip())
+    if not plan:
+        raise ValueError("Unknown Phidias plan label")
+    key = f"{plan}_{int(row['account_size_usd']) // 1000}k"
+    promo = literal(text, r"phidiasPromo\s*=\s*")
+    regular = promo["prices"][key]["otp"]
+    if not isinstance(regular, (int, float)) or isinstance(regular, bool) or regular <= 0:
+        raise ValueError("Phidias one-time price missing")
+    fields = {"eval_cost_usd": money(regular)}
+    pct = promo.get("discounts", {}).get("otp", {}).get(key)
+    code = promo.get("code")
+    verified = bool(isinstance(code, str) and COUPON.fullmatch(code)
+                    and isinstance(pct, (int, float)) and not isinstance(pct, bool) and 0 < pct <= 100)
+    if verified:
+        fields["discount_code"] = coupon_code(row, code)
+        fields["discount_pct"] = money(pct)
+        fields["discounted_eval_usd"] = ""
+    return fields, verified, None, f"Phidias {key} one-time, regular {money(regular)}, code {code} {pct}% (OTP)"
+
+
+def alpha_futures(text, row, now):
+    """Alpha Futures prices from Webflow cards and the ``data-discount-offers`` JSON.
+
+    Cards read ``<h3 class="... price">100K Zero Eval<br><span ...>$279</span>``;
+    Direct plans have no evaluation, so their "Qualified" card carries the price.
+    Each discount offer names the plans it applies to.
+    """
+    m = re.fullmatch(r"(Zero|Standard|Advanced|Direct)", row["account_label"].strip())
+    if not m:
+        raise ValueError("Unknown Alpha Futures plan label")
+    plan, size_k = m[1], int(row["account_size_usd"]) // 1000
+    stage = "Qualified" if plan == "Direct" else "Eval"
+    cards = re.findall(r'<h3 class="[^"]*\bprice\b[^"]*">\s*' + str(size_k) + r"K " + plan + " " + stage
+                       + r'\s*<br\s*/?>\s*<span[^>]*>\$([\d,]+(?:\.\d{1,2})?)</span>', text)
+    regular = unique([money(c) for c in cards])
+    fields = {"eval_cost_usd": regular}
+    offers = re.findall(r'data-discount-offers="([^"]*)"', text)
+    if len(set(offers)) != 1:
+        raise ValueError("Expected one Alpha Futures discount-offer list")
+    matching = [o for o in json.loads(html.unescape(offers[0])) if plan in o.get("plans", [])]
+    offer = matching[0] if len(matching) == 1 else {}
+    code, pct = offer.get("code"), offer.get("percent")
+    verified = bool(isinstance(code, str) and COUPON.fullmatch(code)
+                    and isinstance(pct, (int, float)) and not isinstance(pct, bool) and 0 < pct <= 100)
+    if verified:
+        fields["discount_code"] = coupon_code(row, code)
+        fields["discount_pct"] = money(pct)
+        fields["discounted_eval_usd"] = ""
+    return fields, verified, None, f"Alpha Futures {size_k}K {plan} {stage}, regular {regular}, code {code} {pct}%"
+
+
 ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid": lucid,
             "blue-guardian": blue_guardian, "my-funded-futures": my_funded_futures,
             "tradeday": tradeday, "fundednext": fundednext,
-            "top-one-futures": top_one_futures}
+            "top-one-futures": top_one_futures, "bulenox": bulenox,
+            "phidias": phidias, "alphafutures": alpha_futures}
 
 
 def row_identity(row):
@@ -673,7 +806,7 @@ def main():
     def read(item):
         firm, url = item
         try:
-            return firm, (args.fixtures / (firm + ".html")).read_text() if args.fixtures else fetch(url)
+            return firm, (args.fixtures / (firm + ".html")).read_text() if args.fixtures else fetch_source(firm, url)
         except Exception as exc:
             return firm, {"error": str(type(exc).__name__) + ": " + str(exc)}
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:

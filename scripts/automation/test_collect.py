@@ -560,3 +560,144 @@ class TopOneFuturesAdapterTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class BulenoxAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="bulenox-qualification-opt1-25k", firm_key="bulenox", firm_name="Bulenox",
+                        account_label="Qualification Option 1", account_size_usd="25000",
+                        eval_cost_usd="1", discount_code="MAD", discount_pct="89")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return collect.bulenox(fixture("bulenox"), self.row(**values), NOW)
+
+    def test_qualification_reads_separately_declared_tiers(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields, {"eval_cost_usd": "111"})
+        self.assertIsNone(expires)
+        self.assertIn("managed manually", evidence)
+
+    def test_options_share_price_and_inline_tiers(self):
+        self.assertEqual(self.run_adapter(account_label="Qualification Option 2", account_size_usd="150000")[0],
+                         {"eval_cost_usd": "444"})
+        self.assertEqual(self.run_adapter(account_label="Fast Track Option 2", account_size_usd="50000")[0],
+                         {"eval_cost_usd": "666"})
+        self.assertEqual(self.run_adapter(account_label="Momentum Option 1", account_size_usd="150000")[0],
+                         {"eval_cost_usd": "44.5"})
+
+    def test_discount_fields_are_never_touched(self):
+        for label in ("Qualification Option 1", "Fast Track Option 1", "Momentum Option 2"):
+            fields, _, _, _ = self.run_adapter(account_label=label)
+            self.assertEqual(set(fields), {"eval_cost_usd"})
+
+    def test_build_publishes_price_only_patch(self):
+        result = build([self.row()], {"bulenox": fixture("bulenox")}, NOW)
+        self.assertEqual(result["review"], [])
+        self.assertEqual(result["patches"][0]["values"], {"eval_cost_usd": "111"})
+        self.assertEqual(result["patches"][0]["expected"]["discount_code"], "MAD")
+        self.assertNotIn("promotionExpiresAt", result["patches"][0])
+
+    def test_fixed_discounted_price_blocks_price_change(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(discounted_eval_usd="50")
+        fields, _, _, _ = self.run_adapter(eval_cost_usd="111", discounted_eval_usd="50")
+        self.assertEqual(fields["eval_cost_usd"], "111")
+
+    def test_unknown_label_or_missing_program_fails_closed(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Qualification")
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_size_usd="75000")
+        with self.assertRaises(ValueError):
+            collect.bulenox("var Ai=[{id:`momentum`,tiers:[]}]", self.row(), NOW)
+
+    def test_bundle_is_located_from_the_page(self):
+        pages = {"https://bulenox.com/": '<script type="module" crossorigin src="/assets/index-AbC_1.js"></script>',
+                 "https://bulenox.com/assets/index-AbC_1.js": "BUNDLE"}
+        original = collect.fetch
+        collect.fetch = lambda url, browser=False: pages[url]
+        try:
+            self.assertEqual(collect.fetch_source("bulenox", "https://bulenox.com/"), "BUNDLE")
+            pages["https://bulenox.com/"] += '<script src="/assets/index-Other.js"></script>'
+            with self.assertRaises(ValueError):
+                collect.fetch_source("bulenox", "https://bulenox.com/")
+        finally:
+            collect.fetch = original
+
+
+class PhidiasAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="phidias-express-to-live-25k", firm_key="phidias", firm_name="Phidias",
+                        account_label="Express to Live", account_size_usd="25000",
+                        eval_cost_usd="1", discount_code="MADPROPS", discount_pct="80")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return collect.phidias(fixture("phidias"), self.row(**values), NOW)
+
+    def test_one_time_price_and_otp_discount(self):
+        fields, verified, expires, _ = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields, {"eval_cost_usd": "999", "discount_code": "MADPROPS",
+                                  "discount_pct": "15", "discounted_eval_usd": ""})
+        self.assertIsNone(expires)
+
+    def test_non_affiliate_code_takes_public_code(self):
+        fields, _, _, _ = self.run_adapter(account_label="Fundamental", account_size_usd="50000",
+                                           discount_code="OLD")
+        self.assertEqual((fields["eval_cost_usd"], fields["discount_code"], fields["discount_pct"]),
+                         ("777", "FAKEPROMO", "35"))
+
+    def test_zero_discount_is_held_for_review(self):
+        fields, verified, _, _ = self.run_adapter(account_label="Premium", account_size_usd="100000")
+        self.assertIs(verified, False)
+        self.assertEqual(fields, {"eval_cost_usd": "666"})
+
+    def test_unknown_plan_or_size_fails_closed(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Challenge")
+        with self.assertRaises(KeyError):
+            self.run_adapter(account_size_usd="150000")
+
+
+class AlphaFuturesAdapterTests(unittest.TestCase):
+    def row(self, **values):
+        defaults = dict(key="alpha-zero-50k", firm_key="alphafutures", firm_name="Alpha Futures",
+                        account_label="Zero", account_size_usd="50000",
+                        eval_cost_usd="1", discount_code="ALPHA40", discount_pct="40")
+        return sheet_row(**{**defaults, **values})
+
+    def run_adapter(self, **values):
+        return collect.alpha_futures(fixture("alphafutures"), self.row(**values), NOW)
+
+    def test_zero_uses_its_own_offer(self):
+        fields, verified, _, _ = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields, {"eval_cost_usd": "999", "discount_code": "FAKEZERO",
+                                  "discount_pct": "15", "discounted_eval_usd": ""})
+
+    def test_direct_reads_qualified_card(self):
+        fields, _, _, _ = self.run_adapter(account_label="Direct", account_size_usd="25000",
+                                           discount_code="MAD")
+        self.assertEqual((fields["eval_cost_usd"], fields["discount_code"], fields["discount_pct"]),
+                         ("1777", "MAD", "25"))
+
+    def test_plan_without_offer_is_held(self):
+        fields, verified, _, _ = self.run_adapter(account_label="Advanced")
+        self.assertIs(verified, False)
+        self.assertEqual(fields, {"eval_cost_usd": "666"})
+
+    def test_conflicting_or_missing_cards_fail_closed(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Standard", account_size_usd="150000")
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_size_usd="25000")
+
+
+class NewFixtureSafetyTests(unittest.TestCase):
+    def test_new_fixtures_are_marked_synthetic(self):
+        for name in ("bulenox", "phidias", "alphafutures"):
+            with self.subTest(fixture=name):
+                self.assertIn("SYNTHETIC TEST FIXTURE", fixture(name))
