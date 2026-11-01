@@ -24,8 +24,19 @@ const allowed = new Set([
 // replaced by the firm's verified current public code.
 export const AFFILIATE_CODES: readonly string[] = ["MAD", "MADPROPS"];
 
+// Firms where MadProps has an affiliate code; mirrors AFFILIATE_FIRMS in
+// scripts/automation/collect.py. A patch may never change the code on these rows.
+export const AFFILIATE_FIRMS: readonly string[] = [
+  "bulenox", "e8futures", "fundednext", "lucid", "phidias", "traderslaunch",
+];
+
 export function isAffiliateCode(code: string | undefined) {
   return AFFILIATE_CODES.includes((code ?? "").trim().toUpperCase());
+}
+
+export function isAffiliateFirm(firmKey: string | undefined) {
+  const firm = (firmKey ?? "").trim().toLowerCase();
+  return AFFILIATE_FIRMS.includes(firm.startsWith("lucid-") ? "lucid" : firm);
 }
 
 export function firmRowIdentity(row: CsvRow) {
@@ -59,7 +70,7 @@ export function applyFirmUpdates(
         expires <= now || now - verified > 18 * 60 * 60 * 1000) return row;
     if (Object.entries(patch.expected).some(([field, value]) => (row[field] ?? "") !== value)) return row;
     if (patch.values.discount_code !== undefined && patch.values.discount_code !== row.discount_code &&
-        isAffiliateCode(row.discount_code)) return row;
+        (isAffiliateCode(row.discount_code) || isAffiliateFirm(row.firm_key))) return row;
     if (Object.entries(patch.values).some(([field, value]) =>
       !allowed.has(field) || typeof value !== "string" ||
       // An empty discount_code means a verified code-less discount.
