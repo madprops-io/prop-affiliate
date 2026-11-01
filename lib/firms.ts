@@ -60,7 +60,7 @@ export const AFFILIATE_CODES: Record<string, string> = {
   lucidtrading: "MAD",
   myfundedfutures: "TJ",
   bulenox: "TJ",
-  elitetraderfunding: "TJ",
+  elitetraderfunding: "MadProps",
   tradeify: "TJ",
   alphafutures: "TJ",
   toponefutures: "TJ",
@@ -84,7 +84,7 @@ export const AFFILIATE_LINKS: Record<string, string> = {
   fundingticks: "https://fundingticks.com/signup?ref=TJ",
   daytraders: "https://daytraders.com/go/madprops?i=1",
   tradeify: "https://tradeify.co/?ref=MADPROPS",
-  elitetraderfunding: "https://elitetraderfunding.app/?ref=MADPROPS",
+  elitetraderfunding: "https://elitetraderfunding.app/evaluations?ref=MadProps",
   lucidtrading: "https://lucidtrading.com",
   toponefutures:
     "https://toponefutures.com/?linkId=lp_707970&sourceId=mad&tenantId=toponefutures",
@@ -170,7 +170,7 @@ const RAW_FIRMS: Firm[] = [
     maxFunding: 250000,
     payout: 0.9,
     notes: "Simple one-phase evaluation, quick payouts.",
-    signup: "https://elitetraderfunding.app/",
+    signup: "https://elitetraderfunding.app/evaluations",
   },
   {
     key: "toponefutures",
