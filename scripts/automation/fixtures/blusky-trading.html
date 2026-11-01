@@ -1,0 +1,31 @@
+<!-- SYNTHETIC TEST FIXTURE - fake prices and codes, not real BluSky data -->
+<html><head><title>Synthetic BluSky fixture</title></head><body>
+<script>
+    const skyData = {
+        "3.5k": {
+            "instant": mkPlanSky({ profitGoal: 1, evalStaticDrawdown: "N/A", atLaunch: 0, profitSplit: "fake <br>split", price: 666 }),
+        },
+        "50k": {
+            "launch": mkPlanSky({ profitGoal: 1, evalStaticDrawdown: "$-1 Trailing (EOD)", atLaunch: 77, price: 99 }),
+            "premium": mkPlanSky({ profitGoal: 1, evalStaticDrawdown: "$-1 Trailing (EOD)", atLaunch: 0, price: 699.3, was: 999, discount: "USE CODE: TESTCODE" }),
+            "orbit": mkPlanSky({ profitGoal: 1, evalStaticDrawdown: "$-1 Trailing (EOD)", atLaunch: 0, price: 888, was: 0, discount: "" }),
+            "instant": mkPlanSky({ profitGoal: 1, evalStaticDrawdown: "$1 (intraday)", atLaunch: 0, price: 777 }),
+        },
+        "100k": {
+            "premium": mkPlanSky({ profitGoal: 1, evalStaticDrawdown: "$-1 Trailing (EOD)", atLaunch: 0, price: 333, was: 999, discount: "USE CODE: TESTCODE" }),
+        },
+        "200k": {
+            "launch": mkPlanSky({ profitGoal: 1, evalStaticDrawdown: "$-1 Static", atLaunch: 111, price: 555 }),
+            "premium": mkPlanSky({ profitGoal: 1, evalStaticDrawdown: "$-1 Static", atLaunch: 0, price: 444, was: 888, discount: "" }),
+        }
+    };
+
+    const skyData2 = {
+        "50k": { "premium": mkPlanSky({ profitGoal: 1, evalStaticDrawdown: "x", atLaunch: 0, price: 1 }) }
+    };
+
+    function mkPlanSky({ profitGoal, evalStaticDrawdown, atLaunch, price, was = 0, discount = 0 }) {
+        return { price: price };
+    }
+</script>
+</body></html>

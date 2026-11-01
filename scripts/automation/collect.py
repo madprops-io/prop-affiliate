@@ -31,8 +31,10 @@ SOURCES = {
     # Accessible official storefront candidates; no prices are published until
     # an account-specific adapter is implemented and validated.
     "alphafutures": "https://alpha-futures.com/",
+    # Plan list prices ship in the inline window.AQ_TABLE_CONFIG script.
     "aquafutures": "https://aquafutures.io/",
     "blue-guardian": "https://blueguardian.com/",
+    # Plan prices and codes ship in the inline `const skyData` table.
     "blusky-trading": "https://blusky.pro/",
     "bulenox": "https://bulenox.com/",
     # Futures products (prices, discount, code) ship in this page's Nuxt payload.
@@ -44,15 +46,21 @@ SOURCES = {
     "my-funded-futures": "https://myfundedfutures.com/",
     "phidias": "https://phidiaspropfirm.com/",
     "purdia": "https://purdia.com/",
+    # Homepage carries the promo banner; prices come from COMPANION_JSON below.
     "takeprofittrader": "https://takeprofittrader.com/",
     "top-one-futures": "https://toponefutures.com/",
     "tradeday": "https://tradeday.com/",
+    # Server-rendered pricing cards (default split only).
     "traderslaunch": "https://traderslaunch.com/",
 }
 # Storefronts that only answer browser-like clients (Cloudflare-fronted).
 BROWSER_FETCH = {"phidias", "fundedfutures"}
 # Single-page apps whose plan data lives in a hashed same-origin script.
 BUNDLE_FETCH = {"bulenox", "purdia"}
+# Firms whose prices come from a public same-origin JSON endpoint while the
+# coupon is shown on the page. The JSON is appended to the page as an inert
+# <script type="application/json" id="madprops-companion"> block.
+COMPANION_JSON = {"takeprofittrader": "https://takeprofittrader.com/accounts/api/subscriptions"}
 PRICE_FIELDS = {"eval_cost_usd", "discount_pct", "discounted_eval_usd", "discount_code"}
 ALLOWED = PRICE_FIELDS | {"activation_fee_usd", "min_days (Eval)", "ddt"}
 LITERALS = {}
@@ -94,12 +102,19 @@ def fetch(url, browser=False):
 def fetch_source(firm, url):
     """Fetch a firm's official source as text.
 
-    BROWSER_FETCH firms are read with a browser fingerprint. BUNDLE_FETCH firms
-    are single-page apps whose plan data ships in one hashed same-origin
-    script (``/assets/index-<hash>.js``); the page is read only to find that
-    file name, and the script is returned as text (never executed).
+    BROWSER_FETCH firms are read with a browser fingerprint. COMPANION_JSON
+    firms get their public JSON endpoint appended as an inert script block.
+    BUNDLE_FETCH firms are single-page apps whose plan data ships in one
+    hashed same-origin script (``/assets/index-<hash>.js``); the page is read
+    only to find that file name, and the script is returned as text (never
+    executed).
     """
     page = fetch(url, browser=firm in BROWSER_FETCH)
+    if firm in COMPANION_JSON:
+        data = fetch(COMPANION_JSON[firm], browser=firm in BROWSER_FETCH)
+        json.loads(data)  # must be JSON; never executed
+        return (page + '\n<script type="application/json" id="madprops-companion">'
+                + data.replace("</", "<\\/") + "</script>\n")
     if firm not in BUNDLE_FETCH:
         return page
     scripts = set(re.findall(r'<script[^>]+src="(/assets/index-[A-Za-z0-9_-]+\.js)"', page))
@@ -945,13 +960,194 @@ def e8_futures(text, row, now):
         f"code {code} {pct}% (first purchase {first}%)")
 
 
+AQUA_PLANS = {"Beginner": ("One Step", "beginner"), "Standard": ("Daily", "standard"),
+              "Flex": ("One Step", "flex"), "Instant Standard": ("Instant", "standard")}
+
+
+def aqua_futures(text, row, now):
+    """Aqua Futures list prices from ``window.AQ_TABLE_CONFIG`` on its homepage.
+
+    ``futures[model][type].platforms[platform].prices['50k']`` is the list
+    price; every platform must agree, and the size must be offered
+    (``availableAccounts``). A model or type in ``hiddenModels`` /
+    ``hiddenTypes`` is not shown on the site and fails closed. The site shows
+    ``Math.floor`` of the list price, so that whole-dollar value is used.
+    The page applies a code-less ``bulkDiscount`` to every futures plan and
+    publishes no coupon code, so the Sheet code cannot be verified and the
+    pricing is always held for review.
+    """
+    plan = AQUA_PLANS.get(row["account_label"].strip())
+    if not plan:
+        raise ValueError("Unknown Aqua Futures plan label")
+    model, plan_type = plan
+    size = f"{int(row['account_size_usd']) // 1000}k"
+    config = literal(text, r"window\.AQ_TABLE_CONFIG\s*=\s*(?=\{)")
+    hidden_models = [str(m).strip().lower() for m in config.get("hiddenModels", {}).get("futures", [])]
+    hidden_types = [str(t).strip().lower() for t in config.get("hiddenTypes", {}).get("futures", {}).get(model, [])]
+    if model.lower() in hidden_models or plan_type in hidden_types:
+        raise ValueError(f"Aqua Futures {model} {plan_type} is hidden on the site")
+    platforms = config["futures"][model][plan_type]["platforms"]
+    prices = []
+    for name, platform in platforms.items():
+        offered = platform.get("availableAccounts")
+        if offered and size not in offered:
+            raise ValueError(f"Aqua Futures {model} {plan_type} {size} not offered on {name}")
+        prices.append(money(platform["prices"][size]))
+    listed = unique(prices)
+    regular = money(math.floor(float(listed)))
+    bulk = config.get("bulkDiscount", {}).get("futures")
+    return {"eval_cost_usd": regular}, False, None, (
+        f"Aqua Futures {model} {plan_type} {size}, list {listed} (shown {regular}) on {'/'.join(sorted(platforms))}; "
+        f"code-less bulk discount {bulk}%, no coupon code published")
+
+
+BLUSKY_PLANS = {"Launch": "launch", "Propel": "premium", "Orbit": "orbit", "Instant Funding": "instant"}
+
+
+def blusky(text, row, now):
+    """BluSky prices from the ``const skyData`` plan table on its homepage.
+
+    Each plan is ``"<size>": {"<mode>": mkPlanSky({...})}``. The call takes a
+    single flat object, so it is unwrapped to a plain literal (never run).
+    ``price`` is what the card charges; ``was`` is the regular price when the
+    card shows a sale, and ``discount: "USE CODE: X"`` names its code. The
+    "At Launch" fee is the activation fee. A Sheet label marked "Static" must
+    map to a plan with a static evaluation drawdown, and vice versa.
+    """
+    m = re.fullmatch(r"(Launch|Propel|Orbit|Instant Funding) (\d+(?:\.\d+)?)K( Static)?", row["account_label"].strip())
+    if not m or float(m[2]) * 1000 != int(row["account_size_usd"]):
+        raise ValueError("Unknown BluSky plan label")
+    mode, size = BLUSKY_PLANS[m[1]], m[2] + "k"
+    starts = [s.end() for s in re.finditer(r"\bconst\s+skyData\s*=\s*(?=\{)", text)]
+    if len(starts) != 1:
+        raise ValueError("Expected exactly one BluSky skyData block")
+    body = re.sub(r"\bmkPlanSky\(\s*(\{[^{}]*\})\s*\)", r"\1", text[starts[0]:])
+    plan = literal(body, r"^")[size][mode]
+    static = "static" in str(plan.get("evalStaticDrawdown", "")).lower()
+    if static != bool(m[3]):
+        raise ValueError("BluSky drawdown type disagrees with the Sheet label")
+    price, was, discount = money(plan["price"]), plan.get("was") or 0, plan.get("discount") or ""
+    fields = {}
+    if plan.get("atLaunch") is not None:
+        fields["activation_fee_usd"] = money(plan["atLaunch"])
+    code = re.fullmatch(r"USE CODE:\s*([A-Za-z0-9_-]{1,40})", str(discount).strip(), re.I)
+    pct = None
+    if not was and not discount:
+        fields["eval_cost_usd"] = price
+        verified = not row["discount_code"] and row["discount_pct"] in ("", "0") and not row["discounted_eval_usd"]
+    else:
+        regular = money(was)
+        pct = pct_off(regular, price)
+        if pct is None:
+            raise ValueError("BluSky sale price is not a whole-number discount of the regular price")
+        fields["eval_cost_usd"] = regular
+        verified = bool(code)
+        if verified:
+            fields["discount_code"] = coupon_code(row, code[1])
+            fields["discount_pct"] = str(pct)
+            fields["discounted_eval_usd"] = ""
+    return fields, verified, None, (
+        f"BluSky {m[1]} {size} ({mode}), price {price}, was {was or '-'}, discount '{discount}' {pct or 0}%, "
+        f"at launch {plan.get('atLaunch')}")
+
+
+TPT_COMPANION = re.compile(r'<script type="application/json" id="madprops-companion">(.*?)</script>', re.S)
+
+
+def take_profit_trader(text, row, now):
+    """Take Profit Trader prices from its public subscriptions API, coupon from the homepage banner.
+
+    ``fetch_source`` appends the API JSON to the homepage as an inert
+    ``madprops-companion`` script block. Each Test account is an item with
+    ``balance`` equal to the size, a ``"$ 25k"`` name and a positive monthly
+    ``price``. The coupon is verified only when the homepage promo banner
+    names exactly one percentage and one code and the API shows no
+    separate ``discountPrice``.
+    """
+    if row["account_label"].strip() != "Test":
+        raise ValueError("Unknown Take Profit Trader plan label")
+    size = int(row["account_size_usd"])
+    blocks = TPT_COMPANION.findall(text)
+    if len(blocks) != 1:
+        raise ValueError("Expected exactly one Take Profit Trader subscriptions block")
+    data = json.loads(blocks[0])
+    if data.get("isSuccess") is not True:
+        raise ValueError("Take Profit Trader subscriptions API reported failure")
+    name = f"$ {size // 1000}k"
+    matches = [i for i in data["result"]["items"] if i.get("balance") == size and i.get("marketType") == 0
+               and str(i.get("name", "")).strip().lower() == name and (i.get("price") or 0) > 0]
+    item = unique(matches)
+    regular = money(item["price"])
+    fields = {"eval_cost_usd": regular}
+    banners = re.findall(r'data-testid="home_page-banner_promocode-promo_code-text"[^>]*>(.*?)</p>', text, re.S)
+    banner = html.unescape(re.sub(r"<[^>]+>", " ", banners[0])) if len(banners) == 1 else ""
+    pcts = set(re.findall(r"\b(\d{1,2})% Off\b", banner, re.I))
+    codes = set(re.findall(r"\bUse Code:\s*([A-Za-z0-9_-]{1,40})\b", banner, re.I))
+    verified = (len(pcts) == 1 and len(codes) == 1 and 0 < int(next(iter(pcts))) < 100
+                and item.get("discountPrice") is None)
+    if verified:
+        fields["discount_code"] = coupon_code(row, next(iter(codes)))
+        fields["discount_pct"] = next(iter(pcts))
+        fields["discounted_eval_usd"] = ""
+    return fields, verified, None, (
+        f"Take Profit Trader {name} (id {item.get('id')}), price {regular}, discountPrice {item.get('discountPrice')}; "
+        f"banner: {' '.join(banner.split())[:160] or 'none'}")
+
+
+def traders_launch(text, row, now):
+    """Traders Launch prices from the server-rendered pricing cards on its homepage.
+
+    Each ``<article class="tl-plan tl-plan-futures ...">`` card links to
+    checkout with ``type=futures&size=<balance>&split=<pct>&hours=<n>``; the
+    standard (non-NYC) card has ``hours=2`` and a plain "starting capital"
+    subtitle. Only the default split is rendered (currently 80%); a split the
+    page does not render (e.g. the Sheet's 55%) fails closed. A card with
+    more than one dollar amount in its price block (a sale) also fails closed.
+    """
+    m = re.fullmatch(r"Standard (\d{2})%", row["account_label"].strip())
+    if not m:
+        raise ValueError("Unknown Traders Launch plan label")
+    size, split = int(row["account_size_usd"]), m[1]
+    cards = []
+    for part in re.split(r'(?=<article class="tl-plan tl-plan-futures\b)', text)[1:]:
+        card = part[:part.find("</article>")] if "</article>" in part else ""
+        link = re.search(r'href="[^"]*purchasing-signup\?type=futures&amp;size=(\d+)&amp;split=(\d+)&amp;hours=(\d+)"', card)
+        subtitle = re.search(r'tl-plan-subtitle[^>]*>([^<]*)</p>', card)
+        if not link or link.groups() != (str(size), split, "2") or not subtitle:
+            continue
+        if subtitle[1].strip() != f"${size:,} starting capital":
+            continue
+        block = re.search(r'class="tl-plan-price[^"]*">(.*?)One-Time Fee', card, re.S)
+        amounts = re.findall(r"\$([\d,]+(?:\.\d{1,2})?)", block[1]) if block else []
+        if len(amounts) != 1:
+            raise ValueError("Traders Launch card price is missing or shows a sale")
+        extra = {}
+        fee = re.search(r"Activation Fee</dt><dd[^>]*>([^<]+)</dd>", card)
+        if fee:
+            extra["activation_fee_usd"] = "0" if fee[1].strip() == "None" else money(fee[1])
+        days = re.search(r"Days to Pass</dt><dd[^>]*>(\d+) minimum</dd>", card)
+        if days:
+            extra["min_days (Eval)"] = days[1]
+        if re.search(r"Max Drawdown</dt><dd[^>]*>\$[\d,]+ EOD<", card):
+            extra["ddt"] = "EOD"
+        cards.append({"eval_cost_usd": money(amounts[0]), **extra})
+    if not cards:
+        raise ValueError(f"No Traders Launch {split}% {size // 1000}K standard card on the page")
+    fields = unique(cards)
+    verified = not row["discount_code"] and row["discount_pct"] in ("", "0") and not row["discounted_eval_usd"]
+    return dict(fields), verified, None, (
+        f"Traders Launch standard {size // 1000}K {split}% split card, one-time fee {fields['eval_cost_usd']}, no sale shown")
+
+
 ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid": lucid,
             "blue-guardian": blue_guardian, "my-funded-futures": my_funded_futures,
             "tradeday": tradeday, "fundednext": fundednext,
             "top-one-futures": top_one_futures, "bulenox": bulenox,
             "phidias": phidias, "alphafutures": alpha_futures,
             "legendstrading": legends_trading, "fundedfutures": funded_futures,
-            "e8futures": e8_futures, "purdia": purdia}
+            "e8futures": e8_futures, "purdia": purdia, "aquafutures": aqua_futures,
+            "blusky-trading": blusky, "takeprofittrader": take_profit_trader,
+            "traderslaunch": traders_launch}
 
 
 def row_identity(row):
