@@ -13,6 +13,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 concurrency:
   group: firm-data-update
@@ -108,3 +109,16 @@ jobs:
           APPROVAL_PR_URL: ${{ steps.approval_pr.outputs.pull-request-url }}
           APPROVAL_PR_OPERATION: ${{ steps.approval_pr.outputs.pull-request-operation }}
         run: python scripts/automation/send_approval_email.py
+      - name: Sign in to Google (keyless)
+        if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+      - name: Write verified updates back to the Google Sheet
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          MADPROPS_SHEET_ID: ${{ vars.MADPROPS_SHEET_ID }}
+          MADPROPS_SHEET_TAB: ${{ vars.MADPROPS_SHEET_TAB }}
+          SHEET_WRITEBACK: ${{ vars.SHEET_WRITEBACK }}
+        run: python scripts/automation/sheet_writeback.py
