@@ -972,9 +972,12 @@ def aqua_futures(text, row, now):
     (``availableAccounts``). A model or type in ``hiddenModels`` /
     ``hiddenTypes`` is not shown on the site and fails closed. The site shows
     ``Math.floor`` of the list price, so that whole-dollar value is used.
-    The page applies a code-less ``bulkDiscount`` to every futures plan and
-    publishes no coupon code, so the Sheet code cannot be verified and the
-    pricing is always held for review.
+    The page applies a code-less ``bulkDiscount.futures`` percentage to every
+    futures plan automatically (no coupon code exists). A positive whole
+    percentage up to 100 is verified: ``discount_pct`` takes it, the code is
+    cleared (a MAD/MADPROPS Sheet code is kept, see ``coupon_code``) and
+    ``discounted_eval_usd`` is cleared so the percentage drives the price.
+    A missing, zero or malformed ``bulkDiscount`` holds pricing for review.
     """
     plan = AQUA_PLANS.get(row["account_label"].strip())
     if not plan:
@@ -995,10 +998,18 @@ def aqua_futures(text, row, now):
         prices.append(money(platform["prices"][size]))
     listed = unique(prices)
     regular = money(math.floor(float(listed)))
-    bulk = config.get("bulkDiscount", {}).get("futures")
-    return {"eval_cost_usd": regular}, False, None, (
+    bulk = config.get("bulkDiscount")
+    bulk = bulk.get("futures") if isinstance(bulk, dict) else None
+    fields = {"eval_cost_usd": regular}
+    verified = type(bulk) is int and 0 < bulk <= 100
+    if verified:
+        fields["discount_code"] = coupon_code(row, "")
+        fields["discount_pct"] = str(bulk)
+        fields["discounted_eval_usd"] = ""
+    discount = f"code-less {bulk}% bulk discount applied automatically" if verified else f"no valid code-less bulk discount ({bulk!r})"
+    return fields, verified, None, (
         f"Aqua Futures {model} {plan_type} {size}, list {listed} (shown {regular}) on {'/'.join(sorted(platforms))}; "
-        f"code-less bulk discount {bulk}%, no coupon code published")
+        f"{discount}, no coupon code needed")
 
 
 BLUSKY_PLANS = {"Launch": "launch", "Propel": "premium", "Orbit": "orbit", "Instant Funding": "instant"}
@@ -1188,7 +1199,8 @@ def build(rows, sources, now):
                 if field not in ALLOWED:
                     raise ValueError("Unexpected output field")
                 if field == "discount_code":
-                    if not re.fullmatch(r"[A-Za-z0-9_-]{1,40}", value):
+                    # "" means the verified discount needs no code (code-less sale).
+                    if value and not re.fullmatch(r"[A-Za-z0-9_-]{1,40}", value):
                         raise ValueError("Invalid public coupon")
                 elif field not in ("ddt", "discounted_eval_usd") or value:
                     if field != "ddt":

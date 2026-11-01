@@ -38,6 +38,19 @@ test('any non-affiliate code is replaced by the verified public code', () => {
     assert.equal(result.discount_pct, '30');
   }
 });
+test('a verified code-less discount clears a non-affiliate code but never an affiliate code', () => {
+  const sale = {...row, firm_key:'aquafutures', discount_code:'BACK2WORK', discount_pct:'25'};
+  const update = {...patch, expected:{discount_code:'BACK2WORK'}, values:{discount_code:'', discount_pct:'35', discounted_eval_usd:''}};
+  const [result] = applyFirmUpdates([sale], snapshot(update), now);
+  assert.equal(result.discount_code, '');
+  assert.equal(result.discount_pct, '35');
+  const affiliate = {...sale, discount_code:'MADPROPS'};
+  const clear = {...update, expected:{discount_code:'MADPROPS'}};
+  assert.deepEqual(applyFirmUpdates([affiliate], snapshot(clear), now)[0], affiliate);
+  for (const bad of [' ', 'BAD CODE', 'x'.repeat(41)]) {
+    assert.deepEqual(applyFirmUpdates([sale], snapshot({...update, values:{discount_code:bad}}), now)[0], sale);
+  }
+});
 test('MAD and MADPROPS affiliate codes are never replaced but take the promotion discount', () => {
   for (const code of ['MAD', 'MADPROPS', 'madprops']) {
     const affiliate = {...row, discount_code:code};

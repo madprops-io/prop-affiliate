@@ -1,6 +1,7 @@
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from unittest import mock
 from zoneinfo import ZoneInfo
 
 import collect
@@ -875,19 +876,44 @@ class AquaFuturesAdapterTests(unittest.TestCase):
                         discount_code="SHEETCODE", discount_pct="25")
         return collect.aqua_futures(source or fixture("aquafutures"), sheet_row(**{**defaults, **values}), NOW)
 
-    def test_list_price_is_read_but_coupon_is_always_held(self):
+    def test_code_less_bulk_discount_is_verified_and_sheet_code_cleared(self):
         fields, verified, expires, evidence = self.run_adapter()
-        self.assertIs(verified, False)
+        self.assertIs(verified, True)
         self.assertIsNone(expires)
-        # The site shows Math.floor of the list price.
-        self.assertEqual(fields, {"eval_cost_usd": "999"})
+        # The site shows Math.floor of the list price; the bulk discount needs no code.
+        self.assertEqual(fields, {"eval_cost_usd": "999", "discount_code": "", "discount_pct": "11",
+                                  "discounted_eval_usd": ""})
         self.assertIn("list 999.99", evidence)
-        self.assertIn("bulk discount 11%", evidence)
+        self.assertIn("code-less 11% bulk discount", evidence)
+        fields, verified, _, _ = self.run_adapter(account_label="Flex", discount_code="")
+        self.assertIs(verified, True)
+        self.assertEqual(fields, {"eval_cost_usd": "555", "discount_code": "", "discount_pct": "11",
+                                  "discounted_eval_usd": ""})
+
+    def test_affiliate_code_is_kept_with_bulk_discount(self):
         fields, verified, _, _ = self.run_adapter(account_label="Instant Standard", discount_code="MADPROPS")
-        self.assertIs(verified, False)
-        self.assertEqual(fields, {"eval_cost_usd": "777"})
-        fields, _, _, _ = self.run_adapter(account_label="Flex")
-        self.assertEqual(fields, {"eval_cost_usd": "555"})
+        self.assertIs(verified, True)
+        self.assertEqual(fields, {"eval_cost_usd": "777", "discount_code": "MADPROPS", "discount_pct": "11",
+                                  "discounted_eval_usd": ""})
+
+    def test_missing_zero_or_malformed_bulk_discount_holds_pricing(self):
+        base = fixture("aquafutures")
+        self.assertIn("bulkDiscount: { forex: 11, futures: 11 },", base)
+        for replacement in ("", "bulkDiscount: { forex: 11 },", "bulkDiscount: { forex: 11, futures: 0 },",
+                            "bulkDiscount: { forex: 11, futures: -5 },", "bulkDiscount: { forex: 11, futures: 101 },",
+                            "bulkDiscount: { forex: 11, futures: 12.5 },", "bulkDiscount: { forex: 11, futures: '35' },",
+                            "bulkDiscount: { forex: 11, futures: true },", "bulkDiscount: 35,"):
+            with self.subTest(replacement=replacement):
+                source = base.replace("bulkDiscount: { forex: 11, futures: 11 },", replacement)
+                fields, verified, _, evidence = self.run_adapter(source)
+                self.assertIs(verified, False)
+                self.assertEqual(fields, {"eval_cost_usd": "999"})
+                self.assertIn("no valid code-less bulk discount", evidence)
+
+    def test_hidden_beginner_plans_fail_closed(self):
+        for size in ("50000", "100000"):
+            with self.subTest(size=size), self.assertRaisesRegex(ValueError, "beginner is hidden on the site"):
+                self.run_adapter(account_label="Beginner", account_size_usd=size)
 
     def test_hidden_unoffered_disagreeing_or_unknown_plans_fail_closed(self):
         for label, size in (("Beginner", "50000"), ("Flex", "100000"), ("Instant Standard", "100000"),
@@ -897,13 +923,35 @@ class AquaFuturesAdapterTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.run_adapter("<html>no config</html>")
 
-    def test_build_holds_all_aqua_pricing_for_review(self):
+    def test_build_publishes_code_less_discount_patch(self):
         row = sheet_row(key="aqua-futures-standard-50k", firm_key="aquafutures", firm_name="Aqua Futures",
                         account_label="Standard", account_size_usd="50000", eval_cost_usd="1",
                         discount_code="SHEETCODE", discount_pct="25")
         result = build([row], {"aquafutures": fixture("aquafutures")}, NOW)
+        self.assertEqual(result["review"], [])
+        [patch] = result["patches"]
+        self.assertEqual(patch["values"], {"eval_cost_usd": "999", "discount_code": "", "discount_pct": "11",
+                                           "discounted_eval_usd": ""})
+        self.assertEqual(patch["expected"]["discount_code"], "SHEETCODE")
+        self.assertNotIn("promotionExpiresAt", patch)
+
+    def test_build_holds_pricing_without_bulk_discount(self):
+        row = sheet_row(key="aqua-futures-standard-50k", firm_key="aquafutures", firm_name="Aqua Futures",
+                        account_label="Standard", account_size_usd="50000", eval_cost_usd="1",
+                        discount_code="SHEETCODE", discount_pct="25")
+        source = fixture("aquafutures").replace("bulkDiscount: { forex: 11, futures: 11 },", "")
+        result = build([row], {"aquafutures": source}, NOW)
         self.assertEqual(result["patches"], [])
         self.assertEqual(result["review"][0]["proposed"], {"eval_cost_usd": "999"})
+
+    def test_build_rejects_malformed_non_empty_code(self):
+        row = sheet_row(key="aqua-futures-standard-50k", firm_key="aquafutures", firm_name="Aqua Futures",
+                        account_label="Standard", account_size_usd="50000", eval_cost_usd="1", discount_code="")
+        bad = lambda *_: ({"eval_cost_usd": "999", "discount_code": "BAD CODE"}, True, None, "x")
+        with mock.patch.dict(collect.ADAPTERS, {"aquafutures": bad}):
+            result = build([row], {"aquafutures": fixture("aquafutures")}, NOW)
+        self.assertEqual(result["patches"], [])
+        self.assertEqual(result["review"][0]["reason"], "Invalid public coupon")
 
 
 class BluSkyAdapterTests(unittest.TestCase):
