@@ -52,7 +52,7 @@ SOURCES = {
 # Storefronts that only answer browser-like clients (Cloudflare-fronted).
 BROWSER_FETCH = {"phidias", "fundedfutures"}
 # Single-page apps whose plan data lives in a hashed same-origin script.
-BUNDLE_FETCH = {"bulenox"}
+BUNDLE_FETCH = {"bulenox", "purdia"}
 PRICE_FIELDS = {"eval_cost_usd", "discount_pct", "discounted_eval_usd", "discount_code"}
 ALLOWED = PRICE_FIELDS | {"activation_fee_usd", "min_days (Eval)", "ddt"}
 LITERALS = {}
@@ -760,8 +760,10 @@ def funded_futures(text, row, now):
     """Funded Futures Network prices from the ``plans-data`` JSON on its homepage.
 
     Each plan carries ``tier: "$50K STEADY Account"`` and a one-time ``price``.
-    Coupons live in ``data-coupon-platforms`` per data feed (CQG/Rithmic); the
-    coupon is only verified when every feed offers the same code and percent.
+    Coupons live in ``data-coupon-platforms`` per data feed (CQG/Rithmic).
+    Per TJ (Nov 1 2026) the best verified discount is shown: the highest
+    percentage among valid feed offers. It is held if any valid offer is not
+    a percentage, or if different codes tie for the best percentage.
     """
     plan = FFN_PLANS.get(row["account_label"].strip())
     if not plan:
@@ -779,19 +781,82 @@ def funded_futures(text, row, now):
     regular = money(product["price"])
     fields = {"eval_cost_usd": regular}
     coupons = re.findall(r"<script type=\"application/json\" data-coupon-platforms>(.*?)</script>", text, re.S)
-    offers = list(json.loads(coupons[0]).values()) if len(coupons) == 1 else []
-    terms = {(o.get("code"), o.get("percent")) for o in offers
-             if o.get("valid") is True and o.get("type") == "percentage"}
-    code, pct = next(iter(terms)) if len(terms) == 1 and len(offers) == len(
-        [o for o in offers if o.get("valid") is True]) else (None, None)
-    verified = bool(isinstance(code, str) and COUPON.fullmatch(code)
-                    and isinstance(pct, (int, float)) and not isinstance(pct, bool) and 0 < pct <= 100)
+    feeds = json.loads(coupons[0]) if len(coupons) == 1 else {}
+    feeds = feeds if isinstance(feeds, dict) else {}
+    valid = {feed: o for feed, o in feeds.items() if isinstance(o, dict) and o.get("valid") is True}
+    terms = {(feed, o.get("code"), o.get("percent")) for feed, o in valid.items()}
+    well_formed = bool(valid) and all(
+        o.get("type") == "percentage" and isinstance(o.get("code"), str) and COUPON.fullmatch(o["code"])
+        and isinstance(o.get("percent"), (int, float)) and not isinstance(o.get("percent"), bool)
+        and 0 < o["percent"] <= 100 for o in valid.values())
+    code = pct = None
+    best_feeds = []
+    if well_formed:
+        pct = max(p for _, _, p in terms)
+        best = {(c, p) for _, c, p in terms if p == pct}
+        best_feeds = sorted(f for f, _, p in terms if p == pct)
+        code = next(iter(best))[0] if len(best) == 1 else None
+    verified = code is not None
     if verified:
         fields["discount_code"] = coupon_code(row, code)
         fields["discount_pct"] = money(pct)
         fields["discounted_eval_usd"] = ""
-    feeds = ", ".join(f"{c} {p}%" for c, p in sorted(terms, key=str)) or "none"
-    return fields, verified, None, f"Funded Futures {tier}, regular {regular}, coupons by feed: {feeds}"
+    feeds = ", ".join(f"{f} {c} {p}%" for f, c, p in sorted(terms, key=str)) or "none"
+    best_note = f"; best {code} {pct}% on {'/'.join(best_feeds)}" if verified else "; best discount not verified"
+    return fields, verified, None, f"Funded Futures {tier}, regular {regular}, coupons by feed: {feeds}{best_note}"
+
+
+PURDIA_SLUGS = {"Instant Funded": "{k}k-instant-funded", "Pioneer Pilot": "{k}k-pilot-pioneer",
+                "EOD Evaluation": "{k}k-eod-evaluation", "Pro Evaluation": "{k}k-pro-evaluation"}
+
+
+def purdia(text, row, now):
+    """Purdia prices from the accounts catalogue in its app bundle (read as text, never run).
+
+    Per TJ (Nov 1 2026) the catalogue built around the site-wide code (TRY60)
+    is used, not the October homepage list (OCT50). The bundle maps that
+    catalogue through one function that sets ``discountCode`` and prices
+    every card at ``priceOriginal * <multiplier>``; the code and percent are
+    read from that function. A plan is matched by slug and must be a card
+    whose checkout link carries the same code. A plan missing from that
+    catalogue (e.g. Pro Evaluation) fails closed. The card's top-level
+    ``priceOriginal`` is the default (buffer-rule) price.
+    """
+    template = PURDIA_SLUGS.get(row["account_label"].strip())
+    if not template:
+        raise ValueError("Unknown Purdia plan label")
+    slug = template.format(k=int(row["account_size_usd"]) // 1000)
+    mapper = re.findall(r"function (\w+)\(e\)\{const t=(\w+)\(e\.priceOriginal\),a=s=>\{if\(!s\)return s;"
+                        r"const r=\2\(s\.priceOriginal\);return\{\.\.\.s,priceMain:r\|\|s\.priceMain,"
+                        r"discountCode:(\w+),", text)
+    if len(mapper) != 1:
+        raise ValueError("Expected one Purdia catalogue discount function")
+    fn, pricer, code_var = mapper[0]
+    if len(re.findall(r"=(\w+)\.map\(" + re.escape(fn) + r"\)", text)) != 1:
+        raise ValueError("Expected one Purdia discounted catalogue")
+    mult = re.findall(r"function " + re.escape(pricer) + r"\(e\)\{[^}]{0,200}?Math\.round\(Math\.round\(t\*100\)\*"
+                      r"(0?\.\d+)\)/100", text)
+    codes = set(re.findall(r"(?<![\w$.])" + re.escape(code_var) + r'="([^"]*)"', text))
+    if len(mult) != 1 or len(codes) != 1:
+        raise ValueError("Purdia discount multiplier or code not found exactly once")
+    code = codes.pop()
+    pct = round((1 - float(mult[0])) * 100, 6)
+    cards = []
+    for m in re.finditer(r'slug:"' + re.escape(slug) + '"', text):
+        end = text.find('slug:"', m.end())
+        card = text[m.start():end if end > 0 else len(text)]
+        uses_code = re.search(r"discount:" + re.escape(code_var) + r"\}|,\s*" + re.escape(code_var) + r"\)", card)
+        price = re.search(r'priceOriginal:"([^"]+)"', card)
+        if uses_code and price:
+            cards.append(money(price[1]))
+    regular = unique(cards)
+    fields = {"eval_cost_usd": regular}
+    verified = bool(COUPON.fullmatch(code) and pct == int(pct) and 0 < pct < 100)
+    if verified:
+        fields["discount_code"] = coupon_code(row, code)
+        fields["discount_pct"] = str(int(pct))
+        fields["discounted_eval_usd"] = ""
+    return fields, verified, None, f"Purdia {slug}, regular {regular}, code {code} {pct:g}% (catalogue multiplier {mult[0]})"
 
 
 NUXT_WRAPPERS = {"Reactive", "ShallowReactive", "Ref", "ShallowRef"}
@@ -886,7 +951,7 @@ ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid
             "top-one-futures": top_one_futures, "bulenox": bulenox,
             "phidias": phidias, "alphafutures": alpha_futures,
             "legendstrading": legends_trading, "fundedfutures": funded_futures,
-            "e8futures": e8_futures}
+            "e8futures": e8_futures, "purdia": purdia}
 
 
 def row_identity(row):

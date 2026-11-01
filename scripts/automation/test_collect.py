@@ -698,7 +698,7 @@ class AlphaFuturesAdapterTests(unittest.TestCase):
 
 class NewFixtureSafetyTests(unittest.TestCase):
     def test_new_fixtures_are_marked_synthetic(self):
-        for name in ("bulenox", "phidias", "alphafutures", "legendstrading", "fundedfutures", "e8futures"):
+        for name in ("bulenox", "phidias", "alphafutures", "legendstrading", "fundedfutures", "e8futures", "purdia"):
             with self.subTest(fixture=name):
                 self.assertIn("SYNTHETIC TEST FIXTURE", fixture(name))
 
@@ -751,12 +751,30 @@ class FundedFuturesAdapterTests(unittest.TestCase):
         fields, _, _, _ = self.run_adapter(account_label="MAX Standard", account_size_usd="100000")
         self.assertEqual(fields["eval_cost_usd"], "666")
 
-    def test_feeds_that_disagree_hold_the_coupon(self):
+    def test_best_feed_discount_is_used(self):
         source = fixture("fundedfutures").replace('"percent": 40, "type": "percentage", "valid": true}}',
                                                   '"percent": 25, "type": "percentage", "valid": true}}')
-        fields, verified, _, _ = self.run_adapter(source)
-        self.assertIs(verified, False)
-        self.assertEqual(fields, {"eval_cost_usd": "999"})
+        fields, verified, _, evidence = self.run_adapter(source)
+        self.assertIs(verified, True)
+        self.assertEqual((fields["discount_code"], fields["discount_pct"]), ("FAKEPROMO", "40"))
+        self.assertIn("best FAKEPROMO 40% on cqg", evidence)
+        fields, _, _, _ = self.run_adapter(source, discount_code="MAD")
+        self.assertEqual(fields["discount_code"], "MAD")
+
+    def test_ambiguous_or_malformed_feeds_hold_the_coupon(self):
+        tie = fixture("fundedfutures").replace('"rithmic": {"code": "FAKEPROMO"', '"rithmic": {"code": "OTHER"')
+        flat = fixture("fundedfutures").replace('"percent": 40, "type": "percentage", "valid": true}}',
+                                                '"percent": 90, "type": "fixed", "valid": true}}')
+        for source in (tie, flat, fixture("fundedfutures").replace("data-coupon-platforms", "data-x")):
+            with self.subTest():
+                fields, verified, _, _ = self.run_adapter(source)
+                self.assertIs(verified, False)
+                self.assertEqual(fields, {"eval_cost_usd": "999"})
+        invalid = fixture("fundedfutures").replace('"percent": 40, "type": "percentage", "valid": true}}',
+                                                   '"percent": 90, "type": "percentage", "valid": false}}')
+        fields, verified, _, _ = self.run_adapter(invalid)
+        self.assertIs(verified, True)
+        self.assertEqual(fields["discount_pct"], "40")
 
     def test_monthly_unknown_or_missing_plans_fail_closed(self):
         for label, size in (("STEADY", "100000"), ("STEADY", "25000"), ("Static", "50000")):
@@ -809,3 +827,41 @@ class E8FuturesAdapterTests(unittest.TestCase):
             self.run_adapter("<html>no payload</html>")
         with self.assertRaises(ValueError):
             collect.nuxt_data('<script id="__NUXT_DATA__">[["Set", 1], 2]</script>', "x")
+
+
+class PurdiaAdapterTests(unittest.TestCase):
+    def run_adapter(self, source=None, **values):
+        defaults = dict(key="purdia-instant-25k", firm_key="purdia", firm_name="Purdia",
+                        account_label="Instant Funded", account_size_usd="25000",
+                        eval_cost_usd="1", discount_code="", discount_pct="", discounted_eval_usd="")
+        return collect.purdia(source or fixture("purdia"), sheet_row(**{**defaults, **values}), NOW)
+
+    def test_discounted_catalogue_price_and_code(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertIsNone(expires)
+        self.assertEqual(fields, {"eval_cost_usd": "888", "discount_code": "FAKEPROMO",
+                                  "discount_pct": "75", "discounted_eval_usd": ""})
+        self.assertIn("multiplier .25", evidence)
+
+    def test_old_catalogue_is_ignored_and_affiliate_code_kept(self):
+        fields, verified, _, _ = self.run_adapter(account_label="Pioneer Pilot", account_size_usd="100000",
+                                                  discount_code="MADPROPS", discounted_eval_usd="499")
+        self.assertIs(verified, True)
+        self.assertEqual((fields["eval_cost_usd"], fields["discount_code"]), ("999", "MADPROPS"))
+        fields, _, _, _ = self.run_adapter(account_label="EOD Evaluation", account_size_usd="50000")
+        self.assertEqual(fields["eval_cost_usd"], "666")
+
+    def test_missing_plans_and_broken_bundles_fail_closed(self):
+        for label, size in (("Pro Evaluation", "100000"), ("Instant Funded", "50000"), ("Static", "25000")):
+            with self.subTest(label=label, size=size), self.assertRaises(ValueError):
+                self.run_adapter(account_label=label, account_size_usd=size)
+        for broken in (fixture("purdia").replace("Sa=bw.map(gw)", "Sa=bw"),
+                       fixture("purdia").replace('Qx="FAKEPROMO"', 'Qx=X'),
+                       fixture("purdia").replace("*.25)", "*z)")):
+            with self.subTest(), self.assertRaises(ValueError):
+                self.run_adapter(broken)
+        odd = fixture("purdia").replace("*.25)", "*.333)")
+        fields, verified, _, _ = self.run_adapter(odd)
+        self.assertIs(verified, False)
+        self.assertEqual(fields, {"eval_cost_usd": "888"})
