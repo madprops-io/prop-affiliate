@@ -39,16 +39,21 @@ Three techniques, all free and in-house, no proxies or IP rotation:
 | **Bulenox** | 24 | App bundle | **Regular price only.** Affiliates assemble their own Bulenox codes, so discount fields stay manual. A weekly reminder email covers the codes. A price change on a row with a fixed `discounted_eval_usd` goes to review. |
 | **Phidias** | 10 | `curl_cffi` | `window.phidiasPromo`: one-time (`otp`) price plus `discounts.otp` %. MADPROPS is kept. |
 | **Alpha Futures** | 13 | Correct URL (`alpha-futures.com`) | Webflow cards plus `data-discount-offers` (per-plan code and %). ALPHA40 isn't an affiliate code, so it's replaced by the site's code for that plan. |
+| **Legends Trading** | 7 | Public JSON API | `api.thelegendstrading.com/shop/plans` (what the storefront loads): `price` = regular, `strikeThroughPrice` = sale, `activeCoupon` = code. The % is derived and must be a whole number, otherwise the coupon is held. |
+| **Funded Futures Network** | 10 | `curl_cffi` | `plans-data` JSON (`tier` "$50K STEADY Account", one-time `price`). Coupons come per data feed (`data-coupon-platforms`) and are only verified when every feed has the same code and %. As of Oct 31 2026, NEXUS is 70% on CQG and 50% on Rithmic, so all 10 rows go to review (prices are shown as proposals). |
+
+### Checked Oct 31 2026, not automated (fail closed)
+
+| Firm | Rows | Finding |
+|---|---|---|
+| **Purdia** | 7 | The app bundle has two conflicting catalogues. The homepage shows code OCT50 at 50% (e.g. 50K Instant $549), but the accounts page uses TRY60 at 60% with different prices (50K Instant $449, 100K Instant $699/$849 by payout rule). The site can't name one price and one code, so it stays manual. |
+| **Elite Trader Funding** | 14 | `elitetraderfunding.app` pages (`/evaluations`, `/1-step-evaluation`, `/direct-to-funded`, ...) carry no plan prices in the HTML or flight payload. Prices load in the browser after the page runs, so a rendering step or an API discovery pass is needed. |
+| **E8 Futures** | 10 | e8markets.com now leads with "SimFi". Futures prices aren't on public pages (`/futures` is 404). `/e8-markets-discount-code` lists the futures codes (25% Signature, 35% Zero MAX/Starter, matching the Sheet) but no prices. |
 
 ### Reachable now, mapping still needed
 
 | Firm | Rows | Finding |
 |---|---|---|
-| **Purdia** | 7 | Vue app bundle has `priceOriginal`/`priceMain`/`discountCode` per plan. Same technique as Bulenox. |
-| **Funded Futures Network** | 10 | `www.fundedfuturesnetwork.com` loads via `curl_cffi`. `data-size-was` prices don't match the Sheet's MAX Standard rows, so confirm the plan first. |
-| **Legends Trading** | 7 | `thelegendstrading.com/plans` has `data-card_old_price`/`data-card_coupon_code`. Tabs need mapping to Sheet labels. |
-| **Elite Trader Funding** | 14 | Correct domain is `elitetraderfunding.app`. Prices sit on per-plan pages (Next.js). |
-| **E8 Futures** | 10 | Homepage loads via `curl_cffi`. The Sheet's pricing URL returns 404, so the right pricing page is still needed. |
 | **TakeProfitTrader** | 5 | Angular app. Prices come from its API or a rendered page. |
 
 ### Still blocked

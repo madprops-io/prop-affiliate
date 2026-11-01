@@ -698,6 +698,76 @@ class AlphaFuturesAdapterTests(unittest.TestCase):
 
 class NewFixtureSafetyTests(unittest.TestCase):
     def test_new_fixtures_are_marked_synthetic(self):
-        for name in ("bulenox", "phidias", "alphafutures"):
+        for name in ("bulenox", "phidias", "alphafutures", "legendstrading", "fundedfutures"):
             with self.subTest(fixture=name):
                 self.assertIn("SYNTHETIC TEST FIXTURE", fixture(name))
+
+
+class LegendsTradingAdapterTests(unittest.TestCase):
+    def run_adapter(self, **values):
+        defaults = dict(key="legends-trading-elite-50k", firm_key="legendstrading", firm_name="Legends Trading",
+                        account_label="Elite 50K", account_size_usd="50000",
+                        eval_cost_usd="1", discount_code="LTG", discount_pct="30")
+        return collect.legends_trading(fixture("legendstrading"), sheet_row(**{**defaults, **values}), NOW)
+
+    def test_price_and_derived_percentage(self):
+        fields, verified, expires, _ = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertIsNone(expires)
+        self.assertEqual(fields, {"eval_cost_usd": "999", "discount_code": "FAKEPROMO",
+                                  "discount_pct": "35", "discounted_eval_usd": ""})
+
+    def test_affiliate_code_is_kept(self):
+        fields, _, _, _ = self.run_adapter(account_label="Apprentice 50K", discount_code="MADPROPS")
+        self.assertEqual((fields["eval_cost_usd"], fields["discount_code"], fields["discount_pct"]),
+                         ("100", "MADPROPS", "40"))
+
+    def test_non_whole_or_missing_discount_is_held(self):
+        for label, size in (("Elite 100K", "100000"), ("Elite 150K", "150000")):
+            with self.subTest(label=label):
+                fields, verified, _, _ = self.run_adapter(account_label=label, account_size_usd=size)
+                self.assertIs(verified, False)
+                self.assertEqual(set(fields), {"eval_cost_usd"})
+
+    def test_ambiguous_or_mismatched_rows_fail_closed(self):
+        for label, size in (("Apprentice 150K", "150000"), ("Elite 25K", "25000"),
+                            ("Elite 50K", "100000"), ("Pro 50K", "50000")):
+            with self.subTest(label=label), self.assertRaises(ValueError):
+                self.run_adapter(account_label=label, account_size_usd=size)
+
+
+class FundedFuturesAdapterTests(unittest.TestCase):
+    def run_adapter(self, source=None, **values):
+        defaults = dict(key="ffn-steady-50k", firm_key="fundedfutures", firm_name="Funded Futures Network",
+                        account_label="STEADY", account_size_usd="50000",
+                        eval_cost_usd="1", discount_code="DOUBLE50", discount_pct="50")
+        return collect.funded_futures(source or fixture("fundedfutures"), sheet_row(**{**defaults, **values}), NOW)
+
+    def test_matching_feed_coupons_are_verified(self):
+        fields, verified, _, _ = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertEqual(fields, {"eval_cost_usd": "999", "discount_code": "FAKEPROMO",
+                                  "discount_pct": "40", "discounted_eval_usd": ""})
+        fields, _, _, _ = self.run_adapter(account_label="MAX Standard", account_size_usd="100000")
+        self.assertEqual(fields["eval_cost_usd"], "666")
+
+    def test_feeds_that_disagree_hold_the_coupon(self):
+        source = fixture("fundedfutures").replace('"percent": 40, "type": "percentage", "valid": true}}',
+                                                  '"percent": 25, "type": "percentage", "valid": true}}')
+        fields, verified, _, _ = self.run_adapter(source)
+        self.assertIs(verified, False)
+        self.assertEqual(fields, {"eval_cost_usd": "999"})
+
+    def test_monthly_unknown_or_missing_plans_fail_closed(self):
+        for label, size in (("STEADY", "100000"), ("STEADY", "25000"), ("Static", "50000")):
+            with self.subTest(label=label, size=size), self.assertRaises(ValueError):
+                self.run_adapter(account_label=label, account_size_usd=size)
+
+    def test_build_holds_pricing_when_coupon_unverified(self):
+        source = fixture("fundedfutures").replace('"code": "FAKEPROMO", "percent": 40, "type": "percentage", "valid": true}}',
+                                                  '"code": "OTHER", "percent": 40, "type": "percentage", "valid": true}}')
+        row = sheet_row(key="ffn-steady-50k", firm_key="fundedfutures", firm_name="FFN",
+                        account_label="STEADY", account_size_usd="50000", eval_cost_usd="1")
+        result = build([row], {"fundedfutures": source}, NOW)
+        self.assertEqual(result["patches"], [])
+        self.assertEqual(result["review"][0]["proposed"], {"eval_cost_usd": "999"})

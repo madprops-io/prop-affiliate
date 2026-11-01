@@ -37,7 +37,9 @@ SOURCES = {
     "bulenox": "https://bulenox.com/",
     "e8futures": "https://e8markets.com/",
     "fundednext": "https://fundednext.com/",
-    "legendstrading": "https://legendstrading.com/",
+    "fundedfutures": "https://www.fundedfuturesnetwork.com/",
+    # Public JSON used by the official storefront (thelegendstrading.com/plans).
+    "legendstrading": "https://api.thelegendstrading.com/shop/plans?purchasableOnly=true&broker=Tradovate",
     "my-funded-futures": "https://myfundedfutures.com/",
     "phidias": "https://phidiaspropfirm.com/",
     "purdia": "https://purdia.com/",
@@ -47,7 +49,7 @@ SOURCES = {
     "traderslaunch": "https://traderslaunch.com/",
 }
 # Storefronts that only answer browser-like clients (Cloudflare-fronted).
-BROWSER_FETCH = {"phidias"}
+BROWSER_FETCH = {"phidias", "fundedfutures"}
 # Single-page apps whose plan data lives in a hashed same-origin script.
 BUNDLE_FETCH = {"bulenox"}
 PRICE_FIELDS = {"eval_cost_usd", "discount_pct", "discounted_eval_usd", "discount_code"}
@@ -713,11 +715,90 @@ def alpha_futures(text, row, now):
     return fields, verified, None, f"Alpha Futures {size_k}K {plan} {stage}, regular {regular}, code {code} {pct}%"
 
 
+def pct_off(regular, sale):
+    """Whole-number percentage that turns ``regular`` into ``sale``, or None."""
+    regular, sale = float(regular), float(sale)
+    if not 0 < sale < regular:
+        return None
+    pct = round((1 - sale / regular) * 100)
+    return pct if abs(regular * (1 - pct / 100) - sale) <= .01 else None
+
+
+def legends_trading(text, row, now):
+    """Legends Trading prices from the storefront's public plans API (JSON).
+
+    ``price`` is the regular price, ``strikeThroughPrice`` the sale price after
+    ``activeCoupon``; the percentage is derived and must be a whole number.
+    """
+    m = re.fullmatch(r"(Apprentice|Elite) (\d+)K", row["account_label"].strip(), re.I)
+    if not m or int(m[2]) * 1000 != int(row["account_size_usd"]):
+        raise ValueError("Unknown Legends Trading plan label")
+    category, size_k = m[1].capitalize(), int(m[2])
+    plans = json.loads(text)["data"]
+    matches = [p for p in plans if p.get("productCategory") == category
+               and str(p.get("dashboardDisplayName", "")).strip().lower() == f"{size_k}k {category}".lower()]
+    plan = unique(matches)
+    regular = money(plan["price"])
+    fields = {"eval_cost_usd": regular}
+    code, sale = plan.get("activeCoupon"), plan.get("strikeThroughPrice")
+    pct = pct_off(regular, money(sale)) if sale is not None else None
+    verified = bool(isinstance(code, str) and COUPON.fullmatch(code) and pct)
+    if verified:
+        fields["discount_code"] = coupon_code(row, code)
+        fields["discount_pct"] = str(pct)
+        fields["discounted_eval_usd"] = ""
+    recurring = " (monthly)" if plan.get("isPriceRecurring") else ""
+    return fields, verified, None, (
+        f"Legends {category} {size_k}K{recurring}, regular {regular}, sale {sale}, code {code} {pct}%")
+
+
+FFN_PLANS = {"MAX Standard": "MAX Standard", "STEADY": "STEADY"}
+
+
+def funded_futures(text, row, now):
+    """Funded Futures Network prices from the ``plans-data`` JSON on its homepage.
+
+    Each plan carries ``tier: "$50K STEADY Account"`` and a one-time ``price``.
+    Coupons live in ``data-coupon-platforms`` per data feed (CQG/Rithmic); the
+    coupon is only verified when every feed offers the same code and percent.
+    """
+    plan = FFN_PLANS.get(row["account_label"].strip())
+    if not plan:
+        raise ValueError("Unknown Funded Futures Network plan label")
+    size_k = int(row["account_size_usd"]) // 1000
+    blocks = re.findall(r'<script type="application/json" id="plans-data">(.*?)</script>', text, re.S)
+    if len(blocks) != 1:
+        raise ValueError("Expected exactly one Funded Futures plans-data block")
+    tier = f"${size_k}K {plan} Account"
+    matches = [p for size in json.loads(blocks[0]).values() for p in size.values()
+               if isinstance(p, dict) and p.get("tier") == tier]
+    product = unique(matches)
+    if product.get("billing") != "one_time":
+        raise ValueError("Funded Futures plan is not a one-time price")
+    regular = money(product["price"])
+    fields = {"eval_cost_usd": regular}
+    coupons = re.findall(r"<script type=\"application/json\" data-coupon-platforms>(.*?)</script>", text, re.S)
+    offers = list(json.loads(coupons[0]).values()) if len(coupons) == 1 else []
+    terms = {(o.get("code"), o.get("percent")) for o in offers
+             if o.get("valid") is True and o.get("type") == "percentage"}
+    code, pct = next(iter(terms)) if len(terms) == 1 and len(offers) == len(
+        [o for o in offers if o.get("valid") is True]) else (None, None)
+    verified = bool(isinstance(code, str) and COUPON.fullmatch(code)
+                    and isinstance(pct, (int, float)) and not isinstance(pct, bool) and 0 < pct <= 100)
+    if verified:
+        fields["discount_code"] = coupon_code(row, code)
+        fields["discount_pct"] = money(pct)
+        fields["discounted_eval_usd"] = ""
+    feeds = ", ".join(f"{c} {p}%" for c, p in sorted(terms, key=str)) or "none"
+    return fields, verified, None, f"Funded Futures {tier}, regular {regular}, coupons by feed: {feeds}"
+
+
 ADAPTERS = {"apex": apex, "tradeify": tradeify, "daytraders": daytraders, "lucid": lucid,
             "blue-guardian": blue_guardian, "my-funded-futures": my_funded_futures,
             "tradeday": tradeday, "fundednext": fundednext,
             "top-one-futures": top_one_futures, "bulenox": bulenox,
-            "phidias": phidias, "alphafutures": alpha_futures}
+            "phidias": phidias, "alphafutures": alpha_futures,
+            "legendstrading": legends_trading, "fundedfutures": funded_futures}
 
 
 def row_identity(row):
