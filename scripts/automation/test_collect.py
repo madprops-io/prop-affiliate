@@ -1069,6 +1069,7 @@ class TradersLaunchAdapterTests(unittest.TestCase):
                         discount_code="", discount_pct="0")
         return collect.traders_launch(source or fixture("traderslaunch"), sheet_row(**{**defaults, **values}), NOW)
 
+    # ── Standard / Premium card tests ────────────────────────────
     def test_standard_card_price_and_rules(self):
         fields, verified, expires, evidence = self.run_adapter()
         self.assertIs(verified, True)
@@ -1080,13 +1081,114 @@ class TradersLaunchAdapterTests(unittest.TestCase):
         fields, _, _, _ = self.run_adapter(account_label="Standard 60%", account_size_usd="300000")
         self.assertEqual((fields["eval_cost_usd"], fields["activation_fee_usd"]), ("666", "55"))
 
+    def test_premium_label_accepted(self):
+        """'Premium 80%' is an alias for 'Standard 80%'."""
+        fields, verified, _, _ = self.run_adapter(account_label="Premium 80%")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "999")
+
     def test_sheet_discount_holds_pricing(self):
         fields, verified, _, _ = self.run_adapter(discount_code="OLDCODE", discount_pct="10")
         self.assertIs(verified, False)
         self.assertEqual(fields["eval_cost_usd"], "999")
 
-    def test_unrendered_split_sale_or_unknown_label_fails_closed(self):
-        for label, size in (("Standard 55%", "300000"), ("Standard 55%", "100000"), ("Standard 80%", "300000"),
-                            ("Standard 80%", "200000"), ("Legacy 80%", "100000")):
+    def test_unrendered_split_or_sale_fails_closed(self):
+        for label, size in (("Standard 55%", "300000"), ("Standard 55%", "100000"),
+                            ("Standard 80%", "300000"), ("Standard 80%", "200000")):
             with self.subTest(label=label, size=size), self.assertRaises(ValueError):
                 self.run_adapter(account_label=label, account_size_usd=size)
+
+    def test_unknown_label_fails_closed(self):
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Turbo 80%")
+
+    # ── Legacy NYC card tests ────────────────────────────────────
+    def test_legacy_nyc_card_price(self):
+        fields, verified, expires, evidence = self.run_adapter(
+            key="traderslaunch-nyc-80-100k", account_label="Legacy NYC 80%",
+            account_size_usd="100000")
+        self.assertIs(verified, True)
+        self.assertIsNone(expires)
+        self.assertEqual(fields["eval_cost_usd"], "111")
+        self.assertEqual(fields["ddt"], "EOD")
+        self.assertEqual(fields["activation_fee_usd"], "0")
+        self.assertIn("Legacy NYC", evidence)
+
+    def test_legacy_nyc_200k(self):
+        fields, _, _, _ = self.run_adapter(
+            key="traderslaunch-nyc-80-200k", account_label="Legacy NYC 80%",
+            account_size_usd="200000")
+        self.assertEqual(fields["eval_cost_usd"], "222")
+
+    def test_legacy_nyc_wrong_split_fails_closed(self):
+        """NYC 300K in fixture has split=55, not 80 → fail closed."""
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Legacy NYC 80%", account_size_usd="300000")
+
+    def test_legacy_nyc_discount_holds(self):
+        _, verified, _, _ = self.run_adapter(
+            account_label="Legacy NYC 80%", account_size_usd="100000",
+            discount_code="CODE", discount_pct="5")
+        self.assertIs(verified, False)
+
+    # ── Static plan tests (companion JSON) ───────────────────────
+    def test_static_plan_price(self):
+        fields, verified, expires, evidence = self.run_adapter(
+            key="traderslaunch-static-80-25k", account_label="Static 80%",
+            account_size_usd="25000")
+        self.assertIs(verified, True)
+        self.assertIsNone(expires)
+        self.assertEqual(fields["eval_cost_usd"], "555")
+        self.assertEqual(fields["ddt"], "Static")
+        self.assertEqual(fields["activation_fee_usd"], "0")
+        self.assertIn("Static", evidence)
+        self.assertIn("offers API", evidence)
+
+    def test_static_multiple_sizes(self):
+        """50K 80% and 100K 60% from the fixture companion JSON."""
+        fields, _, _, _ = self.run_adapter(
+            key="traderslaunch-static-80-50k", account_label="Static 80%",
+            account_size_usd="50000")
+        self.assertEqual(fields["eval_cost_usd"], "444")
+        fields, _, _, _ = self.run_adapter(
+            key="traderslaunch-static-60-100k", account_label="Static 60%",
+            account_size_usd="100000")
+        self.assertEqual(fields["eval_cost_usd"], "777")
+
+    def test_static_90_split(self):
+        fields, _, _, _ = self.run_adapter(
+            key="traderslaunch-static-90-25k", account_label="Static 90%",
+            account_size_usd="25000")
+        self.assertEqual(fields["eval_cost_usd"], "333")
+
+    def test_static_sold_out_fails_closed(self):
+        """50K 60% is marked soldOut in fixture → fail closed."""
+        with self.assertRaises(ValueError) as ctx:
+            self.run_adapter(account_label="Static 60%", account_size_usd="50000")
+        self.assertIn("sold out", str(ctx.exception))
+
+    def test_static_missing_plan_fails_closed(self):
+        """100K 90% has no entry in the fixture → fail closed."""
+        with self.assertRaises(ValueError):
+            self.run_adapter(account_label="Static 90%", account_size_usd="100000")
+
+    def test_static_disabled_provider_ignored(self):
+        """The disabled provider's 25K 80% plan must not match."""
+        # Only the enabled hyperprop provider's $555 should match, not $1.
+        fields, _, _, _ = self.run_adapter(
+            account_label="Static 80%", account_size_usd="25000")
+        self.assertEqual(fields["eval_cost_usd"], "555")
+
+    def test_static_discount_holds(self):
+        _, verified, _, _ = self.run_adapter(
+            account_label="Static 80%", account_size_usd="25000",
+            discount_code="OLD", discount_pct="10")
+        self.assertIs(verified, False)
+
+    def test_static_no_companion_fails_closed(self):
+        """If companion JSON is missing, Static plans fail closed."""
+        source_no_companion = fixture("traderslaunch").split('<script type="application/json"')[0] + "</body></html>"
+        with self.assertRaises(ValueError) as ctx:
+            self.run_adapter(source=source_no_companion, account_label="Static 80%",
+                             account_size_usd="25000")
+        self.assertIn("not found", str(ctx.exception))
