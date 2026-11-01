@@ -698,7 +698,8 @@ class AlphaFuturesAdapterTests(unittest.TestCase):
 
 class NewFixtureSafetyTests(unittest.TestCase):
     def test_new_fixtures_are_marked_synthetic(self):
-        for name in ("bulenox", "phidias", "alphafutures", "legendstrading", "fundedfutures", "e8futures", "purdia"):
+        for name in ("bulenox", "phidias", "alphafutures", "legendstrading", "fundedfutures", "e8futures", "purdia",
+                     "aquafutures", "blusky-trading", "takeprofittrader", "traderslaunch"):
             with self.subTest(fixture=name):
                 self.assertIn("SYNTHETIC TEST FIXTURE", fixture(name))
 
@@ -865,3 +866,179 @@ class PurdiaAdapterTests(unittest.TestCase):
         fields, verified, _, _ = self.run_adapter(odd)
         self.assertIs(verified, False)
         self.assertEqual(fields, {"eval_cost_usd": "888"})
+
+
+class AquaFuturesAdapterTests(unittest.TestCase):
+    def run_adapter(self, source=None, **values):
+        defaults = dict(key="aqua-futures-standard-50k", firm_key="aquafutures", firm_name="Aqua Futures",
+                        account_label="Standard", account_size_usd="50000", eval_cost_usd="1",
+                        discount_code="SHEETCODE", discount_pct="25")
+        return collect.aqua_futures(source or fixture("aquafutures"), sheet_row(**{**defaults, **values}), NOW)
+
+    def test_list_price_is_read_but_coupon_is_always_held(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, False)
+        self.assertIsNone(expires)
+        # The site shows Math.floor of the list price.
+        self.assertEqual(fields, {"eval_cost_usd": "999"})
+        self.assertIn("list 999.99", evidence)
+        self.assertIn("bulk discount 11%", evidence)
+        fields, verified, _, _ = self.run_adapter(account_label="Instant Standard", discount_code="MADPROPS")
+        self.assertIs(verified, False)
+        self.assertEqual(fields, {"eval_cost_usd": "777"})
+        fields, _, _, _ = self.run_adapter(account_label="Flex")
+        self.assertEqual(fields, {"eval_cost_usd": "555"})
+
+    def test_hidden_unoffered_disagreeing_or_unknown_plans_fail_closed(self):
+        for label, size in (("Beginner", "50000"), ("Flex", "100000"), ("Instant Standard", "100000"),
+                            ("Standard", "150000"), ("Pro", "50000")):
+            with self.subTest(label=label, size=size), self.assertRaises((ValueError, KeyError)):
+                self.run_adapter(account_label=label, account_size_usd=size)
+        with self.assertRaises(ValueError):
+            self.run_adapter("<html>no config</html>")
+
+    def test_build_holds_all_aqua_pricing_for_review(self):
+        row = sheet_row(key="aqua-futures-standard-50k", firm_key="aquafutures", firm_name="Aqua Futures",
+                        account_label="Standard", account_size_usd="50000", eval_cost_usd="1",
+                        discount_code="SHEETCODE", discount_pct="25")
+        result = build([row], {"aquafutures": fixture("aquafutures")}, NOW)
+        self.assertEqual(result["patches"], [])
+        self.assertEqual(result["review"][0]["proposed"], {"eval_cost_usd": "999"})
+
+
+class BluSkyAdapterTests(unittest.TestCase):
+    def run_adapter(self, source=None, **values):
+        defaults = dict(key="propel-50k", firm_key="blusky-trading", firm_name="BluSky Trading",
+                        account_label="Propel 50K", account_size_usd="50000", eval_cost_usd="1",
+                        discount_code="OLDCODE", discount_pct="10")
+        return collect.blusky(source or fixture("blusky-trading"), sheet_row(**{**defaults, **values}), NOW)
+
+    def test_sale_card_gives_regular_price_code_and_percentage(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertIsNone(expires)
+        self.assertEqual(fields, {"activation_fee_usd": "0", "eval_cost_usd": "999", "discount_code": "TESTCODE",
+                                  "discount_pct": "30", "discounted_eval_usd": ""})
+        self.assertIn("price 699.3, was 999", evidence)
+        fields, _, _, _ = self.run_adapter(discount_code="MAD")
+        self.assertEqual(fields["discount_code"], "MAD")
+
+    def test_plain_price_verified_only_when_sheet_has_no_discount(self):
+        fields, verified, _, _ = self.run_adapter(key="orbit-50k", account_label="Orbit 50K",
+                                                  discount_code="", discount_pct="")
+        self.assertIs(verified, True)
+        self.assertEqual(fields, {"activation_fee_usd": "0", "eval_cost_usd": "888"})
+        fields, verified, _, _ = self.run_adapter(key="launch-50k", account_label="Launch 50K",
+                                                  discount_code="", discount_pct="50")
+        self.assertIs(verified, False)
+        self.assertEqual(fields, {"activation_fee_usd": "77", "eval_cost_usd": "99"})
+        fields, verified, _, _ = self.run_adapter(key="instant-direct-3-5k", account_label="Instant Funding 3.5K",
+                                                  account_size_usd="3500", discount_code="", discount_pct="")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["eval_cost_usd"], "666")
+        fields, _, _, _ = self.run_adapter(key="launch-200k-static", account_label="Launch 200K Static",
+                                           account_size_usd="200000", discount_code="", discount_pct="")
+        self.assertEqual(fields, {"activation_fee_usd": "111", "eval_cost_usd": "555"})
+
+    def test_sale_without_code_holds_coupon(self):
+        fields, verified, _, _ = self.run_adapter(account_label="Propel 200K Static", account_size_usd="200000")
+        self.assertIs(verified, False)
+        self.assertEqual(fields, {"activation_fee_usd": "0", "eval_cost_usd": "888"})
+
+    def test_mismatches_and_odd_discounts_fail_closed(self):
+        for label, size in (("Propel 100K", "100000"),          # 333 is not a whole % of 999
+                            ("Launch 200K", "200000"),          # site plan is static
+                            ("Launch 50K Static", "50000"),     # site plan is trailing
+                            ("Orbit 300K", "300000"), ("Propel 50K", "100000"), ("Premium 50K", "50000")):
+            with self.subTest(label=label, size=size), self.assertRaises((ValueError, KeyError)):
+                self.run_adapter(account_label=label, account_size_usd=size)
+        with self.assertRaises(ValueError):
+            self.run_adapter(fixture("blusky-trading").replace("const skyData2", "const skyData"))
+        nested = fixture("blusky-trading").replace('price: 99 })', 'price: 99, x: {a: 1} })')
+        with self.assertRaises(ValueError):
+            self.run_adapter(nested, account_label="Launch 50K")
+
+
+class TakeProfitTraderAdapterTests(unittest.TestCase):
+    def run_adapter(self, source=None, **values):
+        defaults = dict(key="tpt-25k", firm_key="takeprofittrader", firm_name="Take Profit Trader",
+                        account_label="Test", account_size_usd="25000", eval_cost_usd="1",
+                        discount_code="OLDCODE", discount_pct="40")
+        return collect.take_profit_trader(source or fixture("takeprofittrader"), sheet_row(**{**defaults, **values}), NOW)
+
+    def test_api_price_and_banner_coupon(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertIsNone(expires)
+        self.assertEqual(fields, {"eval_cost_usd": "999", "discount_code": "TESTCODE",
+                                  "discount_pct": "25", "discounted_eval_usd": ""})
+        self.assertIn("id 2", evidence)
+        fields, _, _, _ = self.run_adapter(discount_code="MADPROPS")
+        self.assertEqual(fields["discount_code"], "MADPROPS")
+
+    def test_api_discount_price_or_unclear_banner_holds_coupon(self):
+        fields, verified, _, _ = self.run_adapter(account_size_usd="50000")
+        self.assertIs(verified, False)
+        self.assertEqual(fields, {"eval_cost_usd": "888"})
+        for banner in ("Get 25% Off! Use Code: TESTCODE or 30% Off", "Get 25% Off! Use Code: A or Use Code: B",
+                       "Big sale today!"):
+            source = fixture("takeprofittrader").replace(
+                "Get 25% Off For Life + Fake Perk! <a href=\"https://example.invalid/faq\">DETAILS</a>. Use Code: TESTCODE",
+                banner)
+            with self.subTest(banner=banner):
+                fields, verified, _, _ = self.run_adapter(source)
+                self.assertIs(verified, False)
+                self.assertEqual(fields, {"eval_cost_usd": "999"})
+
+    def test_missing_duplicate_or_free_items_fail_closed(self):
+        for label, size in (("Test", "75000"), ("Test", "100000"), ("Test", "150000"), ("PRO+", "25000")):
+            with self.subTest(label=label, size=size), self.assertRaises(ValueError):
+                self.run_adapter(account_label=label, account_size_usd=size)
+        with self.assertRaises(ValueError):
+            self.run_adapter("<html>banner only</html>")
+        with self.assertRaises(ValueError):
+            self.run_adapter(fixture("takeprofittrader").replace('"isSuccess":true', '"isSuccess":false'))
+
+    def test_fetch_source_appends_api_json_as_inert_block(self):
+        pages = {"https://takeprofittrader.com/": "<p>page</p>",
+                 collect.COMPANION_JSON["takeprofittrader"]: '{"result":{"items":[]},"note":"</script>"}'}
+        original = collect.fetch
+        collect.fetch = lambda url, browser=False: pages[url]
+        try:
+            text = collect.fetch_source("takeprofittrader", "https://takeprofittrader.com/")
+            self.assertEqual(collect.TPT_COMPANION.findall(text), ['{"result":{"items":[]},"note":"<\\/script>"}'])
+            pages[collect.COMPANION_JSON["takeprofittrader"]] = "<html>not json</html>"
+            with self.assertRaises(ValueError):
+                collect.fetch_source("takeprofittrader", "https://takeprofittrader.com/")
+        finally:
+            collect.fetch = original
+
+
+class TradersLaunchAdapterTests(unittest.TestCase):
+    def run_adapter(self, source=None, **values):
+        defaults = dict(key="traderslaunch-standard-80-100k", firm_key="traderslaunch", firm_name="Traders Launch",
+                        account_label="Standard 80%", account_size_usd="100000", eval_cost_usd="1",
+                        discount_code="", discount_pct="0")
+        return collect.traders_launch(source or fixture("traderslaunch"), sheet_row(**{**defaults, **values}), NOW)
+
+    def test_standard_card_price_and_rules(self):
+        fields, verified, expires, evidence = self.run_adapter()
+        self.assertIs(verified, True)
+        self.assertIsNone(expires)
+        # The Legacy NYC card for the same size and split ($111) is ignored.
+        self.assertEqual(fields, {"eval_cost_usd": "999", "activation_fee_usd": "0",
+                                  "min_days (Eval)": "3", "ddt": "EOD"})
+        self.assertIn("one-time fee 999", evidence)
+        fields, _, _, _ = self.run_adapter(account_label="Standard 60%", account_size_usd="300000")
+        self.assertEqual((fields["eval_cost_usd"], fields["activation_fee_usd"]), ("666", "55"))
+
+    def test_sheet_discount_holds_pricing(self):
+        fields, verified, _, _ = self.run_adapter(discount_code="OLDCODE", discount_pct="10")
+        self.assertIs(verified, False)
+        self.assertEqual(fields["eval_cost_usd"], "999")
+
+    def test_unrendered_split_sale_or_unknown_label_fails_closed(self):
+        for label, size in (("Standard 55%", "300000"), ("Standard 55%", "100000"), ("Standard 80%", "300000"),
+                            ("Standard 80%", "200000"), ("Legacy 80%", "100000")):
+            with self.subTest(label=label, size=size), self.assertRaises(ValueError):
+                self.run_adapter(account_label=label, account_size_usd=size)

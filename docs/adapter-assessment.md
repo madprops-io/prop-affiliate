@@ -44,21 +44,27 @@ Three techniques, all free and in-house, no proxies or IP rotation:
 | **Purdia** | 7 | App bundle (`BUNDLE_FETCH`) | Per TJ (Nov 1 2026) the TRY60 accounts catalogue is used, not the October homepage list (OCT50). The adapter finds the catalogue mapper (sets `discountCode`, prices cards at `priceOriginal * .4`), reads the code and the multiplier from it (60%), and matches cards by slug whose checkout link carries that code. Card top-level `priceOriginal` is the default (buffer-rule) price; EOD prices are first-month subscription prices. Nov 1 2026 dry run: Instant 249/449/699, Pioneer 849, EOD 179/299, all TRY60 60%. **Pro Evaluation is not in the TRY60 catalogue, so it goes to review.** |
 | **E8 Futures** | 10 | Nuxt payload (`__NUXT_DATA__`) | `e8markets.com/e8-markets-discount-code` (plain fetch) ships `global-data.products`. Futures plans are `e8signature_v_fu`, `e8zero_max_fu` and `e8zero_start_fu`, each with `balances[size].price`, `discount`/`firstDiscount` and `discountCode`. The payload is decoded by index only, never evaluated. The coupon is held if first-purchase and regular % differ, and a tier-price disagreement fails closed. Nov 1 2026 dry run: Zero MAX unchanged. Signature 120/170/280/450 (Sheet 110/150/260/390). Zero Starter 50K/100K 218/338 (Sheet 178/278). The site has no Zero Starter 200K, so that row goes to review. |
 
+### Adapters added (Oct 31 2026 round)
+
+All four read public pages (or a public same-origin JSON endpoint) with a plain
+fetch. Nothing is executed. Live dry run on Oct 31 2026 against the live Sheet:
+**23 verified patches, 0 changed cells, 14 review items.**
+
+| Firm | Rows | Source | Notes |
+|---|---|---|---|
+| **BluSky Trading** | 15 | Inline `const skyData` table on `blusky.pro` | Each plan is `"<size>": {"<mode>": mkPlanSky({...})}` (`launch` = Launch, `premium` = Propel, `orbit` = Orbit, `instant` = Instant Funding). The single flat argument is unwrapped to a literal and parsed with json5. `price` is the charge, `was` the regular price, `discount: "USE CODE: X"` the code, and `atLaunch` the activation fee. A "Static" Sheet label must match a static evaluation drawdown, and vice versa. Propel: regular price, 30OFF and 30% verified. Orbit and Instant: plain price, verified because the Sheet has no discount. **Launch (3 rows): the Sheet says 50% with no code and the site shows no discount, so pricing goes to review.** The activation fee is still published. |
+| **Take Profit Trader** | 5 | Homepage + public API `takeprofittrader.com/accounts/api/subscriptions` (`COMPANION_JSON`) | `fetch_source` appends the API JSON to the homepage as an inert `madprops-companion` JSON block. Test accounts are items `"$ 25k"` with `balance` equal to the size, `marketType` 0 and a positive `price`; free PRO+ entries are ignored. The coupon is verified only when the homepage promo banner names exactly one `% Off` and one `Use Code:` and the API has no `discountPrice`. Live: 150/170/245/330/360, NOFEE40 40%, all 5 verified and unchanged. |
+| **Traders Launch** | 6 | Server-rendered pricing cards on `traderslaunch.com` | Cards are matched by the checkout link (`type=futures&size=<n>&split=<pct>&hours=2`) and the plain "starting capital" subtitle, which excludes Legacy NYC cards. The card also gives the activation fee ("None" = 0), minimum days and EOD drawdown. A card showing more than one dollar amount (a sale) fails closed. Standard 80% (3 rows) is verified (159/299/599). **Standard 55% (3 rows) goes to review:** the site now offers 60% or 80% for standard accounts, and only the default 80% cards are rendered. The bundle still has a 55% fee table (79/149/299), but the page doesn't offer it, so it isn't used. |
+| **Aqua Futures** | 8 | Inline `window.AQ_TABLE_CONFIG` on `aquafutures.io` | `futures[model][type].platforms[platform].prices['50k']`. Every platform (Tradovate, DeepCharts) must agree, and the size must be in `availableAccounts`. Mapping: Beginner = One Step / beginner, Standard = Daily / standard, Flex = One Step / flex, Instant Standard = Instant / standard. The site shows `Math.floor` of the list price, and that value is used. **All Aqua pricing goes to review.** The page applies a code-less site-wide `bulkDiscount` (35% on futures) and publishes no coupon code, so the Sheet code (BACK2WORK 25%) can't be verified. **Beginner (2 rows) fails closed** because `hiddenTypes` hides One Step / beginner on the site. Live proposed list prices: Standard 121/186 (Sheet 120/200), Flex 141/205 (Sheet 106/173), Instant Standard 487/646 (Sheet 328/408). The Sheet values look like discounted or older prices, so a human should confirm the mapping and which price the Sheet should hold. |
+
 ### Checked Oct 31 2026, not automated (fail closed)
 
 | Firm | Rows | Finding |
 |---|---|---|
-| **Elite Trader Funding** | 14 | `elitetraderfunding.app` pages (`/evaluations`, `/1-step-evaluation`, `/direct-to-funded`, ...) carry no plan prices in the HTML, the flight payload, the static JS chunks, or even the fully rendered page (Playwright, Nov 1 2026). The only public API calls are feature flags and session. Prices appear only in checkout, which requires sign-in. Not automatable without an account, so it stays manual. |
-
-### Reachable now, mapping still needed
-
-| Firm | Rows | Finding |
-|---|---|---|
-| **TakeProfitTrader** | 5 | Angular app. Prices come from its API or a rendered page. |
+| **Elite Trader Funding** | 14 | `elitetraderfunding.app` pages (`/evaluations`, `/1-step-evaluation`, `/direct-to-funded`, ...) carry no plan prices in the HTML, the flight payload, the static JS chunks, or even the fully rendered page (Playwright, Nov 1 2026). The only public API calls are feature flags and session. Prices appear only in checkout, which requires sign-in. **Re-checked Oct 31 2026:** the homepage and `/evaluations` now show a comparison table, but it only has "As Low As" activation and reset fees ($47/$87 monthly, $157/$177/$307 one-time), not per-plan evaluation prices. `elitetraderfunding.com` returns 403. It stays manual and no adapter was added. |
 
 ### Still blocked
 
 | Firm | Rows | Reason / options |
 |---|---|---|
 | **Apex, Lucid** | 32 | Cloudflare 403 even with a browser fingerprint and headless Chromium. Options: a paid rendering service (ScrapingBee, ZenRows, Browserless) or a price feed from the firm's affiliate team. Adapters already exist, so whenever a fetch succeeds they work. |
-| **AquaFutures, Blusky, TradersLaunch** | 29 | Data is reachable, but Sheet labels don't map cleanly (unchanged from the prior round). |

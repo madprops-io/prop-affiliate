@@ -1,0 +1,40 @@
+<!-- SYNTHETIC TEST FIXTURE - fake prices, not real Aqua Futures data -->
+<html><head><title>Synthetic Aqua fixture</title></head><body>
+<script>
+    /* Copies only the shape of window.AQ_TABLE_CONFIG. */
+    window.AQ_TABLE_CONFIG = {
+      checkoutBase: 'https://checkout.example.invalid/?add-to-cart=',
+      defaultMarket: 'forex',
+      bulkDiscount: { forex: 11, futures: 11 },
+      hiddenModels: { forex: ['three-step'], futures: [] },
+      hiddenTypes: { forex: {}, futures: { Instant: ['pro'], 'One Step': ['beginner'] } },
+      forex: { 'one-step': { standard: { platforms: { mt5: { prices: { '50k': 1 } } } } } },
+      futures: {
+        Daily: {
+          standard: { platforms: {
+            tradovate: { availableAccounts: ['50k', '100k'], prices: { '50k': 999.99, '100k': 888 }, accountId: { '50k': 1, '100k': 2 } },
+            deepcharts: { availableAccounts: ['50k', '100k'], prices: { '50k': 999.99, '100k': 888 }, accountId: { '50k': 3, '100k': 4 } }
+          } }
+        },
+        Instant: {
+          standard: { platforms: {
+            tradovate: { prices: { '50k': 777.5, '100k': 666 } },
+            deepcharts: { prices: { '50k': 777.5, '100k': 665 } }
+          } },
+          pro: { platforms: { tradovate: { prices: { '50k': 444 } } } }
+        },
+        'One Step': {
+          beginner: { platforms: { tradovate: { prices: { '50k': 333.33 } }, deepcharts: { prices: { '50k': 333.33 } } } },
+          flex: { platforms: {
+            tradovate: { availableAccounts: ['50k'], prices: { '50k': 555, '100k': 444 } },
+            deepcharts: { availableAccounts: ['50k'], prices: { '50k': 555, '100k': 444 } }
+          } }
+        }
+      }
+    };
+</script>
+<script>
+window.AQ_TABLE_CONFIG = window.AQ_TABLE_CONFIG || {};
+window.AQ_TABLE_CONFIG.defaultMarket = 'futures';
+</script>
+</body></html>
