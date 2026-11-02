@@ -2,6 +2,13 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "key": "alpha-zero-50k",
+      "values": {
+        "eval_cost_usd": "169"
+      },
+      "approvedAt": "2026-11-02T21:45:41.502414+00:00"
+    },
+    {
       "key": "tradeify-growth-100k",
       "values": {
         "discount_code": "GEMS",
