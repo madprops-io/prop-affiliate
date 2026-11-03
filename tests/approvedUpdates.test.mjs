@@ -40,6 +40,22 @@ test('holds, duplicate identities, and unknown fields cannot change data', () =>
   const [r] = applyApprovedUpdates([row], [row], data([{...entry,values:{signup_url:'evil',true_cost:'100'}}]), now);
   assert.deepEqual(r,row);
 });
+test('the committed approved data loads and non-string values are ignored', async () => {
+  // lib/firmData.ts casts the JSON import through unknown; these runtime checks make that safe.
+  const { default: committed } = await import('../data/approved-firm-data.json', { with: { type: 'json' } });
+  assert.equal(committed.schemaVersion, 1);
+  assert.ok(Array.isArray(committed.entries));
+  for (const e of committed.entries) {
+    assert.equal(typeof e.key, 'string');
+    assert.ok(Number.isFinite(Date.parse(e.approvedAt)), `${e.key} approvedAt`);
+    for (const v of Object.values(e.values)) assert.equal(typeof v, 'string', `${e.key} values`);
+  }
+  const odd = {...entry, values: {eval_cost_usd: undefined, discount_pct: 30, discount_code: 'GEMS'}};
+  const [r] = applyApprovedUpdates([row], [row], data([odd]), now);
+  assert.equal(r.eval_cost_usd, '99');
+  assert.equal(r.discount_pct, '50');
+  assert.equal(r.discount_code, 'GEMS');
+});
 test('a promotion without a real expiration is never approved', () => {
   const [r] = applyApprovedUpdates([row], [row], data([{...entry,promotionExpiresAt:undefined}]), now);
   assert.equal(r.discount_code,'SEP');
