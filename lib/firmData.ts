@@ -23,7 +23,11 @@ export async function loadFirmCsv(nocache = false) {
   if (process.env.MADPROPS_AUTOMATION_DISABLED !== "1") {
     const now = Date.now();
     const verified = verifyFirmUpdates(parsed.data, snapshot as unknown as UpdateSnapshot, now);
-    rows = applyApprovedUpdates(parsed.data, verified.rows, approved as ApprovedSnapshot, now, verified.verifiedFields);
+    // The bot rewrites approved-firm-data.json, so TypeScript infers a different
+    // union (optional keys as `undefined`) for each data shape. Cast through
+    // unknown, like the snapshot above; applyApprovedUpdates checks schemaVersion
+    // and skips any value that is not a string at runtime.
+    rows = applyApprovedUpdates(parsed.data, verified.rows, approved as unknown as ApprovedSnapshot, now, verified.verifiedFields);
   }
   return Papa.unparse(rows, { columns: parsed.meta.fields });
 }
