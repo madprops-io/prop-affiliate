@@ -12,8 +12,8 @@
       futures: {
         Daily: {
           standard: { platforms: {
-            tradovate: { availableAccounts: ['50k', '100k'], prices: { '50k': 999.99, '100k': 888 }, accountId: { '50k': 1, '100k': 2 } },
-            deepcharts: { availableAccounts: ['50k', '100k'], prices: { '50k': 999.99, '100k': 888 }, accountId: { '50k': 3, '100k': 4 } }
+            tradovate: { availableAccounts: ['50k', '100k', '150k'], prices: { '50k': 222.5, '100k': 211, '150k': 233 } },
+            deepcharts: { availableAccounts: ['50k', '100k', '150k'], prices: { '50k': 222.5, '100k': 211, '150k': 233 } }
           } }
         },
         Instant: {
@@ -25,6 +25,14 @@
         },
         'One Step': {
           beginner: { platforms: { tradovate: { prices: { '50k': 333.33 } }, deepcharts: { prices: { '50k': 333.33 } } } },
+          standard: { platforms: {
+            tradovate: { availableAccounts: ['50k', '100k'], prices: { '50k': 999.99, '100k': 888 }, accountId: { '50k': 1, '100k': 2 } },
+            deepcharts: { availableAccounts: ['50k', '100k'], prices: { '50k': 999.99, '100k': 888 }, accountId: { '50k': 3, '100k': 4 } }
+          } },
+          dll: { platforms: {
+            tradovate: { availableAccounts: ['50k'], prices: { '50k': 5555 } },
+            deepcharts: { availableAccounts: ['50k'], prices: { '50k': 5555 } }
+          } },
           flex: { platforms: {
             tradovate: { availableAccounts: ['50k'], prices: { '50k': 555, '100k': 444 } },
             deepcharts: { availableAccounts: ['50k'], prices: { '50k': 555, '100k': 444 } }
