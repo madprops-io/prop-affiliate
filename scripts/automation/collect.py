@@ -965,8 +965,22 @@ def e8_futures(text, row, now):
         f"code {code} {pct}% (first purchase {first}%)")
 
 
-AQUA_PLANS = {"Beginner": ("One Step", "beginner"), "Standard": ("Daily", "standard"),
-              "Flex": ("One Step", "flex"), "Instant Standard": ("Instant", "standard")}
+# Each Sheet label tracks the cheapest base version of a plan, never a paid
+# add-on: "Flex" is One Step ``flex`` ($1,200 daily loss limit), not the
+# pricier no-limit ``dll`` upgrade. "Standard" is One Step Standard.
+AQUA_PLANS = {"Beginner": ("One Step", "beginner"), "Standard": ("One Step", "standard"),
+              "Flex": ("One Step", "flex"), "Daily": ("Daily", "standard"),
+              "Instant Standard": ("Instant", "standard")}
+AQUA_BANNER_CODE = re.compile(r'fs-copyclip-text="([^"]*)"[^>]*class="[^"]*\bbanner-top_code-copy\b|'
+                              r'class="[^"]*\bbanner-top_code-copy\b[^"]*"[^>]*fs-copyclip-text="([^"]*)"')
+AQUA_BANNER_TEXT = re.compile(r'class="[^"]*\bbanner[^"]*"[^>]*>([^<]*)')
+
+
+def aqua_banner(text):
+    """Promo codes and "N% OFF" percentages named in the homepage banners."""
+    codes = {(a or b).strip() for a, b in AQUA_BANNER_CODE.findall(text)}
+    pcts = {int(p) for t in AQUA_BANNER_TEXT.findall(text) for p in re.findall(r"\b(\d{1,3})% OFF\b", t, re.I)}
+    return codes, pcts
 
 
 def aqua_futures(text, row, now):
@@ -977,12 +991,15 @@ def aqua_futures(text, row, now):
     (``availableAccounts``). A model or type in ``hiddenModels`` /
     ``hiddenTypes`` is not shown on the site and fails closed. The site shows
     ``Math.floor`` of the list price, so that whole-dollar value is used.
-    The page applies a code-less ``bulkDiscount.futures`` percentage to every
-    futures plan automatically (no coupon code exists). A positive whole
-    percentage up to 100 is verified: ``discount_pct`` takes it, the code is
-    cleared (a MAD/MADPROPS Sheet code is kept, see ``coupon_code``) and
-    ``discounted_eval_usd`` is cleared so the percentage drives the price.
-    A missing, zero or malformed ``bulkDiscount`` holds pricing for review.
+    The page applies the ``bulkDiscount.futures`` percentage to every futures
+    plan. A positive whole percentage up to 100 is verified: ``discount_pct``
+    takes it and ``discounted_eval_usd`` is cleared so the percentage drives
+    the price. When the homepage banner names a promo code (e.g. HONOR), it
+    is the public code, but only if exactly one code is shown and every
+    banner "N% OFF" matches the bulk percentage; otherwise pricing is held.
+    With no banner code the code is cleared. A MAD/MADPROPS Sheet code is
+    always kept (see ``coupon_code``). A missing, zero or malformed
+    ``bulkDiscount`` holds pricing for review.
     """
     plan = AQUA_PLANS.get(row["account_label"].strip())
     if not plan:
@@ -1006,15 +1023,26 @@ def aqua_futures(text, row, now):
     bulk = config.get("bulkDiscount")
     bulk = bulk.get("futures") if isinstance(bulk, dict) else None
     fields = {"eval_cost_usd": regular}
-    verified = type(bulk) is int and 0 < bulk <= 100
+    valid = type(bulk) is int and 0 < bulk <= 100
+    codes, pcts = aqua_banner(text)
+    code = next(iter(codes)) if len(codes) == 1 else ""
+    if not valid:
+        verified, discount = False, f"no valid code-less bulk discount ({bulk!r})"
+    elif len(codes) > 1 or (codes and not re.fullmatch(r"[A-Za-z0-9_-]{1,40}", code)):
+        verified, discount = False, f"ambiguous banner codes {sorted(codes)}"
+    elif code and pcts != {bulk}:
+        verified, discount = False, f"banner code {code} shows {sorted(pcts)}% but bulk discount is {bulk}%"
+    else:
+        verified = True
+        discount = (f"{bulk}% off with banner code {code}" if code
+                    else f"code-less {bulk}% bulk discount applied automatically, no coupon code needed")
     if verified:
-        fields["discount_code"] = coupon_code(row, "")
+        fields["discount_code"] = coupon_code(row, code)
         fields["discount_pct"] = str(bulk)
         fields["discounted_eval_usd"] = ""
-    discount = f"code-less {bulk}% bulk discount applied automatically" if verified else f"no valid code-less bulk discount ({bulk!r})"
     return fields, verified, None, (
         f"Aqua Futures {model} {plan_type} {size}, list {listed} (shown {regular}) on {'/'.join(sorted(platforms))}; "
-        f"{discount}, no coupon code needed")
+        f"{discount}")
 
 
 BLUSKY_PLANS = {"Launch": "launch", "Propel": "premium", "Orbit": "orbit", "Instant Funding": "instant"}

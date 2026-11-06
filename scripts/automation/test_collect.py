@@ -995,6 +995,42 @@ class AquaFuturesAdapterTests(unittest.TestCase):
         self.assertEqual(result["patches"], [])
         self.assertEqual(result["review"][0]["proposed"], {"eval_cost_usd": "999"})
 
+    BANNER = ('<div class="banner-refund">{pct}% OFF</div>'
+              '<div fs-copyclip-text="{code}" fs-copyclip-element="click" class="banner-top_code-copy banner">{code}</div>'
+              '<div class="banner-top_code-copy" fs-copyclip-text="{code2}">{code2}</div>')
+
+    def with_banner(self, pct=11, code="FAKEPROMO", code2=None):
+        return fixture("aquafutures").replace("</body>", self.BANNER.format(pct=pct, code=code, code2=code2 or code) + "</body>")
+
+    def test_banner_code_is_used_when_it_matches_bulk_discount(self):
+        fields, verified, _, evidence = self.run_adapter(self.with_banner())
+        self.assertIs(verified, True)
+        self.assertEqual(fields, {"eval_cost_usd": "999", "discount_code": "FAKEPROMO", "discount_pct": "11",
+                                  "discounted_eval_usd": ""})
+        self.assertIn("banner code FAKEPROMO", evidence)
+
+    def test_affiliate_code_is_kept_over_banner_code(self):
+        fields, verified, _, _ = self.run_adapter(self.with_banner(), discount_code="MAD")
+        self.assertIs(verified, True)
+        self.assertEqual(fields["discount_code"], "MAD")
+
+    def test_banner_disagreeing_or_ambiguous_holds_pricing(self):
+        for source in (self.with_banner(pct=30), self.with_banner(code2="OTHERCODE"),
+                       self.with_banner(code="BAD CODE")):
+            with self.subTest():
+                fields, verified, _, _ = self.run_adapter(source)
+                self.assertIs(verified, False)
+                self.assertEqual(fields, {"eval_cost_usd": "999"})
+
+    def test_labels_track_cheapest_base_plan(self):
+        # Flex is the cheaper $1,200-DLL plan, never the no-DLL "dll" upgrade.
+        self.assertEqual(self.run_adapter(account_label="Flex")[0]["eval_cost_usd"], "555")
+        # Standard is One Step Standard; Daily is its own plan.
+        self.assertEqual(self.run_adapter(account_label="Standard", account_size_usd="100000")[0]["eval_cost_usd"], "888")
+        for size, price in (("50000", "222"), ("100000", "211"), ("150000", "233")):
+            with self.subTest(size=size):
+                self.assertEqual(self.run_adapter(account_label="Daily", account_size_usd=size)[0]["eval_cost_usd"], price)
+
     def test_build_rejects_malformed_non_empty_code(self):
         row = sheet_row(key="aqua-futures-standard-50k", firm_key="aquafutures", firm_name="Aqua Futures",
                         account_label="Standard", account_size_usd="50000", eval_cost_usd="1", discount_code="")
