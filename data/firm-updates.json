@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-08T13:38:05.486246+00:00",
+  "generatedAt": "2026-11-08T22:13:43.761367+00:00",
   "patches": [
     {
       "key": "fundednext-futures-flex-50k",
@@ -18,11 +18,11 @@
         "discount_pct": "47",
         "discounted_eval_usd": "74.99"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://fundednext.com/",
       "evidence": "FundedNext Flex 50K, regular 141.99, code FNFLEX 47% OFF, package 'flex' variant 'default'",
-      "sha256": "e120f49d4753254b6b0376f9dcf2868ae0a8158e75b67e3273391ea404e80f6a"
+      "sha256": "6bdc214952453ad612572348b78904f9001131b52965b5ed077cbf5caa4d8222"
     },
     {
       "key": "fundednext-futures-flex-100k",
@@ -40,11 +40,11 @@
         "discount_pct": "47",
         "discounted_eval_usd": "144.99"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://fundednext.com/",
       "evidence": "FundedNext Flex 100K, regular 273.99, code FNFLEX 47% OFF, package 'flex' variant 'default'",
-      "sha256": "e120f49d4753254b6b0376f9dcf2868ae0a8158e75b67e3273391ea404e80f6a"
+      "sha256": "6bdc214952453ad612572348b78904f9001131b52965b5ed077cbf5caa4d8222"
     },
     {
       "key": "fundednext-futures-flex-150k",
@@ -62,11 +62,11 @@
         "discount_pct": "47",
         "discounted_eval_usd": "259.99"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://fundednext.com/",
       "evidence": "FundedNext Flex 150K, regular 490.99, code FNFLEX 47% OFF, package 'flex' variant 'default'",
-      "sha256": "e120f49d4753254b6b0376f9dcf2868ae0a8158e75b67e3273391ea404e80f6a"
+      "sha256": "6bdc214952453ad612572348b78904f9001131b52965b5ed077cbf5caa4d8222"
     },
     {
       "key": "ffn-max-standard-25k",
@@ -85,11 +85,11 @@
         "discount_pct": "70",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://www.fundedfuturesnetwork.com/",
       "evidence": "Funded Futures $25K MAX Standard Account, regular 148, coupons by feed: cqg NEXUS 70%, rithmic NEXUS 50%; best NEXUS 70% on cqg",
-      "sha256": "284fc6577c3c8ecb2d42d437933bc9959799b6ff70ba3c629a7a3bf62e6a6f03"
+      "sha256": "157dfb2d2cd2b36ddf066b6cec35ab138ad2b337a23872b82fc4ce1a584df0be"
     },
     {
       "key": "ffn-max-standard-50k",
@@ -108,11 +108,11 @@
         "discount_pct": "70",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://www.fundedfuturesnetwork.com/",
       "evidence": "Funded Futures $50K MAX Standard Account, regular 178, coupons by feed: cqg NEXUS 70%, rithmic NEXUS 50%; best NEXUS 70% on cqg",
-      "sha256": "284fc6577c3c8ecb2d42d437933bc9959799b6ff70ba3c629a7a3bf62e6a6f03"
+      "sha256": "157dfb2d2cd2b36ddf066b6cec35ab138ad2b337a23872b82fc4ce1a584df0be"
     },
     {
       "key": "ffn-max-standard-100k",
@@ -131,11 +131,11 @@
         "discount_pct": "70",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://www.fundedfuturesnetwork.com/",
       "evidence": "Funded Futures $100K MAX Standard Account, regular 348, coupons by feed: cqg NEXUS 70%, rithmic NEXUS 50%; best NEXUS 70% on cqg",
-      "sha256": "284fc6577c3c8ecb2d42d437933bc9959799b6ff70ba3c629a7a3bf62e6a6f03"
+      "sha256": "157dfb2d2cd2b36ddf066b6cec35ab138ad2b337a23872b82fc4ce1a584df0be"
     },
     {
       "key": "ffn-max-standard-150k",
@@ -154,11 +154,11 @@
         "discount_pct": "70",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://www.fundedfuturesnetwork.com/",
       "evidence": "Funded Futures $150K MAX Standard Account, regular 408, coupons by feed: cqg NEXUS 70%, rithmic NEXUS 50%; best NEXUS 70% on cqg",
-      "sha256": "284fc6577c3c8ecb2d42d437933bc9959799b6ff70ba3c629a7a3bf62e6a6f03"
+      "sha256": "157dfb2d2cd2b36ddf066b6cec35ab138ad2b337a23872b82fc4ce1a584df0be"
     },
     {
       "key": "ffn-max-standard-250k",
@@ -177,11 +177,11 @@
         "discount_pct": "70",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://www.fundedfuturesnetwork.com/",
       "evidence": "Funded Futures $250K MAX Standard Account, regular 658, coupons by feed: cqg NEXUS 70%, rithmic NEXUS 50%; best NEXUS 70% on cqg",
-      "sha256": "284fc6577c3c8ecb2d42d437933bc9959799b6ff70ba3c629a7a3bf62e6a6f03"
+      "sha256": "157dfb2d2cd2b36ddf066b6cec35ab138ad2b337a23872b82fc4ce1a584df0be"
     },
     {
       "key": "ffn-steady-25k",
@@ -200,11 +200,11 @@
         "discount_pct": "70",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://www.fundedfuturesnetwork.com/",
       "evidence": "Funded Futures $25K STEADY Account, regular 149, coupons by feed: cqg NEXUS 70%, rithmic NEXUS 50%; best NEXUS 70% on cqg",
-      "sha256": "284fc6577c3c8ecb2d42d437933bc9959799b6ff70ba3c629a7a3bf62e6a6f03"
+      "sha256": "157dfb2d2cd2b36ddf066b6cec35ab138ad2b337a23872b82fc4ce1a584df0be"
     },
     {
       "key": "ffn-steady-50k",
@@ -223,11 +223,11 @@
         "discount_pct": "70",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://www.fundedfuturesnetwork.com/",
       "evidence": "Funded Futures $50K STEADY Account, regular 229, coupons by feed: cqg NEXUS 70%, rithmic NEXUS 50%; best NEXUS 70% on cqg",
-      "sha256": "284fc6577c3c8ecb2d42d437933bc9959799b6ff70ba3c629a7a3bf62e6a6f03"
+      "sha256": "157dfb2d2cd2b36ddf066b6cec35ab138ad2b337a23872b82fc4ce1a584df0be"
     },
     {
       "key": "ffn-steady-100k",
@@ -246,11 +246,11 @@
         "discount_pct": "70",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://www.fundedfuturesnetwork.com/",
       "evidence": "Funded Futures $100K STEADY Account, regular 308, coupons by feed: cqg NEXUS 70%, rithmic NEXUS 50%; best NEXUS 70% on cqg",
-      "sha256": "284fc6577c3c8ecb2d42d437933bc9959799b6ff70ba3c629a7a3bf62e6a6f03"
+      "sha256": "157dfb2d2cd2b36ddf066b6cec35ab138ad2b337a23872b82fc4ce1a584df0be"
     },
     {
       "key": "ffn-steady-150k",
@@ -269,11 +269,11 @@
         "discount_pct": "70",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://www.fundedfuturesnetwork.com/",
       "evidence": "Funded Futures $150K STEADY Account, regular 585, coupons by feed: cqg NEXUS 70%, rithmic NEXUS 50%; best NEXUS 70% on cqg",
-      "sha256": "284fc6577c3c8ecb2d42d437933bc9959799b6ff70ba3c629a7a3bf62e6a6f03"
+      "sha256": "157dfb2d2cd2b36ddf066b6cec35ab138ad2b337a23872b82fc4ce1a584df0be"
     },
     {
       "key": "ffn-steady-250k",
@@ -292,11 +292,11 @@
         "discount_pct": "70",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://www.fundedfuturesnetwork.com/",
       "evidence": "Funded Futures $250K STEADY Account, regular 750, coupons by feed: cqg NEXUS 70%, rithmic NEXUS 50%; best NEXUS 70% on cqg",
-      "sha256": "284fc6577c3c8ecb2d42d437933bc9959799b6ff70ba3c629a7a3bf62e6a6f03"
+      "sha256": "157dfb2d2cd2b36ddf066b6cec35ab138ad2b337a23872b82fc4ce1a584df0be"
     },
     {
       "key": "launch-50k",
@@ -312,11 +312,11 @@
       "values": {
         "activation_fee_usd": "99"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Launch 50k (launch), price 59, was -, discount '' 0%, at launch 99",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "launch-100k",
@@ -332,11 +332,11 @@
       "values": {
         "activation_fee_usd": "149"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Launch 100k (launch), price 69, was -, discount '' 0%, at launch 149",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "launch-200k-static",
@@ -352,11 +352,11 @@
       "values": {
         "activation_fee_usd": "179"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Launch 200k (launch), price 79, was -, discount '' 0%, at launch 179",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "propel-25k",
@@ -377,11 +377,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Propel 25k (premium), price 105, was 150, discount 'USE CODE: 30OFF' 30%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "propel-50k",
@@ -402,11 +402,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Propel 50k (premium), price 112, was 160, discount 'USE CODE: 30OFF' 30%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "propel-100k",
@@ -427,11 +427,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Propel 100k (premium), price 154, was 220, discount 'USE CODE: 30OFF' 30%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "propel-150k-static",
@@ -452,11 +452,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Propel 150k (premium), price 119, was 170, discount 'USE CODE: 30OFF' 30%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "propel-200k-static",
@@ -477,11 +477,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Propel 200k (premium), price 189, was 270, discount 'USE CODE: 30OFF' 30%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "propel-300k-static",
@@ -502,11 +502,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Propel 300k (premium), price 224, was 320, discount 'USE CODE: 30OFF' 30%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "orbit-50k",
@@ -524,11 +524,11 @@
         "activation_fee_usd": "0",
         "eval_cost_usd": "199"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Orbit 50k (orbit), price 199, was -, discount '' 0%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "orbit-100k",
@@ -546,11 +546,11 @@
         "activation_fee_usd": "0",
         "eval_cost_usd": "299"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Orbit 100k (orbit), price 299, was -, discount '' 0%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "orbit-150k",
@@ -568,11 +568,11 @@
         "activation_fee_usd": "0",
         "eval_cost_usd": "419"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Orbit 150k (orbit), price 419, was -, discount '' 0%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "orbit-200k-static",
@@ -590,11 +590,11 @@
         "activation_fee_usd": "0",
         "eval_cost_usd": "419"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Orbit 200k (orbit), price 419, was -, discount '' 0%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "instant-direct-3-5k",
@@ -612,11 +612,11 @@
         "activation_fee_usd": "0",
         "eval_cost_usd": "749"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Instant Funding 3.5k (instant), price 749, was -, discount '' 0%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "instant-sim-50k",
@@ -634,11 +634,11 @@
         "activation_fee_usd": "0",
         "eval_cost_usd": "599"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blusky.pro/",
       "evidence": "BluSky Instant Funding 50k (instant), price 599, was -, discount '' 0%, at launch 0",
-      "sha256": "cda54d645862a4491b2e82122629d1a27fd0d338f5678e575fb7fbeddbdeb652"
+      "sha256": "59cfcacecbe3fd60785fb54eee721521c9abbeb60e12eae79dc76cedcf586b93"
     },
     {
       "key": "alpha-zero-25k",
@@ -657,11 +657,11 @@
         "discount_pct": "40",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 25K Zero Eval, regular 89, code ALPHA40 40%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-zero-50k",
@@ -680,11 +680,11 @@
         "discount_pct": "40",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 50K Zero Eval, regular 169, code ALPHA40 40%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-zero-100k",
@@ -703,11 +703,11 @@
         "discount_pct": "40",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 100K Zero Eval, regular 279, code ALPHA40 40%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-standard-50k",
@@ -726,11 +726,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 50K Standard Eval, regular 129, code ALPHA50 50%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-standard-100k",
@@ -749,11 +749,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 100K Standard Eval, regular 239, code ALPHA50 50%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-standard-150k",
@@ -772,11 +772,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 150K Standard Eval, regular 349, code ALPHA50 50%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-advanced-50k",
@@ -795,11 +795,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 50K Advanced Eval, regular 209, code ALPHA50 50%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-advanced-100k",
@@ -818,11 +818,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 100K Advanced Eval, regular 349, code ALPHA50 50%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-advanced-150k",
@@ -841,11 +841,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 150K Advanced Eval, regular 489, code ALPHA50 50%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-direct-25k",
@@ -864,11 +864,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 25K Direct Qualified, regular 349, code ALPHA50 50%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-direct-50k",
@@ -887,11 +887,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 50K Direct Qualified, regular 519, code ALPHA50 50%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-direct-100k",
@@ -910,11 +910,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 100K Direct Qualified, regular 689, code ALPHA50 50%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "alpha-direct-150k",
@@ -933,11 +933,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://alpha-futures.com/",
       "evidence": "Alpha Futures 150K Direct Qualified, regular 859, code ALPHA50 50%",
-      "sha256": "39e5397c2191217d6466cede8ae548f7d071390ea72e8ae78569934fda226359"
+      "sha256": "5ae7d20b234cb7c8dcae605e91c18680b2ddde2cf6bbb5c7793f89ecd8c2fd54"
     },
     {
       "key": "purdia-instant-25k",
@@ -956,8 +956,8 @@
         "discount_pct": "60",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://purdia.com/",
       "evidence": "Purdia 25k-instant-funded, regular 249, code TRY60 60% (catalogue multiplier .4)",
       "sha256": "300c829bbfa1767dbb2584270b30047899d9f91358bcb0ab5762ca5f6ce50f5a"
@@ -979,8 +979,8 @@
         "discount_pct": "60",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://purdia.com/",
       "evidence": "Purdia 50k-instant-funded, regular 449, code TRY60 60% (catalogue multiplier .4)",
       "sha256": "300c829bbfa1767dbb2584270b30047899d9f91358bcb0ab5762ca5f6ce50f5a"
@@ -1002,8 +1002,8 @@
         "discount_pct": "60",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://purdia.com/",
       "evidence": "Purdia 100k-instant-funded, regular 699, code TRY60 60% (catalogue multiplier .4)",
       "sha256": "300c829bbfa1767dbb2584270b30047899d9f91358bcb0ab5762ca5f6ce50f5a"
@@ -1025,8 +1025,8 @@
         "discount_pct": "60",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://purdia.com/",
       "evidence": "Purdia 100k-pilot-pioneer, regular 849, code TRY60 60% (catalogue multiplier .4)",
       "sha256": "300c829bbfa1767dbb2584270b30047899d9f91358bcb0ab5762ca5f6ce50f5a"
@@ -1048,8 +1048,8 @@
         "discount_pct": "60",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://purdia.com/",
       "evidence": "Purdia 50k-eod-evaluation, regular 179, code TRY60 60% (catalogue multiplier .4)",
       "sha256": "300c829bbfa1767dbb2584270b30047899d9f91358bcb0ab5762ca5f6ce50f5a"
@@ -1071,8 +1071,8 @@
         "discount_pct": "60",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://purdia.com/",
       "evidence": "Purdia 100k-eod-evaluation, regular 299, code TRY60 60% (catalogue multiplier .4)",
       "sha256": "300c829bbfa1767dbb2584270b30047899d9f91358bcb0ab5762ca5f6ce50f5a"
@@ -1094,11 +1094,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://takeprofittrader.com/",
       "evidence": "Take Profit Trader $ 25k (id 2), price 150, discountPrice None; banner: Early Black Friday Sale: Get 50% Off For Life + Never Pay An Activation Fee! CLICK THIS LINK FOR DETAILS . Use Code: NOFEE50",
-      "sha256": "b88c922e26237fd30f0637d1f7a9739394fc5b6d2ac245bf405029a7c9c51de7"
+      "sha256": "8cdd1593d56fade5a410430fe3ac0df4c8e545eb37c09cdddcfaea3d0f1c38c5"
     },
     {
       "key": "tpt-50k",
@@ -1117,11 +1117,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://takeprofittrader.com/",
       "evidence": "Take Profit Trader $ 50k (id 3), price 170, discountPrice None; banner: Early Black Friday Sale: Get 50% Off For Life + Never Pay An Activation Fee! CLICK THIS LINK FOR DETAILS . Use Code: NOFEE50",
-      "sha256": "b88c922e26237fd30f0637d1f7a9739394fc5b6d2ac245bf405029a7c9c51de7"
+      "sha256": "8cdd1593d56fade5a410430fe3ac0df4c8e545eb37c09cdddcfaea3d0f1c38c5"
     },
     {
       "key": "tpt-75k",
@@ -1140,11 +1140,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://takeprofittrader.com/",
       "evidence": "Take Profit Trader $ 75k (id 4), price 245, discountPrice None; banner: Early Black Friday Sale: Get 50% Off For Life + Never Pay An Activation Fee! CLICK THIS LINK FOR DETAILS . Use Code: NOFEE50",
-      "sha256": "b88c922e26237fd30f0637d1f7a9739394fc5b6d2ac245bf405029a7c9c51de7"
+      "sha256": "8cdd1593d56fade5a410430fe3ac0df4c8e545eb37c09cdddcfaea3d0f1c38c5"
     },
     {
       "key": "tpt-100k",
@@ -1163,11 +1163,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://takeprofittrader.com/",
       "evidence": "Take Profit Trader $ 100k (id 5), price 330, discountPrice None; banner: Early Black Friday Sale: Get 50% Off For Life + Never Pay An Activation Fee! CLICK THIS LINK FOR DETAILS . Use Code: NOFEE50",
-      "sha256": "b88c922e26237fd30f0637d1f7a9739394fc5b6d2ac245bf405029a7c9c51de7"
+      "sha256": "8cdd1593d56fade5a410430fe3ac0df4c8e545eb37c09cdddcfaea3d0f1c38c5"
     },
     {
       "key": "tpt-150k",
@@ -1186,11 +1186,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://takeprofittrader.com/",
       "evidence": "Take Profit Trader $ 150k (id 6), price 360, discountPrice None; banner: Early Black Friday Sale: Get 50% Off For Life + Never Pay An Activation Fee! CLICK THIS LINK FOR DETAILS . Use Code: NOFEE50",
-      "sha256": "b88c922e26237fd30f0637d1f7a9739394fc5b6d2ac245bf405029a7c9c51de7"
+      "sha256": "8cdd1593d56fade5a410430fe3ac0df4c8e545eb37c09cdddcfaea3d0f1c38c5"
     },
     {
       "key": "bulenox-qualification-opt1-25k",
@@ -1206,8 +1206,8 @@
       "values": {
         "eval_cost_usd": "145"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Qualification 25K (Option 1), regular 145; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1226,8 +1226,8 @@
       "values": {
         "eval_cost_usd": "145"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Qualification 25K (Option 2), regular 145; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1246,8 +1246,8 @@
       "values": {
         "eval_cost_usd": "175"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Qualification 50K (Option 1), regular 175; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1266,8 +1266,8 @@
       "values": {
         "eval_cost_usd": "175"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Qualification 50K (Option 2), regular 175; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1286,8 +1286,8 @@
       "values": {
         "eval_cost_usd": "215"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Qualification 100K (Option 1), regular 215; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1306,8 +1306,8 @@
       "values": {
         "eval_cost_usd": "215"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Qualification 100K (Option 2), regular 215; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1326,8 +1326,8 @@
       "values": {
         "eval_cost_usd": "325"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Qualification 150K (Option 1), regular 325; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1346,8 +1346,8 @@
       "values": {
         "eval_cost_usd": "325"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Qualification 150K (Option 2), regular 325; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1366,8 +1366,8 @@
       "values": {
         "eval_cost_usd": "338"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Fast Track 25K (Option 1), regular 338; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1386,8 +1386,8 @@
       "values": {
         "eval_cost_usd": "338"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Fast Track 25K (Option 2), regular 338; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1406,8 +1406,8 @@
       "values": {
         "eval_cost_usd": "488"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Fast Track 50K (Option 1), regular 488; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1426,8 +1426,8 @@
       "values": {
         "eval_cost_usd": "488"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Fast Track 50K (Option 2), regular 488; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1446,8 +1446,8 @@
       "values": {
         "eval_cost_usd": "648"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Fast Track 100K (Option 1), regular 648; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1466,8 +1466,8 @@
       "values": {
         "eval_cost_usd": "648"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Fast Track 100K (Option 2), regular 648; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1486,8 +1486,8 @@
       "values": {
         "eval_cost_usd": "788"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Fast Track 150K (Option 1), regular 788; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1506,8 +1506,8 @@
       "values": {
         "eval_cost_usd": "788"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Fast Track 150K (Option 2), regular 788; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1526,8 +1526,8 @@
       "values": {
         "eval_cost_usd": "94"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Momentum 25K (Option 1), regular 94; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1546,8 +1546,8 @@
       "values": {
         "eval_cost_usd": "94"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Momentum 25K (Option 2), regular 94; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1566,8 +1566,8 @@
       "values": {
         "eval_cost_usd": "143"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Momentum 50K (Option 1), regular 143; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1586,8 +1586,8 @@
       "values": {
         "eval_cost_usd": "143"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Momentum 50K (Option 2), regular 143; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1606,8 +1606,8 @@
       "values": {
         "eval_cost_usd": "248"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Momentum 100K (Option 1), regular 248; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1626,8 +1626,8 @@
       "values": {
         "eval_cost_usd": "248"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Momentum 100K (Option 2), regular 248; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1646,8 +1646,8 @@
       "values": {
         "eval_cost_usd": "358"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Momentum 150K (Option 1), regular 358; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1666,8 +1666,8 @@
       "values": {
         "eval_cost_usd": "358"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://bulenox.com/",
       "evidence": "Bulenox Momentum 150K (Option 2), regular 358; codes are managed manually",
       "sha256": "fb162f3743ce26233ba2c2ee748eec8eca774b04710e8e73645038770a8979d5"
@@ -1689,8 +1689,8 @@
         "discount_pct": "55",
         "discounted_eval_usd": "80"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://toponefutures.com/",
       "evidence": "Top One Elite 25K, regular 178, sale 80, code BLACKFRIDAY 55%",
       "sha256": "af5103d772dc00e4686146de7dad6bdc00ab623efc8a75fc7a38389c05cd9815"
@@ -1712,8 +1712,8 @@
         "discount_pct": "55",
         "discounted_eval_usd": "98"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://toponefutures.com/",
       "evidence": "Top One Elite 50K, regular 218, sale 98, code BLACKFRIDAY 55%",
       "sha256": "af5103d772dc00e4686146de7dad6bdc00ab623efc8a75fc7a38389c05cd9815"
@@ -1735,8 +1735,8 @@
         "discount_pct": "55",
         "discounted_eval_usd": "179"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://toponefutures.com/",
       "evidence": "Top One Elite 100K, regular 398, sale 179, code BLACKFRIDAY 55%",
       "sha256": "af5103d772dc00e4686146de7dad6bdc00ab623efc8a75fc7a38389c05cd9815"
@@ -1758,8 +1758,8 @@
         "discount_pct": "55",
         "discounted_eval_usd": "247"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://toponefutures.com/",
       "evidence": "Top One Elite 150K, regular 549, sale 247, code BLACKFRIDAY 55%",
       "sha256": "af5103d772dc00e4686146de7dad6bdc00ab623efc8a75fc7a38389c05cd9815"
@@ -1781,8 +1781,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "293"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://toponefutures.com/",
       "evidence": "Top One Instant Sim Funded 25K, regular 419, sale 293, code BLACKFRIDAY 30%",
       "sha256": "af5103d772dc00e4686146de7dad6bdc00ab623efc8a75fc7a38389c05cd9815"
@@ -1804,8 +1804,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "475"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://toponefutures.com/",
       "evidence": "Top One Instant Sim Funded 50K, regular 679, sale 475, code BLACKFRIDAY 30%",
       "sha256": "af5103d772dc00e4686146de7dad6bdc00ab623efc8a75fc7a38389c05cd9815"
@@ -1827,8 +1827,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "575"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://toponefutures.com/",
       "evidence": "Top One Instant Sim Funded 100K, regular 821, sale 575, code BLACKFRIDAY 30%",
       "sha256": "af5103d772dc00e4686146de7dad6bdc00ab623efc8a75fc7a38389c05cd9815"
@@ -1850,8 +1850,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "657"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://toponefutures.com/",
       "evidence": "Top One Instant Sim Funded 150K, regular 939, sale 657, code BLACKFRIDAY 30%",
       "sha256": "af5103d772dc00e4686146de7dad6bdc00ab623efc8a75fc7a38389c05cd9815"
@@ -1873,8 +1873,8 @@
         "discount_pct": "60",
         "discounted_eval_usd": "87"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://toponefutures.com/",
       "evidence": "Top One Ignite Instant Funding 25K, regular 218, sale 87, code BLACKFRIDAY 60%",
       "sha256": "af5103d772dc00e4686146de7dad6bdc00ab623efc8a75fc7a38389c05cd9815"
@@ -1896,8 +1896,8 @@
         "discount_pct": "60",
         "discounted_eval_usd": "159"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://toponefutures.com/",
       "evidence": "Top One Ignite Instant Funding 50K, regular 398, sale 159, code BLACKFRIDAY 60%",
       "sha256": "af5103d772dc00e4686146de7dad6bdc00ab623efc8a75fc7a38389c05cd9815"
@@ -1919,8 +1919,8 @@
         "discount_pct": "60",
         "discounted_eval_usd": "225"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://toponefutures.com/",
       "evidence": "Top One Ignite Instant Funding 100K, regular 563, sale 225, code BLACKFRIDAY 60%",
       "sha256": "af5103d772dc00e4686146de7dad6bdc00ab623efc8a75fc7a38389c05cd9815"
@@ -1942,8 +1942,8 @@
         "discount_pct": "55",
         "discounted_eval_usd": "45"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://tradeday.com/",
       "evidence": "TradeDay Quick Pay Intraday 25k, regular 100, sale 45, code TDNEW 55%, platforms agree",
       "sha256": "657eece2dba8e347778c87aaa0c669aa2a8c5d230a9b214a7d7db46e8fee57a6"
@@ -1965,8 +1965,8 @@
         "discount_pct": "55",
         "discounted_eval_usd": "59"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://tradeday.com/",
       "evidence": "TradeDay Quick Pay Intraday 50k, regular 131, sale 59, code TDNEW 55%, platforms agree",
       "sha256": "657eece2dba8e347778c87aaa0c669aa2a8c5d230a9b214a7d7db46e8fee57a6"
@@ -1988,8 +1988,8 @@
         "discount_pct": "55",
         "discounted_eval_usd": "108"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://tradeday.com/",
       "evidence": "TradeDay Quick Pay Intraday 100k, regular 240, sale 108, code TDNEW 55%, platforms agree",
       "sha256": "657eece2dba8e347778c87aaa0c669aa2a8c5d230a9b214a7d7db46e8fee57a6"
@@ -2011,8 +2011,8 @@
         "discount_pct": "55",
         "discounted_eval_usd": "162"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://tradeday.com/",
       "evidence": "TradeDay Quick Pay Intraday 150k, regular 360, sale 162, code TDNEW 55%, platforms agree",
       "sha256": "657eece2dba8e347778c87aaa0c669aa2a8c5d230a9b214a7d7db46e8fee57a6"
@@ -2034,8 +2034,8 @@
         "discount_pct": "55",
         "discounted_eval_usd": "79"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://tradeday.com/",
       "evidence": "TradeDay Quick Pay End of Day 50k, regular 175, sale 79, code TDNEW 55%, platforms agree",
       "sha256": "657eece2dba8e347778c87aaa0c669aa2a8c5d230a9b214a7d7db46e8fee57a6"
@@ -2057,8 +2057,8 @@
         "discount_pct": "55",
         "discounted_eval_usd": "129"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://tradeday.com/",
       "evidence": "TradeDay Quick Pay End of Day 100k, regular 285, sale 129, code TDNEW 55%, platforms agree",
       "sha256": "657eece2dba8e347778c87aaa0c669aa2a8c5d230a9b214a7d7db46e8fee57a6"
@@ -2080,8 +2080,8 @@
         "discount_pct": "55",
         "discounted_eval_usd": "180"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://tradeday.com/",
       "evidence": "TradeDay Quick Pay End of Day 150k, regular 400, sale 180, code TDNEW 55%, platforms agree",
       "sha256": "657eece2dba8e347778c87aaa0c669aa2a8c5d230a9b214a7d7db46e8fee57a6"
@@ -2103,8 +2103,8 @@
         "discount_pct": "50",
         "discounted_eval_usd": "65"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://tradeday.com/",
       "evidence": "TradeDay Fast Pass End of Day 25k, regular 130, sale 65, code TDNEW 50%, platforms agree",
       "sha256": "657eece2dba8e347778c87aaa0c669aa2a8c5d230a9b214a7d7db46e8fee57a6"
@@ -2126,8 +2126,8 @@
         "discount_pct": "50",
         "discounted_eval_usd": "95"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://tradeday.com/",
       "evidence": "TradeDay Fast Pass End of Day 50k, regular 189, sale 95, code TDNEW 50%, platforms agree",
       "sha256": "657eece2dba8e347778c87aaa0c669aa2a8c5d230a9b214a7d7db46e8fee57a6"
@@ -2149,8 +2149,8 @@
         "discount_pct": "50",
         "discounted_eval_usd": "175"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://tradeday.com/",
       "evidence": "TradeDay Fast Pass End of Day 100k, regular 350, sale 175, code TDNEW 50%, platforms agree",
       "sha256": "657eece2dba8e347778c87aaa0c669aa2a8c5d230a9b214a7d7db46e8fee57a6"
@@ -2172,8 +2172,8 @@
         "discount_pct": "50",
         "discounted_eval_usd": "265"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://tradeday.com/",
       "evidence": "TradeDay Fast Pass End of Day 150k, regular 530, sale 265, code TDNEW 50%, platforms agree",
       "sha256": "657eece2dba8e347778c87aaa0c669aa2a8c5d230a9b214a7d7db46e8fee57a6"
@@ -2197,8 +2197,8 @@
         "discount_pct": "40",
         "discounted_eval_usd": "59"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 25000, all visible brokers agree",
@@ -2223,8 +2223,8 @@
         "discount_pct": "40",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 50000, all visible brokers agree",
@@ -2249,8 +2249,8 @@
         "discount_pct": "40",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 100000, all visible brokers agree",
@@ -2275,8 +2275,8 @@
         "discount_pct": "40",
         "discounted_eval_usd": "221"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Growth, 150000, all visible brokers agree",
@@ -2301,8 +2301,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "76"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 25000, all visible brokers agree",
@@ -2327,8 +2327,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "116"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 50000, all visible brokers agree",
@@ -2353,8 +2353,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "186"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 100000, all visible brokers agree",
@@ -2379,8 +2379,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "258"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Select, 150000, all visible brokers agree",
@@ -2403,8 +2403,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "242"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 25000, all visible brokers agree",
@@ -2427,8 +2427,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "344"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 50000, all visible brokers agree",
@@ -2451,8 +2451,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 100000, all visible brokers agree",
@@ -2475,8 +2475,8 @@
         "discount_pct": "30",
         "discounted_eval_usd": "557"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "promotionExpiresAt": "2026-11-13T23:59:00-05:00",
       "source": "https://tradeify.co/",
       "evidence": "Tradeify Lightning, 150000, all visible brokers agree",
@@ -2499,11 +2499,11 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blueguardian.com/",
       "evidence": "Blue Guardian futures Reserve 25K, regular 72, sale 54, code BG25, all copies and platforms agree",
-      "sha256": "d8381196dccfa1566eca403357a3cb8e92eb5e656bcee7e53e0a05d80f5877a0"
+      "sha256": "5232491d4e1f405ca27d646dbd9285682ec0cfaaa07cf400a09cea1e51d6f0c2"
     },
     {
       "key": "blue-guardian-reserve-100k",
@@ -2522,11 +2522,11 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blueguardian.com/",
       "evidence": "Blue Guardian futures Reserve 100K, regular 148, sale 111, code BG25, all copies and platforms agree",
-      "sha256": "d8381196dccfa1566eca403357a3cb8e92eb5e656bcee7e53e0a05d80f5877a0"
+      "sha256": "5232491d4e1f405ca27d646dbd9285682ec0cfaaa07cf400a09cea1e51d6f0c2"
     },
     {
       "key": "blue-guardian-reserve-150k",
@@ -2545,11 +2545,11 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blueguardian.com/",
       "evidence": "Blue Guardian futures Reserve 150K, regular 296, sale 222, code BG25, all copies and platforms agree",
-      "sha256": "d8381196dccfa1566eca403357a3cb8e92eb5e656bcee7e53e0a05d80f5877a0"
+      "sha256": "5232491d4e1f405ca27d646dbd9285682ec0cfaaa07cf400a09cea1e51d6f0c2"
     },
     {
       "key": "blue-guardian-express-25k",
@@ -2568,11 +2568,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": "60"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blueguardian.com/",
       "evidence": "Blue Guardian futures Express 25K, regular 86, sale 60, code NOV30, all copies and platforms agree",
-      "sha256": "d8381196dccfa1566eca403357a3cb8e92eb5e656bcee7e53e0a05d80f5877a0"
+      "sha256": "5232491d4e1f405ca27d646dbd9285682ec0cfaaa07cf400a09cea1e51d6f0c2"
     },
     {
       "key": "blue-guardian-express-50k",
@@ -2591,11 +2591,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blueguardian.com/",
       "evidence": "Blue Guardian futures Express 50K, regular 130, sale 91, code NOV30, all copies and platforms agree",
-      "sha256": "d8381196dccfa1566eca403357a3cb8e92eb5e656bcee7e53e0a05d80f5877a0"
+      "sha256": "5232491d4e1f405ca27d646dbd9285682ec0cfaaa07cf400a09cea1e51d6f0c2"
     },
     {
       "key": "blue-guardian-express-100k",
@@ -2614,11 +2614,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": "144"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blueguardian.com/",
       "evidence": "Blue Guardian futures Express 100K, regular 205, sale 144, code NOV30, all copies and platforms agree",
-      "sha256": "d8381196dccfa1566eca403357a3cb8e92eb5e656bcee7e53e0a05d80f5877a0"
+      "sha256": "5232491d4e1f405ca27d646dbd9285682ec0cfaaa07cf400a09cea1e51d6f0c2"
     },
     {
       "key": "blue-guardian-express-150k",
@@ -2637,11 +2637,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blueguardian.com/",
       "evidence": "Blue Guardian futures Express 150K, regular 320, sale 224, code NOV30, all copies and platforms agree",
-      "sha256": "d8381196dccfa1566eca403357a3cb8e92eb5e656bcee7e53e0a05d80f5877a0"
+      "sha256": "5232491d4e1f405ca27d646dbd9285682ec0cfaaa07cf400a09cea1e51d6f0c2"
     },
     {
       "key": "blue-guardian-direct-25k",
@@ -2660,11 +2660,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blueguardian.com/",
       "evidence": "Blue Guardian futures Direct 25K, regular 350, sale 245, code NOV30, all copies and platforms agree",
-      "sha256": "d8381196dccfa1566eca403357a3cb8e92eb5e656bcee7e53e0a05d80f5877a0"
+      "sha256": "5232491d4e1f405ca27d646dbd9285682ec0cfaaa07cf400a09cea1e51d6f0c2"
     },
     {
       "key": "blue-guardian-direct-50k",
@@ -2683,11 +2683,11 @@
         "discount_pct": "30",
         "discounted_eval_usd": "316"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://blueguardian.com/",
       "evidence": "Blue Guardian futures Direct 50K, regular 452, sale 316, code NOV30, all copies and platforms agree",
-      "sha256": "d8381196dccfa1566eca403357a3cb8e92eb5e656bcee7e53e0a05d80f5877a0"
+      "sha256": "5232491d4e1f405ca27d646dbd9285682ec0cfaaa07cf400a09cea1e51d6f0c2"
     },
     {
       "key": "daytraders-trail-25k",
@@ -2705,8 +2705,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 25K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2727,8 +2727,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 50K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2749,8 +2749,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 150K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2771,8 +2771,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Trailing 300K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2793,8 +2793,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 25K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2815,8 +2815,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 50K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2837,8 +2837,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 150K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2859,8 +2859,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders EOD 300K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2881,8 +2881,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 25K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2903,8 +2903,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 50K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2925,8 +2925,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 100K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2947,8 +2947,8 @@
         "activation_fee_usd": "5",
         "min_days (Eval)": "2"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://daytraders.com/go/madprops?i=1",
       "evidence": "DayTraders Static 150K, single-account price",
       "sha256": "1d266a628d405223f267cb2de4202d6adc3d8116079529c43bd290d26ab7a70b"
@@ -2970,8 +2970,8 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://api.thelegendstrading.com/shop/plans?purchasableOnly=true&broker=Tradovate",
       "evidence": "Legends Apprentice 50K (monthly), regular 59, sale 38.35, code LTG 35%",
       "sha256": "0fec0cc2e0e383061f9d9a12469340a6d2421d52d729e32b1cda1619bfbb0e15"
@@ -2993,8 +2993,8 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://api.thelegendstrading.com/shop/plans?purchasableOnly=true&broker=Tradovate",
       "evidence": "Legends Apprentice 100K (monthly), regular 107, sale 69.55, code LTG 35%",
       "sha256": "0fec0cc2e0e383061f9d9a12469340a6d2421d52d729e32b1cda1619bfbb0e15"
@@ -3016,8 +3016,8 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://api.thelegendstrading.com/shop/plans?purchasableOnly=true&broker=Tradovate",
       "evidence": "Legends Apprentice 150K (monthly), regular 138, sale 89.7, code LTG 35%",
       "sha256": "0fec0cc2e0e383061f9d9a12469340a6d2421d52d729e32b1cda1619bfbb0e15"
@@ -3039,8 +3039,8 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://api.thelegendstrading.com/shop/plans?purchasableOnly=true&broker=Tradovate",
       "evidence": "Legends Elite 25K, regular 119, sale 77.35, code LTG 35%",
       "sha256": "0fec0cc2e0e383061f9d9a12469340a6d2421d52d729e32b1cda1619bfbb0e15"
@@ -3062,8 +3062,8 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://api.thelegendstrading.com/shop/plans?purchasableOnly=true&broker=Tradovate",
       "evidence": "Legends Elite 50K, regular 151, sale 98.15, code LTG 35%",
       "sha256": "0fec0cc2e0e383061f9d9a12469340a6d2421d52d729e32b1cda1619bfbb0e15"
@@ -3085,8 +3085,8 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://api.thelegendstrading.com/shop/plans?purchasableOnly=true&broker=Tradovate",
       "evidence": "Legends Elite 100K, regular 227, sale 147.55, code LTG 35%",
       "sha256": "0fec0cc2e0e383061f9d9a12469340a6d2421d52d729e32b1cda1619bfbb0e15"
@@ -3108,8 +3108,8 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://api.thelegendstrading.com/shop/plans?purchasableOnly=true&broker=Tradovate",
       "evidence": "Legends Elite 150K, regular 347, sale 225.55, code LTG 35%",
       "sha256": "0fec0cc2e0e383061f9d9a12469340a6d2421d52d729e32b1cda1619bfbb0e15"
@@ -3131,11 +3131,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "52.5"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Builder NoneK, price 105, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-builder-50k",
@@ -3154,11 +3154,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "76.5"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Builder NoneK, price 153, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-builder-100k",
@@ -3177,11 +3177,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "141"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Builder NoneK, price 282, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-builder-150k",
@@ -3200,11 +3200,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "199"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Builder NoneK, price 398, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-rapid-25k",
@@ -3223,11 +3223,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "72.5"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Rapid NoneK, price 145, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-rapid-50k",
@@ -3246,11 +3246,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "104.5"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Rapid NoneK, price 209, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-rapid-100k",
@@ -3269,11 +3269,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "178"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Rapid NoneK, price 356, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-rapid-150k",
@@ -3292,11 +3292,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "231.5"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Rapid NoneK, price 463, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-rapid-eod-25k",
@@ -3315,11 +3315,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "72.5"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Rapid EOD NoneK, price 145, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-rapid-eod-50k",
@@ -3338,11 +3338,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "112.5"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Rapid EOD NoneK, price 225, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-pro-50k",
@@ -3361,11 +3361,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "132.5"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Pro NoneK, price 265, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-pro-100k",
@@ -3384,11 +3384,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "200.5"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Pro NoneK, price 401, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "mffu-pro-150k",
@@ -3407,11 +3407,11 @@
         "discount_pct": "50",
         "discounted_eval_usd": "278.5"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://myfundedfutures.com/",
       "evidence": "MFFU Pro NoneK, price 557, coupon fiftyoff 50%",
-      "sha256": "0aa80761cc0880add8c6cb0c15442a9eab5bf760114c3cd88f78051edd004c05"
+      "sha256": "64b6d89168700bf40d557454e27d5eb40032da4884f21e0280d5d24348c9905c"
     },
     {
       "key": "phidias-express-to-live-25k",
@@ -3429,11 +3429,11 @@
         "discount_pct": "75",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://phidiaspropfirm.com/",
       "evidence": "Phidias e2l_25k one-time, regular 277, code WINTERARC80 75% (OTP)",
-      "sha256": "68300ba4cfd0d2b47c466f5b60a41f5312ea2b8a53a4c2ce4701c7ae027de622"
+      "sha256": "35ded9ff8f9a36a599df7894cafa41c15cdaac26a405f3bd1f549640a0220ad3"
     },
     {
       "key": "phidias-express-to-live-50k",
@@ -3451,11 +3451,11 @@
         "discount_pct": "80",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://phidiaspropfirm.com/",
       "evidence": "Phidias e2l_50k one-time, regular 723, code WINTERARC80 80% (OTP)",
-      "sha256": "68300ba4cfd0d2b47c466f5b60a41f5312ea2b8a53a4c2ce4701c7ae027de622"
+      "sha256": "35ded9ff8f9a36a599df7894cafa41c15cdaac26a405f3bd1f549640a0220ad3"
     },
     {
       "key": "phidias-express-to-live-100k",
@@ -3473,11 +3473,11 @@
         "discount_pct": "80",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://phidiaspropfirm.com/",
       "evidence": "Phidias e2l_100k one-time, regular 900, code WINTERARC80 80% (OTP)",
-      "sha256": "68300ba4cfd0d2b47c466f5b60a41f5312ea2b8a53a4c2ce4701c7ae027de622"
+      "sha256": "35ded9ff8f9a36a599df7894cafa41c15cdaac26a405f3bd1f549640a0220ad3"
     },
     {
       "key": "phidias-express-to-live-150k",
@@ -3495,11 +3495,11 @@
         "discount_pct": "80",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://phidiaspropfirm.com/",
       "evidence": "Phidias e2l_150k one-time, regular 1125, code WINTERARC80 80% (OTP)",
-      "sha256": "68300ba4cfd0d2b47c466f5b60a41f5312ea2b8a53a4c2ce4701c7ae027de622"
+      "sha256": "35ded9ff8f9a36a599df7894cafa41c15cdaac26a405f3bd1f549640a0220ad3"
     },
     {
       "key": "phidias-fundamental-50k",
@@ -3517,11 +3517,11 @@
         "discount_pct": "80",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://phidiaspropfirm.com/",
       "evidence": "Phidias fundamental_50k one-time, regular 580, code WINTERARC80 80% (OTP)",
-      "sha256": "68300ba4cfd0d2b47c466f5b60a41f5312ea2b8a53a4c2ce4701c7ae027de622"
+      "sha256": "35ded9ff8f9a36a599df7894cafa41c15cdaac26a405f3bd1f549640a0220ad3"
     },
     {
       "key": "phidias-fundamental-100k",
@@ -3539,11 +3539,11 @@
         "discount_pct": "80",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://phidiaspropfirm.com/",
       "evidence": "Phidias fundamental_100k one-time, regular 723, code WINTERARC80 80% (OTP)",
-      "sha256": "68300ba4cfd0d2b47c466f5b60a41f5312ea2b8a53a4c2ce4701c7ae027de622"
+      "sha256": "35ded9ff8f9a36a599df7894cafa41c15cdaac26a405f3bd1f549640a0220ad3"
     },
     {
       "key": "phidias-fundamental-150k",
@@ -3561,11 +3561,11 @@
         "discount_pct": "80",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://phidiaspropfirm.com/",
       "evidence": "Phidias fundamental_150k one-time, regular 863, code WINTERARC80 80% (OTP)",
-      "sha256": "68300ba4cfd0d2b47c466f5b60a41f5312ea2b8a53a4c2ce4701c7ae027de622"
+      "sha256": "35ded9ff8f9a36a599df7894cafa41c15cdaac26a405f3bd1f549640a0220ad3"
     },
     {
       "key": "phidias-premium-50k",
@@ -3583,11 +3583,11 @@
         "discount_pct": "80",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://phidiaspropfirm.com/",
       "evidence": "Phidias premium_50k one-time, regular 723, code WINTERARC80 80% (OTP)",
-      "sha256": "68300ba4cfd0d2b47c466f5b60a41f5312ea2b8a53a4c2ce4701c7ae027de622"
+      "sha256": "35ded9ff8f9a36a599df7894cafa41c15cdaac26a405f3bd1f549640a0220ad3"
     },
     {
       "key": "phidias-premium-100k",
@@ -3605,11 +3605,11 @@
         "discount_pct": "80",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://phidiaspropfirm.com/",
       "evidence": "Phidias premium_100k one-time, regular 900, code WINTERARC80 80% (OTP)",
-      "sha256": "68300ba4cfd0d2b47c466f5b60a41f5312ea2b8a53a4c2ce4701c7ae027de622"
+      "sha256": "35ded9ff8f9a36a599df7894cafa41c15cdaac26a405f3bd1f549640a0220ad3"
     },
     {
       "key": "phidias-premium-150k",
@@ -3627,11 +3627,11 @@
         "discount_pct": "80",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://phidiaspropfirm.com/",
       "evidence": "Phidias premium_150k one-time, regular 1123, code WINTERARC80 80% (OTP)",
-      "sha256": "68300ba4cfd0d2b47c466f5b60a41f5312ea2b8a53a4c2ce4701c7ae027de622"
+      "sha256": "35ded9ff8f9a36a599df7894cafa41c15cdaac26a405f3bd1f549640a0220ad3"
     },
     {
       "key": "aqua-futures-standard-50k",
@@ -3650,8 +3650,8 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://aquafutures.io/",
       "evidence": "Aqua Futures One Step standard 50k, list 160 (shown 160) on deepcharts/tradovate; 25% off with banner code HONOR",
       "sha256": "6b22c8bde2e821f719280579bbb5f19b48ef5b2150cd467d026294f749adfe0d"
@@ -3673,8 +3673,8 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://aquafutures.io/",
       "evidence": "Aqua Futures One Step standard 100k, list 300 (shown 300) on deepcharts/tradovate; 25% off with banner code HONOR",
       "sha256": "6b22c8bde2e821f719280579bbb5f19b48ef5b2150cd467d026294f749adfe0d"
@@ -3696,8 +3696,8 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://aquafutures.io/",
       "evidence": "Aqua Futures One Step flex 50k, list 131 (shown 131) on deepcharts/tradovate; 25% off with banner code HONOR",
       "sha256": "6b22c8bde2e821f719280579bbb5f19b48ef5b2150cd467d026294f749adfe0d"
@@ -3719,8 +3719,8 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://aquafutures.io/",
       "evidence": "Aqua Futures One Step flex 100k, list 191 (shown 191) on deepcharts/tradovate; 25% off with banner code HONOR",
       "sha256": "6b22c8bde2e821f719280579bbb5f19b48ef5b2150cd467d026294f749adfe0d"
@@ -3742,8 +3742,8 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://aquafutures.io/",
       "evidence": "Aqua Futures Daily standard 50k, list 113 (shown 113) on deepcharts/tradovate; 25% off with banner code HONOR",
       "sha256": "6b22c8bde2e821f719280579bbb5f19b48ef5b2150cd467d026294f749adfe0d"
@@ -3765,8 +3765,8 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://aquafutures.io/",
       "evidence": "Aqua Futures Daily standard 100k, list 173 (shown 173) on deepcharts/tradovate; 25% off with banner code HONOR",
       "sha256": "6b22c8bde2e821f719280579bbb5f19b48ef5b2150cd467d026294f749adfe0d"
@@ -3788,8 +3788,8 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://aquafutures.io/",
       "evidence": "Aqua Futures Daily standard 150k, list 267 (shown 267) on deepcharts/tradovate; 25% off with banner code HONOR",
       "sha256": "6b22c8bde2e821f719280579bbb5f19b48ef5b2150cd467d026294f749adfe0d"
@@ -3811,8 +3811,8 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://aquafutures.io/",
       "evidence": "Aqua Futures Instant standard 50k, list 453 (shown 453) on deepcharts/tradovate; 25% off with banner code HONOR",
       "sha256": "6b22c8bde2e821f719280579bbb5f19b48ef5b2150cd467d026294f749adfe0d"
@@ -3834,8 +3834,8 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://aquafutures.io/",
       "evidence": "Aqua Futures Instant standard 100k, list 600 (shown 600) on deepcharts/tradovate; 25% off with banner code HONOR",
       "sha256": "6b22c8bde2e821f719280579bbb5f19b48ef5b2150cd467d026294f749adfe0d"
@@ -3856,11 +3856,11 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://e8markets.com/e8-markets-discount-code",
       "evidence": "E8 Signature 25K (e8signature_v_fu), regular 120, code E8 25% (first purchase 25%)",
-      "sha256": "99e2b7524607c00883bfbb9941fd828d8ef7f423c80c3de44883d09a88a072e9"
+      "sha256": "504b1f8ee0fc2df9d78fce74da566f488af4f5520877f995ca123e8d6202498d"
     },
     {
       "key": "e8-signature-50k",
@@ -3878,11 +3878,11 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://e8markets.com/e8-markets-discount-code",
       "evidence": "E8 Signature 50K (e8signature_v_fu), regular 170, code E8 25% (first purchase 25%)",
-      "sha256": "99e2b7524607c00883bfbb9941fd828d8ef7f423c80c3de44883d09a88a072e9"
+      "sha256": "504b1f8ee0fc2df9d78fce74da566f488af4f5520877f995ca123e8d6202498d"
     },
     {
       "key": "e8-signature-100k",
@@ -3900,11 +3900,11 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://e8markets.com/e8-markets-discount-code",
       "evidence": "E8 Signature 100K (e8signature_v_fu), regular 280, code E8 25% (first purchase 25%)",
-      "sha256": "99e2b7524607c00883bfbb9941fd828d8ef7f423c80c3de44883d09a88a072e9"
+      "sha256": "504b1f8ee0fc2df9d78fce74da566f488af4f5520877f995ca123e8d6202498d"
     },
     {
       "key": "e8-signature-150k",
@@ -3922,11 +3922,11 @@
         "discount_pct": "25",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://e8markets.com/e8-markets-discount-code",
       "evidence": "E8 Signature 150K (e8signature_v_fu), regular 450, code E8 25% (first purchase 25%)",
-      "sha256": "99e2b7524607c00883bfbb9941fd828d8ef7f423c80c3de44883d09a88a072e9"
+      "sha256": "504b1f8ee0fc2df9d78fce74da566f488af4f5520877f995ca123e8d6202498d"
     },
     {
       "key": "e8-zero-max-50k",
@@ -3944,11 +3944,11 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://e8markets.com/e8-markets-discount-code",
       "evidence": "E8 Zero MAX 50K (e8zero_max_fu), regular 328, code E8 35% (first purchase 35%)",
-      "sha256": "99e2b7524607c00883bfbb9941fd828d8ef7f423c80c3de44883d09a88a072e9"
+      "sha256": "504b1f8ee0fc2df9d78fce74da566f488af4f5520877f995ca123e8d6202498d"
     },
     {
       "key": "e8-zero-max-100k",
@@ -3966,11 +3966,11 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://e8markets.com/e8-markets-discount-code",
       "evidence": "E8 Zero MAX 100K (e8zero_max_fu), regular 588, code E8 35% (first purchase 35%)",
-      "sha256": "99e2b7524607c00883bfbb9941fd828d8ef7f423c80c3de44883d09a88a072e9"
+      "sha256": "504b1f8ee0fc2df9d78fce74da566f488af4f5520877f995ca123e8d6202498d"
     },
     {
       "key": "e8-zero-max-200k",
@@ -3988,11 +3988,11 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://e8markets.com/e8-markets-discount-code",
       "evidence": "E8 Zero MAX 200K (e8zero_max_fu), regular 1088, code E8 35% (first purchase 35%)",
-      "sha256": "99e2b7524607c00883bfbb9941fd828d8ef7f423c80c3de44883d09a88a072e9"
+      "sha256": "504b1f8ee0fc2df9d78fce74da566f488af4f5520877f995ca123e8d6202498d"
     },
     {
       "key": "e8-zero-starter-50k",
@@ -4010,11 +4010,11 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://e8markets.com/e8-markets-discount-code",
       "evidence": "E8 Zero Starter 50K (e8zero_start_fu), regular 218, code E8 35% (first purchase 35%)",
-      "sha256": "99e2b7524607c00883bfbb9941fd828d8ef7f423c80c3de44883d09a88a072e9"
+      "sha256": "504b1f8ee0fc2df9d78fce74da566f488af4f5520877f995ca123e8d6202498d"
     },
     {
       "key": "e8-zero-starter-100k",
@@ -4032,11 +4032,11 @@
         "discount_pct": "35",
         "discounted_eval_usd": ""
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://e8markets.com/e8-markets-discount-code",
       "evidence": "E8 Zero Starter 100K (e8zero_start_fu), regular 338, code E8 35% (first purchase 35%)",
-      "sha256": "99e2b7524607c00883bfbb9941fd828d8ef7f423c80c3de44883d09a88a072e9"
+      "sha256": "504b1f8ee0fc2df9d78fce74da566f488af4f5520877f995ca123e8d6202498d"
     },
     {
       "key": "traderslaunch-standard-80-100k",
@@ -4054,11 +4054,11 @@
         "activation_fee_usd": "0",
         "ddt": "EOD"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch standard 100K 80% split card, one-time fee 159, no sale shown",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-standard-80-200k",
@@ -4076,11 +4076,11 @@
         "activation_fee_usd": "0",
         "ddt": "EOD"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch standard 200K 80% split card, one-time fee 299, no sale shown",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-standard-80-300k",
@@ -4098,11 +4098,11 @@
         "activation_fee_usd": "0",
         "ddt": "EOD"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch standard 300K 80% split card, one-time fee 599, no sale shown",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-static-60-25k",
@@ -4120,11 +4120,11 @@
         "ddt": "Static",
         "activation_fee_usd": "0"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Static 25K 60% from offers API, price 119",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-static-60-50k",
@@ -4142,11 +4142,11 @@
         "ddt": "Static",
         "activation_fee_usd": "0"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Static 50K 60% from offers API, price 239",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-static-60-100k",
@@ -4164,11 +4164,11 @@
         "ddt": "Static",
         "activation_fee_usd": "0"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Static 100K 60% from offers API, price 479",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-static-80-25k",
@@ -4186,11 +4186,11 @@
         "ddt": "Static",
         "activation_fee_usd": "0"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Static 25K 80% from offers API, price 149",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-static-80-50k",
@@ -4208,11 +4208,11 @@
         "ddt": "Static",
         "activation_fee_usd": "0"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Static 50K 80% from offers API, price 299",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-static-80-100k",
@@ -4230,11 +4230,11 @@
         "ddt": "Static",
         "activation_fee_usd": "0"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Static 100K 80% from offers API, price 599",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-static-90-25k",
@@ -4252,11 +4252,11 @@
         "ddt": "Static",
         "activation_fee_usd": "0"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Static 25K 90% from offers API, price 169",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-static-90-50k",
@@ -4274,11 +4274,11 @@
         "ddt": "Static",
         "activation_fee_usd": "0"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Static 50K 90% from offers API, price 339",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-static-90-100k",
@@ -4296,11 +4296,11 @@
         "ddt": "Static",
         "activation_fee_usd": "0"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Static 100K 90% from offers API, price 679",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-nyc-80-100k",
@@ -4318,11 +4318,11 @@
         "activation_fee_usd": "0",
         "ddt": "EOD"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Legacy NYC 100K 80% card, one-time fee 99",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-nyc-80-200k",
@@ -4340,11 +4340,11 @@
         "activation_fee_usd": "0",
         "ddt": "EOD"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Legacy NYC 200K 80% card, one-time fee 149",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     },
     {
       "key": "traderslaunch-nyc-80-300k",
@@ -4362,11 +4362,11 @@
         "activation_fee_usd": "0",
         "ddt": "EOD"
       },
-      "verifiedAt": "2026-11-08T13:38:05.486246+00:00",
-      "expiresAt": "2026-11-09T07:38:05.486246+00:00",
+      "verifiedAt": "2026-11-08T22:13:43.761367+00:00",
+      "expiresAt": "2026-11-09T16:13:43.761367+00:00",
       "source": "https://traderslaunch.com/",
       "evidence": "Traders Launch Legacy NYC 300K 80% card, one-time fee 279",
-      "sha256": "eaae6e77901149e0d14dddabb91bf268756bb6bdb6e9b668d28f77191a7b388e"
+      "sha256": "0fa90da48a0b596c89ea9cd6daf78f7e7127a56cf53aef5947bd4941c462f1c5"
     }
   ],
   "review": [
@@ -4981,7 +4981,7 @@
       "title": "Futures"
     },
     "blue-guardian": {
-      "bytes": 831818,
+      "bytes": 831861,
       "title": "Blue Guardian | Best Instant Funding Prop Firm - Fast Funded Accounts"
     },
     "blusky-trading": {
@@ -4993,11 +4993,11 @@
       "title": ""
     },
     "e8futures": {
-      "bytes": 441622,
+      "bytes": 441760,
       "title": "Discount Codes & Promo Offers \u00b7 E8Markets"
     },
     "fundednext": {
-      "bytes": 1196880,
+      "bytes": 1234317,
       "title": "FundedNext - Prop Trading Firm for CFDs and Futures"
     },
     "fundedfutures": {
@@ -5009,11 +5009,11 @@
       "title": ""
     },
     "my-funded-futures": {
-      "bytes": 412584,
+      "bytes": 412508,
       "title": "The Premier Futures Prop Firm - My Funded Futures"
     },
     "phidias": {
-      "bytes": 325841,
+      "bytes": 335796,
       "title": "Phidias Propfirm : N\u00b01 Live Futures Prop firm"
     },
     "purdia": {
