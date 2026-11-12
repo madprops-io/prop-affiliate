@@ -44,6 +44,83 @@
       "approvedAt": "2026-11-06T17:36:25.972640+00:00"
     },
     {
+      "key": "tradeday-fast-pass-eod-100k",
+      "values": {
+        "eval_cost_usd": "498"
+      },
+      "approvedAt": "2026-11-12T20:02:00.206542+00:00"
+    },
+    {
+      "key": "tradeday-fast-pass-eod-150k",
+      "values": {
+        "eval_cost_usd": "725"
+      },
+      "approvedAt": "2026-11-12T20:02:00.206542+00:00"
+    },
+    {
+      "key": "tradeday-fast-pass-eod-25k",
+      "values": {
+        "eval_cost_usd": "173"
+      },
+      "approvedAt": "2026-11-12T20:02:00.206542+00:00"
+    },
+    {
+      "key": "tradeday-fast-pass-eod-50k",
+      "values": {
+        "eval_cost_usd": "248"
+      },
+      "approvedAt": "2026-11-12T20:02:00.206542+00:00"
+    },
+    {
+      "key": "tradeday-quick-pay-eod-100k",
+      "values": {
+        "eval_cost_usd": "298"
+      },
+      "approvedAt": "2026-11-12T20:02:00.206542+00:00"
+    },
+    {
+      "key": "tradeday-quick-pay-eod-150k",
+      "values": {
+        "eval_cost_usd": "440"
+      },
+      "approvedAt": "2026-11-12T20:02:00.206542+00:00"
+    },
+    {
+      "key": "tradeday-quick-pay-eod-50k",
+      "values": {
+        "eval_cost_usd": "174"
+      },
+      "approvedAt": "2026-11-12T20:02:00.206542+00:00"
+    },
+    {
+      "key": "tradeday-quick-pay-intraday-100k",
+      "values": {
+        "eval_cost_usd": "248"
+      },
+      "approvedAt": "2026-11-12T20:02:00.206542+00:00"
+    },
+    {
+      "key": "tradeday-quick-pay-intraday-150k",
+      "values": {
+        "eval_cost_usd": "398"
+      },
+      "approvedAt": "2026-11-12T20:02:00.206542+00:00"
+    },
+    {
+      "key": "tradeday-quick-pay-intraday-25k",
+      "values": {
+        "eval_cost_usd": "99"
+      },
+      "approvedAt": "2026-11-12T20:02:00.206542+00:00"
+    },
+    {
+      "key": "tradeday-quick-pay-intraday-50k",
+      "values": {
+        "eval_cost_usd": "124"
+      },
+      "approvedAt": "2026-11-12T20:02:00.206542+00:00"
+    },
+    {
       "key": "tradeify-growth-100k",
       "values": {
         "discount_code": "GEMS",
