@@ -2,66 +2,16 @@
 
 This report shows official-source proposals. **Review before merging**; no changes are automatically approved.
 
-Collected: 2026-11-12T20:02:00.206542+00:00
+Collected: 2026-11-13T19:49:22.779061+00:00
 
-**Plans with proposed changes:** 16
+**Plans with proposed changes:** 2
 
 | Plan | Field | Existing Sheet | Official source | Promo expires | Evidence |
 |---|---|---|---|---|---|
-| tpt-25k | Promo code | NOFEE50 | NOFEE40 | — | [Official site](https://takeprofittrader.com/) |
-| tpt-25k | Discount % | 50 | 40 | — | [Official site](https://takeprofittrader.com/) |
-| tpt-50k | Promo code | NOFEE50 | NOFEE40 | — | [Official site](https://takeprofittrader.com/) |
-| tpt-50k | Discount % | 50 | 40 | — | [Official site](https://takeprofittrader.com/) |
-| tpt-75k | Promo code | NOFEE50 | NOFEE40 | — | [Official site](https://takeprofittrader.com/) |
-| tpt-75k | Discount % | 50 | 40 | — | [Official site](https://takeprofittrader.com/) |
-| tpt-100k | Promo code | NOFEE50 | NOFEE40 | — | [Official site](https://takeprofittrader.com/) |
-| tpt-100k | Discount % | 50 | 40 | — | [Official site](https://takeprofittrader.com/) |
-| tpt-150k | Promo code | NOFEE50 | NOFEE40 | — | [Official site](https://takeprofittrader.com/) |
-| tpt-150k | Discount % | 50 | 40 | — | [Official site](https://takeprofittrader.com/) |
-| tradeday-quick-pay-intraday-25k | Regular price | 100 | 99 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-25k | Promo code | TDNEW | SALE60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-25k | Discount % | 55 | 60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-25k | Discounted price | 45 | 39 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-50k | Regular price | 131 | 124 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-50k | Promo code | TDNEW | SALE60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-50k | Discount % | 55 | 60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-50k | Discounted price | 59 | 49 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-100k | Regular price | 240 | 248 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-100k | Promo code | TDNEW | SALE60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-100k | Discount % | 55 | 60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-100k | Discounted price | 108 | 99 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-150k | Regular price | 360 | 398 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-150k | Promo code | TDNEW | SALE60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-150k | Discount % | 55 | 60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-intraday-150k | Discounted price | 162 | 159 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-50k | Regular price | 175 | 174 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-50k | Promo code | TDNEW | SALE60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-50k | Discount % | 55 | 60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-50k | Discounted price | 79 | 69 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-100k | Regular price | 285 | 298 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-100k | Promo code | TDNEW | SALE60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-100k | Discount % | 55 | 60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-100k | Discounted price | 129 | 119 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-150k | Regular price | 400 | 440 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-150k | Promo code | TDNEW | SALE60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-150k | Discount % | 55 | 60 | — | [Official site](https://tradeday.com/) |
-| tradeday-quick-pay-eod-150k | Discounted price | 180 | 176 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-25k | Regular price | 130 | 173 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-25k | Promo code | TDNEW | SALE60 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-25k | Discount % | 50 | 60 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-25k | Discounted price | 65 | 69 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-50k | Regular price | 189 | 248 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-50k | Promo code | TDNEW | SALE60 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-50k | Discount % | 50 | 60 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-50k | Discounted price | 95 | 99 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-100k | Regular price | 350 | 498 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-100k | Promo code | TDNEW | SALE60 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-100k | Discount % | 50 | 60 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-100k | Discounted price | 175 | 199 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-150k | Regular price | 530 | 725 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-150k | Promo code | TDNEW | SALE60 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-150k | Discount % | 50 | 60 | — | [Official site](https://tradeday.com/) |
-| tradeday-fast-pass-eod-150k | Discounted price | 265 | 290 | — | [Official site](https://tradeday.com/) |
+| mffu-rapid-eod-25k | Regular price | 145 | 162 | — | [Official site](https://myfundedfutures.com/) |
+| mffu-rapid-eod-25k | Discounted price | 72.5 | 81 | — | [Official site](https://myfundedfutures.com/) |
+| mffu-rapid-eod-50k | Regular price | 225 | 275 | — | [Official site](https://myfundedfutures.com/) |
+| mffu-rapid-eod-50k | Discounted price | 112.5 | 137.5 | — | [Official site](https://myfundedfutures.com/) |
 
 ## Requires investigation
 

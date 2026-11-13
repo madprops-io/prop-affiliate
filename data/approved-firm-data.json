@@ -44,6 +44,20 @@
       "approvedAt": "2026-11-06T17:36:25.972640+00:00"
     },
     {
+      "key": "mffu-rapid-eod-25k",
+      "values": {
+        "eval_cost_usd": "162"
+      },
+      "approvedAt": "2026-11-13T19:49:22.779061+00:00"
+    },
+    {
+      "key": "mffu-rapid-eod-50k",
+      "values": {
+        "eval_cost_usd": "275"
+      },
+      "approvedAt": "2026-11-13T19:49:22.779061+00:00"
+    },
+    {
       "key": "tradeday-fast-pass-eod-100k",
       "values": {
         "eval_cost_usd": "498"
