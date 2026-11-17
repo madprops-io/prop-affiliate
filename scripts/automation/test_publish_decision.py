@@ -75,8 +75,13 @@ class PublishDecisionTests(unittest.TestCase):
         self.assertEqual(check(self.prev, self.cur)[0], "publish")
 
     def test_coupon_or_promotion_expiry_change_publishes(self):
-        promo = next(p for p in self.cur["patches"] if "promotionExpiresAt" in p)
-        promo["promotionExpiresAt"] = "2099-01-01T00:00:00+00:00"
+        # Ensure at least one patch carries a promotionExpiresAt so the test
+        # exercises the promo-expiry diff path regardless of live data.
+        target = self.cur["patches"][0]
+        target["promotionExpiresAt"] = iso(run_at(self.prev) + timedelta(hours=10))
+        # Mirror in prev so only the expiry value differs.
+        self.prev["patches"][0]["promotionExpiresAt"] = iso(run_at(self.prev) + timedelta(hours=5))
+        target["promotionExpiresAt"] = "2099-01-01T00:00:00+00:00"
         self.assertEqual(check(self.prev, self.cur)[0], "publish")
         cur = rerun(self.prev)
         cur["patches"][0]["values"]["discount_code"] = "CHANGED"
@@ -116,7 +121,9 @@ class PublishDecisionTests(unittest.TestCase):
 
     def test_fixed_source_expiry_does_not_force_identical_republish(self):
         # Republishing cannot extend a promotion-end expiry; the post-expiry run differs materially.
-        promo = next(p for p in self.prev["patches"] if "promotionExpiresAt" in p)
+        # Inject promotionExpiresAt so the test works regardless of live data.
+        promo = self.prev["patches"][0]
+        promo["promotionExpiresAt"] = iso(run_at(self.prev) + timedelta(hours=10))
         promo["expiresAt"] = iso(run_at(self.prev) + timedelta(hours=3))
         cur = rerun(self.prev)
         next(p for p in cur["patches"] if p["key"] == promo["key"])["expiresAt"] = promo["expiresAt"]
